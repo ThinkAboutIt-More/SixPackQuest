@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>PAKALU'S SIX PACK QUEST 🍄</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#e52521;--coin:#fbd000;--coin-dark:#7a5800;--blue:#0066cc;--sky:#5c94fc;
+  --green:#00cc44;--pink:#ff6eb4;--pink-dark:#c2185b;--bg:#000;--panel:#0a0a0a;--line:#222;
+  --ps2p:'Press Start 2P',monospace;--vt:'VT323',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{background:#000;}
+body{background:#000;color:#fff;font-family:var(--vt);font-size:1.05rem;min-height:100vh;
+  padding-bottom:calc(90px + env(safe-area-inset-bottom));}
+button{touch-action:manipulation;user-select:none;}
+input{user-select:text;}
+#sky{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:linear-gradient(#0a0a2e 0%,#141448 40%,#000 100%);}
+#sky .cloud{position:absolute;font-size:1.6rem;opacity:.14;}
+.wrap{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:10px 12px 0;}
+/* ===== HEADER ===== */
+.hdr{text-align:center;padding:12px 0 6px;}
+.hdr h1{font-family:var(--ps2p);font-size:.62rem;color:var(--coin);text-shadow:2px 2px 0 var(--coin-dark);line-height:1.7;letter-spacing:.02em;}
+.hdr .sub{font-size:.85rem;color:#888;margin-top:5px;}
+.sync-badge{display:inline-flex;align-items:center;gap:5px;margin-top:7px;font-family:var(--ps2p);font-size:.26rem;
+  padding:5px 9px;border:2px solid #1a3a1a;color:#2a5a2a;background:#020a02;cursor:default;}
+.sync-badge.ok{border-color:#0a4d0a;color:#33dd55;}
+.sync-badge.busy{border-color:#4d4d0a;color:#dddd33;}
+.sync-badge.err{border-color:#4d0a0a;color:#dd5533;cursor:pointer;}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:currentColor;}
+/* ===== HUD ===== */
+.hud{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:8px 0;}
+.chip{background:#000;border:2px solid var(--line);padding:5px 8px;font-family:var(--ps2p);font-size:.28rem;color:#ccc;text-align:center;}
+.chip b{display:block;font-size:.4rem;margin-top:3px;}
+.chip.coin{border-color:var(--coin-dark);color:var(--coin);}
+.chip.xp{border-color:#0a4d0a;color:#33dd55;}
+.chip.streak{border-color:#4d2a00;color:#ffaa44;}
+.chip.week{border-color:#333366;color:#9999ff;}
+/* ===== SMO HEART BAR ===== */
+.smo{display:flex;align-items:center;justify-content:center;gap:12px;margin:10px 0;}
+.smo-ring{position:relative;width:74px;height:74px;}
+.smo-ring .fill{position:absolute;inset:0;border-radius:50%;}
+.smo-ring .inner{position:absolute;inset:7px;border-radius:50%;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.smo-heart{font-size:1.35rem;line-height:1;filter:drop-shadow(0 0 4px #ff2244);}
+.smo-lives{font-family:var(--ps2p);font-size:.3rem;color:#fff;margin-top:2px;}
+.smo-label{font-family:var(--ps2p);font-size:.24rem;color:#666;text-align:left;line-height:1.9;}
+.smo-label b{color:#ccc;}
+/* ===== WORLD MAP ===== */
+.world-sec{background:#000;border:3px solid var(--line);padding:9px 8px 6px;margin:8px 0;}
+.world-lbl{font-family:var(--ps2p);font-size:.26rem;color:#000;background:var(--coin);display:inline-block;padding:3px 6px;border:2px solid var(--coin-dark);margin-bottom:7px;}
+.wmap{display:flex;justify-content:space-between;align-items:flex-end;overflow-x:auto;padding-bottom:2px;}
+.wk{flex:1;min-width:34px;text-align:center;position:relative;}
+.wk .castle{font-size:1.35rem;filter:grayscale(1) brightness(.35);line-height:1.15;}
+.wk.cleared .castle{filter:grayscale(0) drop-shadow(0 0 5px gold);}
+.wk.cur .castle{filter:grayscale(0);animation:wkB .55s infinite alternate;}
+.wk.avail .castle{filter:grayscale(.3) brightness(.9);}
+@keyframes wkB{from{transform:translateY(0)}to{transform:translateY(-4px)}}
+.wk .wnum{font-family:var(--ps2p);font-size:.18rem;color:#555;}
+.wk.cur .wnum{color:var(--coin);}
+.wpath{position:relative;height:2px;background:repeating-linear-gradient(90deg,#333 0 6px,transparent 6px 12px);margin:0 17px;}
+/* ===== QUOTE BUBBLE (Paper Mario) ===== */
+.pm-overlay{position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.82);display:none;align-items:flex-end;justify-content:center;padding:0 14px calc(24px + env(safe-area-inset-bottom));}
+.pm-overlay.show{display:flex;}
+.pm-box{width:100%;max-width:440px;position:relative;}
+.pm-portrait{position:absolute;left:8px;bottom:-4px;width:64px;height:64px;image-rendering:pixelated;}
+.pm-bubble{margin-left:62px;background:#fff;border:4px solid #000;border-radius:14px;padding:13px 14px 11px;position:relative;box-shadow:5px 5px 0 rgba(0,0,0,.5);}
+.pm-bubble:before{content:'';position:absolute;left:-16px;bottom:14px;border:8px solid transparent;border-right-color:#000;}
+.pm-bubble:after{content:'';position:absolute;left:-9px;bottom:17px;border:6px solid transparent;border-right-color:#fff;}
+.pm-name{font-family:var(--ps2p);font-size:.3rem;color:#a33;margin-bottom:6px;}
+.pm-text{font-family:var(--vt);font-size:1.15rem;color:#111;line-height:1.35;min-height:3.2em;}
+.pm-tap{font-family:var(--ps2p);font-size:.22rem;color:#999;text-align:right;margin-top:5px;}
+/* ===== MODE TABS ===== */
+.mode-tabs{display:flex;border:3px solid var(--line);margin:8px 0;background:#000;}
+.mode-tab{flex:1;font-family:var(--ps2p);font-size:.3rem;padding:11px 4px;text-align:center;color:#666;cursor:pointer;background:#050505;}
+.mode-tab.on{color:#000;background:var(--coin);}
+.mode-tab.on.t-travel{background:var(--sky);}
+/* ===== SECTIONS ===== */
+.sec{background:#000;border:3px solid var(--line);margin:9px 0;}
+.sec-hdr{display:flex;justify-content:space-between;align-items:center;padding:9px 10px;cursor:pointer;background:#0d0d0d;}
+.sec-hdr .t{font-family:var(--ps2p);font-size:.3rem;color:#ccc;}
+.sec-hdr.pink .t{color:var(--pink);}
+.sec-hdr.blue .t{color:#44aaff;}
+.sec-hdr .count{font-family:var(--ps2p);font-size:.26rem;color:#888;margin-right:7px;}
+.sec-body{padding:9px;}
+.sec-body.closed{display:none;}
+/* ===== TASKS ===== */
+.task{display:flex;align-items:center;gap:9px;background:var(--panel);border:2px solid var(--line);padding:9px;margin-bottom:6px;cursor:pointer;transition:opacity .15s;}
+.task:active{transform:scale(.985);}
+.task.done{opacity:.5;border-color:#0a4d0a;}
+.task.done .tname{text-decoration:line-through;}
+.task .chk{width:26px;height:26px;min-width:26px;border:3px solid #444;background:#000;display:flex;align-items:center;justify-content:center;font-size:.95rem;color:var(--green);}
+.task.done .chk{border-color:var(--green);background:#021a08;}
+.tinfo{flex:1;}
+.tname{font-family:var(--ps2p);font-size:.27rem;color:#eee;line-height:1.5;}
+.tdet{font-size:.92rem;color:#777;margin-top:2px;line-height:1.25;}
+.txp{font-family:var(--ps2p);font-size:.24rem;color:var(--coin);white-space:nowrap;}
+.sets-ctr{display:flex;align-items:center;gap:6px;margin-top:5px;}
+.sets-ctr .sbtn{width:28px;height:28px;border:2px solid #444;background:#111;color:#ccc;font-family:var(--ps2p);font-size:.4rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.sets-ctr .slbl{font-family:var(--ps2p);font-size:.24rem;color:#888;}
+.sets-pips{display:flex;gap:3px;}
+.sets-pips .pip{width:11px;height:11px;border:2px solid #444;background:#000;}
+.sets-pips .pip.on{background:var(--coin);border-color:var(--coin-dark);}
+.task.bonus{border-color:#3a2a00;background:#0d0a02;}
+.task.bonus .tname{color:var(--coin);}
+.task.supp{border-color:#0a2a3a;background:#020608;}
+.task.supp .tname{color:#66ccff;}
+.task.carry{border-style:dashed;border-color:#4d3300;}
+.carry-tag{font-family:var(--ps2p);font-size:.18rem;color:#ffaa44;display:inline-block;border:1px solid #4d3300;padding:2px 4px;margin-bottom:3px;}
+/* ===== PROTEIN BAR ===== */
+.pqb{padding:10px;}
+.pqb-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
+.pqb-num{font-family:var(--ps2p);font-size:.34rem;color:var(--pink);}
+.pqb-goal-lbl{font-family:var(--ps2p);font-size:.22rem;color:#66404f;}
+.pqb-track{position:relative;height:22px;background:#1a0510;border:3px solid var(--pink-dark);overflow:hidden;}
+.pqb-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--pink-dark),var(--pink));transition:width .4s;}
+.pqb-fill.max{background:linear-gradient(90deg,#ff9ecd,#fff);}
+.pqb-end{position:absolute;right:3px;top:50%;transform:translateY(-50%);font-size:.68rem;color:#8a5a70;}
+.pqb-status{text-align:center;color:#a06070;font-size:.9rem;margin-top:5px;}
+/* ===== HYDRATION ===== */
+.hyd{padding:10px;}
+.hyd-track{position:relative;height:18px;background:#010510;border:3px solid #003a75;overflow:hidden;margin:7px 0;}
+.hyd-fill{height:100%;width:0%;background:linear-gradient(90deg,#0044aa,#44aaff);transition:width .3s;}
+.hyd-row{display:flex;gap:5px;flex-wrap:wrap;}
+.hbtn{flex:1;min-width:64px;background:#001133;border:2px solid var(--blue);color:#44aaff;font-family:var(--ps2p);font-size:.24rem;padding:8px 4px;cursor:pointer;text-align:center;line-height:1.5;}
+.hbtn small{font-family:var(--vt);font-size:.72rem;color:#336699;display:block;}
+.hyd-custom{display:flex;gap:5px;margin-top:6px;}
+.hyd-custom input{flex:1;background:#001122;border:2px solid #003366;color:#44aaff;font-family:var(--ps2p);font-size:.3rem;padding:7px;outline:none;min-width:0;}
+.hyd-custom button{background:#0044aa;border:none;border-bottom:3px solid #002266;color:#fff;font-family:var(--ps2p);font-size:.24rem;padding:7px 10px;cursor:pointer;}
+.hyd-reset{background:#110000;border:2px solid #330000;color:#664444;font-family:var(--ps2p);font-size:.22rem;padding:7px 8px;cursor:pointer;}
+.hyd-status{text-align:center;color:#336699;font-size:.9rem;margin-top:5px;}
+/* ===== FOOD ===== */
+.meal-card{border:2px solid var(--line);background:var(--panel);padding:8px 9px;margin-bottom:6px;cursor:pointer;display:flex;gap:8px;align-items:center;}
+.meal-card:active{transform:scale(.985);}
+.meal-card .mi{font-size:1.3rem;}
+.meal-card .mn{font-family:var(--ps2p);font-size:.24rem;color:#eee;line-height:1.5;}
+.meal-card .md{font-size:.85rem;color:#777;margin-top:2px;}
+.meal-card .mp{font-family:var(--ps2p);font-size:.22rem;color:var(--pink);white-space:nowrap;margin-left:auto;}
+.meal-card.rank-1{border-left:4px solid var(--coin);}
+.meal-card.rank-2{border-left:4px solid #aaa;}
+.meal-card.rank-3{border-left:4px solid #b87333;}
+.food-lbl{font-family:var(--ps2p);font-size:.24rem;color:#ffaa44;margin:9px 0 6px;letter-spacing:.03em;}
+.qadd-row{display:flex;gap:5px;flex-wrap:wrap;}
+.qadd{border:2px solid var(--line);background:#0d0d0d;padding:6px 7px;cursor:pointer;text-align:center;flex:1;min-width:86px;}
+.qadd .qi{font-size:1.05rem;}
+.qadd .qn{font-family:var(--ps2p);font-size:.17rem;color:#bbb;margin-top:3px;line-height:1.4;}
+.qadd .qp{font-family:var(--ps2p);font-size:.18rem;color:var(--pink);margin-top:2px;}
+.food-list{display:flex;flex-direction:column;gap:4px;margin-top:8px;max-height:220px;overflow-y:auto;}
+.fentry{border:2px solid #1c1c1c;padding:6px 8px;display:flex;align-items:center;gap:7px;background:#070707;position:relative;}
+.fentry .fi{font-size:1rem;}
+.fentry .fn{font-family:var(--ps2p);font-size:.2rem;color:#ccc;line-height:1.5;flex:1;}
+.fentry .fp{font-family:var(--ps2p);font-size:.19rem;color:var(--pink);white-space:nowrap;}
+.fentry .fx{color:#555;cursor:pointer;padding:3px 5px;font-size:.8rem;}
+.fentry.fuel{border-left:3px solid var(--green);}
+.fentry.cheat{border-left:3px solid #cc2200;}
+.fentry.meal{border-left:3px solid #3366ff;}
+.custom-food{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap;}
+.custom-food input{background:#0d0d0d;border:2px solid var(--line);color:#eee;font-family:var(--vt);font-size:1rem;padding:7px;outline:none;min-width:0;}
+.custom-food .cf-name{flex:2;min-width:110px;}
+.custom-food .cf-pro{flex:1;min-width:64px;}
+.custom-food button{background:#2a2a00;border:none;border-bottom:3px solid #111;color:var(--coin);font-family:var(--ps2p);font-size:.22rem;padding:7px 10px;cursor:pointer;}
+.ftype-row{display:flex;gap:4px;margin-top:6px;}
+.ftype{flex:1;font-family:var(--ps2p);font-size:.18rem;padding:6px 2px;text-align:center;border:2px solid var(--line);color:#666;cursor:pointer;}
+.ftype.on.f-meal{border-color:#3366ff;color:#7aa2ff;}
+.ftype.on.f-fuel{border-color:var(--green);color:#5fd97a;}
+.ftype.on.f-cheat{border-color:#cc2200;color:#ff7755;}
+/* ===== BOSS OVERLAY ===== */
+.boss-ovl{position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,.96);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s;padding:16px;}
+.boss-ovl.show{opacity:1;pointer-events:all;}
+.boss-box{background:#000;border:6px solid var(--red);max-width:360px;width:100%;text-align:center;box-shadow:0 0 0 8px #000,0 0 40px rgba(220,0,0,.5);animation:bossIn .5s cubic-bezier(.4,0,.2,1);max-height:92vh;overflow-y:auto;}
+@keyframes bossIn{0%{transform:scale(.4) rotate(-5deg)}70%{transform:scale(1.05)}100%{transform:scale(1)}}
+.boss-tb{background:var(--red);padding:8px;font-family:var(--ps2p);font-size:.34rem;color:#fff;text-shadow:2px 2px 0 #880000;}
+.boss-scene{padding:16px 12px 6px;display:flex;align-items:center;justify-content:center;gap:16px;}
+.boss-portrait{width:84px;height:84px;image-rendering:pixelated;animation:bossShk .3s infinite alternate;}
+@keyframes bossShk{from{transform:translateX(-2px)}to{transform:translateX(2px)}}
+.boss-vs{font-family:var(--ps2p);font-size:.4rem;color:var(--coin);text-shadow:2px 2px 0 var(--coin-dark);}
+.boss-player{width:64px;height:64px;image-rendering:pixelated;}
+.boss-name{font-family:var(--ps2p);font-size:.4rem;color:#fff;padding:4px 0 2px;}
+.boss-story{font-family:var(--vt);font-size:1.08rem;color:#ccc;line-height:1.5;padding:7px 16px 11px;}
+.boss-defeated{font-family:var(--ps2p);font-size:.3rem;color:var(--coin);text-shadow:2px 2px 0 var(--coin-dark);padding:4px 10px 6px;line-height:1.8;display:none;}
+.boss-xp{font-family:var(--ps2p);font-size:.26rem;color:#00ff88;padding-bottom:9px;display:none;}
+.boss-btn{background:var(--red);color:#fff;border:none;border-bottom:4px solid #880000;padding:9px 18px;font-family:var(--ps2p);font-size:.28rem;cursor:pointer;margin-bottom:12px;}
+/* princess finale */
+.princess-ovl{position:fixed;inset:0;z-index:10002;background:radial-gradient(circle at 50% 30%,#33113a,#000 70%);display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;}
+.princess-ovl.show{display:flex;}
+.princess-ovl .pc{font-size:4rem;animation:wkB .8s infinite alternate;}
+.princess-ovl h2{font-family:var(--ps2p);font-size:.5rem;color:var(--pink);text-shadow:2px 2px 0 var(--pink-dark);margin:16px 0;line-height:1.9;}
+.princess-ovl p{font-size:1.15rem;color:#dda;max-width:340px;line-height:1.5;}
+/* ===== TOASTS ===== */
+.notif{position:fixed;top:calc(10px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:9500;background:#001a00;border:2px solid var(--green);color:#7ee89a;font-family:var(--ps2p);font-size:.24rem;padding:8px 12px;opacity:0;transition:opacity .25s;pointer-events:none;max-width:92vw;text-align:center;line-height:1.6;}
+.notif.show{opacity:1;}
+.notif.org{background:#1a0d00;border-color:#ff8800;color:#ffbb66;}
+.notif.toad{background:#0a0a2a;border-color:var(--sky);color:#aaccff;}
+#undoToast{position:fixed;bottom:calc(14px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:9400;background:#1a0a00;border:3px solid #ff8800;padding:9px 12px;display:none;align-items:center;gap:10px;box-shadow:0 4px 18px rgba(0,0,0,.7);max-width:94vw;}
+#undoToast.show{display:flex;}
+#undoToast .um{font-family:var(--ps2p);font-size:.22rem;color:#ffbb66;line-height:1.6;}
+#undoToast .ub{background:#ff8800;color:#000;border:none;border-bottom:3px solid #a55500;font-family:var(--ps2p);font-size:.24rem;padding:7px 12px;cursor:pointer;}
+#updateToast{position:fixed;bottom:calc(14px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:9600;background:#020a2a;border:3px solid var(--sky);padding:10px 14px;display:none;align-items:center;gap:10px;}
+#updateToast.show{display:flex;}
+#updateToast .um{font-family:var(--ps2p);font-size:.22rem;color:#aaccff;}
+#updateToast .ub{background:var(--sky);color:#000;border:none;border-bottom:3px solid #2a4a8a;font-family:var(--ps2p);font-size:.24rem;padding:7px 12px;cursor:pointer;}
+/* ===== MODAL (shake picker) ===== */
+.modal-ovl{position:fixed;inset:0;z-index:9800;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;padding:18px;}
+.modal-ovl.show{display:flex;}
+.modal{background:#000;border:3px solid var(--coin);max-width:380px;width:100%;padding:12px;}
+.modal h3{font-family:var(--ps2p);font-size:.3rem;color:var(--coin);margin-bottom:10px;text-align:center;line-height:1.7;}
+.shake-opt{display:flex;align-items:center;gap:9px;border:2px solid var(--line);background:var(--panel);padding:10px;margin-bottom:6px;cursor:pointer;}
+.shake-opt .si{font-size:1.25rem;}
+.shake-opt .sn{font-family:var(--ps2p);font-size:.23rem;color:#eee;flex:1;line-height:1.5;}
+.shake-opt .sp{font-family:var(--ps2p);font-size:.23rem;color:var(--pink);}
+.modal .x{display:block;margin:6px auto 0;background:none;border:2px solid #444;color:#888;font-family:var(--ps2p);font-size:.22rem;padding:7px 14px;cursor:pointer;}
+/* hidden blocks */
+.hblock{position:absolute;width:26px;height:26px;cursor:pointer;opacity:.06;}
+.hblock.found{opacity:1;}
+.hblock .hb-q{font-size:1.1rem;}
+/* day nav */
+.daynav{display:flex;align-items:center;justify-content:space-between;margin:7px 0;gap:6px;}
+.daynav button{background:#000;border:2px solid var(--line);color:#888;font-family:var(--ps2p);font-size:.3rem;padding:8px 12px;cursor:pointer;}
+.daynav .dlbl{font-family:var(--ps2p);font-size:.28rem;color:#ccc;text-align:center;line-height:1.8;}
+.daynav .dlbl small{display:block;font-size:.2rem;color:#666;}
+.coin-ico{display:inline-block;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe97a,var(--coin) 55%,#c9a000);border:2px solid var(--coin-dark);vertical-align:-2px;}
+.rest-box{text-align:center;padding:22px 10px;}
+.rest-box .re{font-size:2.4rem;}
+.rest-box .rt{font-family:var(--ps2p);font-size:.3rem;color:#888;margin-top:10px;line-height:1.8;}
+.mute-btn{position:fixed;top:calc(8px + env(safe-area-inset-top));right:10px;z-index:9001;background:#000;border:2px solid var(--line);color:#888;font-size:1rem;padding:5px 8px;cursor:pointer;}
+.foot{text-align:center;color:#444;font-size:.8rem;margin:14px 0 4px;font-family:var(--ps2p);font-size:.2rem;line-height:2;}
+</style>
+</head>
+<body>
+<div id="sky"></div>
+<button class="mute-btn" id="muteBtn" title="sound on/off">🔊</button>
+<div class="wrap">
+  <div class="hdr">
+    <h1>PAKALU'S SIX PACK QUEST 🍄</h1>
+    <div class="sub">12 worlds. One princess. Zero skipped days.</div>
+    <div><span class="sync-badge busy" id="syncBadge"><span class="sync-dot"></span><span id="syncTxt">CONNECTING</span></span></div>
+  </div>
+  <div class="hud">
+    <div class="chip week">WORLD<b id="hudWeek">1</b></div>
+    <div class="chip coin"><span class="coin-ico"></span> COINS<b id="hudCoins">0</b></div>
+    <div class="chip xp">SCORE<b id="hudScore">0</b></div>
+    <div class="chip streak">STREAK<b id="hudStreak">0</b></div>
+  </div>
+  <div class="smo">
+    <div class="smo-ring">
+      <div class="fill" id="smoFill"></div>
+      <div class="inner"><div class="smo-heart">❤️</div><div class="smo-lives" id="smoLives">×3</div></div>
+    </div>
+    <div class="smo-label">POWER THIS WEEK<br><b id="powerPct">0%</b> COMPLETE<br><span id="dayOfQuest">DAY 1 OF THE QUEST</span></div>
+  </div>
+  <div class="world-sec">
+    <div class="world-lbl">WORLD MAP</div>
+    <div class="wmap" id="wmap"></div>
+    <div class="wpath"></div>
+  </div>
+  <div class="mode-tabs">
+    <div class="mode-tab t-home" id="tabHome" onclick="setMode('home')">🏠 HOME</div>
+    <div class="mode-tab t-travel" id="tabTravel" onclick="setMode('travel')">✈️ TRAVEL</div>
+  </div>
+  <div class="daynav">
+    <button id="dayPrev" onclick="navDay(-1)">◀</button>
+    <div class="dlbl" id="dayLbl">TODAY<small id="daySub"></small></div>
+    <button id="dayNext" onclick="navDay(1)">▶</button>
+  </div>
+  <div id="todayArea"></div>
+  <div class="sec">
+    <div class="sec-hdr pink" onclick="toggleSec('protSec')"><span class="t">🎯 PROTEIN QUEST</span><span><span class="count" id="protCount">0g/160g</span><span id="arr_protSec">▼</span></span></div>
+    <div class="sec-body" id="protSec">
+      <div class="pqb">
+        <div class="pqb-top"><span class="pqb-num" id="pqbNumber">0g / 160g</span><span class="pqb-goal-lbl">DAILY GOAL</span></div>
+        <div class="pqb-track"><div class="pqb-fill" id="pqbFill"></div><div class="pqb-end">160g</div></div>
+        <div class="pqb-status" id="pqbStatus">Log food below to track progress</div>
+      </div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec-hdr blue" onclick="toggleSec('hydSec')"><span class="t">💧 HYDRATION</span><span><span class="count" id="hydCount">0oz</span><span id="arr_hydSec">▼</span></span></div>
+    <div class="sec-body" id="hydSec">
+      <div class="hyd">
+        <div class="hyd-track"><div class="hyd-fill" id="hydFill"></div></div>
+        <div class="hyd-row" id="hydRow">
+          <button class="hbtn" onclick="addWater(24)">+24oz<small>home cup</small></button>
+        </div>
+        <div class="hyd-custom">
+          <input id="hydCustom" type="number" inputmode="numeric" min="1" max="200" placeholder="custom oz" onkeydown="if(event.key==='Enter')addCustomWater()">
+          <button onclick="addCustomWater()">+ LOG</button>
+          <button class="hyd-reset" onclick="resetWater()" title="Reset today's water">↺</button>
+        </div>
+        <div class="hyd-status" id="hydStatus">Log water to track hydration</div>
+      </div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec-hdr pink" onclick="toggleSec('foodSec')"><span class="t">🍕 FOOD LOG</span><span><span class="count" id="foodCount">0g</span><span id="arr_foodSec">▼</span></span></div>
+    <div class="sec-body" id="foodSec">
+      <div class="food-lbl">🏆 YOUR GO-TO MEALS <span style="color:#555;">— ranked healthiest → least</span></div>
+      <div id="mealCards"></div>
+      <div class="food-lbl">⚡ QUICK ADD</div>
+      <div class="qadd-row" id="quickAddRow"></div>
+      <div class="food-lbl">✏️ CUSTOM ENTRY</div>
+      <div class="custom-food">
+        <input class="cf-name" id="cfName" placeholder="what did you eat?" maxlength="60">
+        <input class="cf-pro" id="cfPro" type="number" inputmode="numeric" placeholder="protein g" min="0" max="300">
+        <button onclick="addCustomFood()">+ LOG</button>
+      </div>
+      <div class="ftype-row">
+        <div class="ftype f-meal on" id="ftMeal" onclick="setFtype('meal')">🍽 MEAL</div>
+        <div class="ftype f-fuel" id="ftFuel" onclick="setFtype('fuel')">⚡ FUEL</div>
+        <div class="ftype f-cheat" id="ftCheat" onclick="setFtype('cheat')">😈 CHEAT</div>
+      </div>
+      <div class="food-list" id="foodList"></div>
+    </div>
+  </div>
+  <div class="foot">A VERY PAKALU PRODUCTION<br>v<span id="verLbl">1</span> · GITHUB PAGES + CLOUD SYNC</div>
+</div>
+<div class="pm-overlay" id="pmOverlay">
+  <div class="pm-box">
+    <canvas class="pm-portrait" id="pmPortrait" width="16" height="16"></canvas>
+    <div class="pm-bubble">
+      <div class="pm-name">PAKALU</div>
+      <div class="pm-text" id="pmText"></div>
+      <div class="pm-tap">TAP TO CONTINUE ▶</div>
+    </div>
+  </div>
+</div>
+<div class="boss-ovl" id="bossOvl">
+  <div class="boss-box">
+    <div class="boss-tb" id="bossTitleBar">WORLD 1 BOSS</div>
+    <div class="boss-scene">
+      <canvas class="boss-portrait" id="bossPortrait" width="16" height="16"></canvas>
+      <div class="boss-vs">VS</div>
+      <canvas class="boss-player" id="bossPlayer" width="16" height="16"></canvas>
+    </div>
+    <div class="boss-name" id="bossName"></div>
+    <div class="boss-story" id="bossStory"></div>
+    <div class="boss-defeated" id="bossDefeated"></div>
+    <div class="boss-xp" id="bossXp"></div>
+    <button class="boss-btn" id="bossBtn">⚔ FIGHT!</button>
+  </div>
+</div>
+<div class="princess-ovl" id="princessOvl">
+  <div class="pc">👸</div>
+  <h2>PRINCESS SAVED!</h2>
+  <p id="princessText">Twelve worlds. Twelve bosses. One six pack. You did what Bowser said you'd never do.</p>
+  <button class="boss-btn" style="margin-top:18px;" onclick="document.getElementById('princessOvl').classList.remove('show')">▶ CONTINUE</button>
+</div>
+<div class="modal-ovl" id="shakeModal">
+  <div class="modal">
+    <h3 id="shakeTitle">PICK YOUR SHAKE</h3>
+    <div id="shakeOpts"></div>
+    <button class="x" onclick="closeShake()">✕ CANCEL</button>
+  </div>
+</div>
+<div class="notif" id="notif"></div>
+<div id="undoToast"><span class="um" id="undoMsg"></span><button class="ub" onclick="doUndo()">↺ UNDO</button></div>
+<div id="updateToast"><span class="um">⭐ NEW VERSION FOUND</span><button class="ub" onclick="location.reload()">UPDATE</button></div>
+<script>
+'use strict';
+// ================================================================
+// PAKALU'S SIX PACK QUEST — self-updating web app
+// State: Supabase app_state (cloud source of truth) + localStorage cache
+// ================================================================
+const APP_VERSION="1";
+document.getElementById('verLbl').textContent=APP_VERSION;
+const SB_URL="https://pmgmtjmilcjrxsalnuxr.supabase.co";
+const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA";
+const SB_DOC="sixpack:state";
+const WATER_GOAL=100, PROTEIN_GOAL=160;
+
+// ================================================================
+// PIXEL SPRITES (16x16) — Pakalu (brown Mario, P hat), Princess, Bowser, Toad
+// ================================================================
+const PAL={'.':null,'K':'#000','S':'#ffcc99','B':'#7a4a1a','b':'#5c3408','P':'#ffeeaa','R':'#e52521','W':'#fff','Y':'#fbd000','G':'#3aa830','g':'#1f6b1a','O':'#ff9944','N':'#c98a5a','p':'#ff6eb4','d':'#c2185b','H':'#ffe9c9'};
+const SPR_PAKALU=[
+"................",
+"....BBBBBB......",
+"...BBBBBBBB.....",
+"...BPPPPPPB.....",
+"...BBBBBBBB.....",
+"....SSSSSS......",
+"....SKSSKS......",
+"....SSSSSS......",
+"...bbbbbbbb.....",
+"..bbBbbbbBbb....",
+"...SSbBbbBbSS...",
+"....bbbbbb......",
+"....BbbBbb......",
+"....BbbBbb......",
+"....bb..bb......",
+"...KKK..KKK....."];
+const SPR_PRINCESS=[
+"................",
+".....YYYY.......",
+"....YYYYYY......",
+"...HHHHHHHH.....",
+"..HHSSSSSSHH....",
+"..HSSSSSSSSH....",
+"..HSKSSSSKSH....",
+"..HSSSSSSSSH....",
+"...SSSSSSSS.....",
+"....pppppp......",
+"...pppppppp.....",
+"..ppWppppWpp....",
+"..pppppppppp....",
+".pppppppppppp...",
+".pppppppppppp...",
+"pppppppppppppp.."];
+const SPR_BOWSER=[
+"................",
+"..KK......KK....",
+".KWWK....KWWK...",
+".KGGKYYYYKGGK...",
+".GGGGGGGGGGGG...",
+"GGKGGGGGGGKG....",
+"GGGGGGGGGGGG....",
+"GGGKKKKKKGGG....",
+"GGGKWWWWKGGG....",
+".GGKKKKKKGG.....",
+".OOggggggOO.....",
+".OOgGGGGgOO.....",
+"..OgGGGGgO......",
+"..gggggggg......",
+".KKK....KKK.....",
+"................"];
+const SPR_TOAD=[
+"................",
+"...WWWWWWW......",
+"..WRRWWWRRW.....",
+".WRRRWWRRRW.....",
+".WWWWWWWWW......",
+"..SSSSSSS.......",
+"..SKSSSKS.......",
+"..SSSSSS........",
+"...SSSS.........",
+"..BBBBBB........",
+".BBBBBBBB.......",
+".BBWBBWBB.......",
+"..BBBBBB........",
+"...S..S.........",
+"..KK..KK........",
+"................"];
+function drawSprite(cv,map){
+  const ctx=cv.getContext('2d');ctx.clearRect(0,0,16,16);
+  for(let y=0;y<16;y++){const row=map[y]||'';for(let x=0;x<16;x++){const c=PAL[row[x]];if(c){ctx.fillStyle=c;ctx.fillRect(x,y,1,1);}}}
+}
+// clouds
+(function(){const sky=document.getElementById('sky');for(let i=0;i<6;i++){const c=document.createElement('div');c.className='cloud';c.textContent='☁️';c.style.top=(4+i*14)+'%';c.style.left=(i*17+5)+'%';c.style.fontSize=(1.1+(i%3)*0.5)+'rem';sky.appendChild(c);}})();
+
+// ================================================================
+// DAILY QUOTES — Paper Mario bubble, princess quest
+// ================================================================
+const DAILY_QUOTES=[
+"Part of the journey is the end. But YOUR journey is just beginning. Every rep counts. — Tony Stark",
+"If you only do what you can do, you'll never be more than you are now. Do MORE than you can. — Master Shifu",
+"The princess is counting on you. So is the version of you from week one. Don't make either of them wait.",
+"Your future self is watching you through your memories right now. Make him proud.",
+"Pain is temporary. What you're building right now is permanent.",
+"Do or do not. There is no try. — Yoda. Today you DO.",
+"You started this with zero gym experience. That's the most impressive part.",
+"The body achieves what the mind believes. Your mind said yes. Now your body follows.",
+"Every day you don't train, Bowser gets stronger. Every day you do, so do you.",
+"Twelve castles between you and the princess. Every workout is a flagpole. Keep moving.",
+"It always seems impossible until it's done. — Mandela. Week 12 will feel impossible. Then it won't.",
+"Twelve weeks to become someone different. Bowser's already nervous.",
+"I am Iron Man. And Iron Man does not skip protein shakes. — Tony Stark probably",
+"Wax on, wax off. Goblet squat, kettlebell swing. It all builds toward something real.",
+"You're not just training muscles. You're training the guy who saves the princess.",
+"One day or day one. You already chose. Today is day one again.",
+"Koopas want you tired and skipping. Show up tired anyway. That's what heroes do.",
+"Hotel room, tour bus, home gym. Doesn't matter. Pakalu trains everywhere now.",
+"Every coin, every rep, every shake is one brick closer to her castle.",
+"Somewhere past that final castle she's waiting. The abs are just the souvenir.",
+"The quest started as a promise. Keep it. The princess doesn't rescue herself.",
+"Bowser's whole plan is that you quit by week three. Ruin his whole plan today."
+];
+
+// ================================================================
+// WORKOUT PLAN — home uses his kit (40lb + 35lb kettlebells, jump rope,
+// ab roller). Travel = hotel room, jump rope only. Shared task ids:
+// checking off in either tab syncs both.
+// ================================================================
+const PLAN={
+home:{
+0:{label:'REST DAY',type:'rest',emoji:'💤',workout:[],bonuses:[{id:'r_b1',name:'⭐ SAUNA SESSION',detail:'30-60 min — boosts growth hormone, cuts cortisol, accelerates recovery',xp:40}],
+  supps:[
+    {id:'daily_s0',icon:'🧠',name:'SHAKE #1 + CREATINE',detail:'Pick your drink — creatine goes with this one',xp:15,type:'shake1'},
+    {id:'daily_s1',icon:'🥤',name:'SHAKE #2',detail:'Pick your drink',xp:15,type:'shake2'},
+    {id:'daily_s2',icon:'🥩',name:'CHOMPS x2',detail:'2 sticks · 20g protein',xp:10,type:'chomps',target:2}]},
+1:{label:'KETTLEBELL + CONDITIONING',type:'kb',emoji:'⚡',
+  workout:[
+    {id:'m0',name:'JUMP ROPE WARMUP',detail:'150 skips — easy pace, get blood moving',sets:1,rn:'150 skips',xp:15},
+    {id:'m1',name:'JUMP ROPE INTERVALS',detail:'5 × 100 skips / 30s rest',sets:5,rn:'100 skips',xp:40},
+    {id:'m2',name:'GOBLET SQUAT',detail:'4 × 15 reps (40lb kettlebell)',sets:4,rn:'15 reps',xp:50,prog:'goblet'},
+    {id:'m3',name:'KETTLEBELL SWINGS',detail:'5 × 20 reps (40lb kettlebell)',sets:5,rn:'20 reps',xp:60,prog:'swings'},
+    {id:'m4',name:'ONE-ARM KETTLEBELL ROW',detail:'3 × 12 per arm (35lb kettlebell)',sets:3,rn:'12/arm',xp:50,prog:'rows'},
+    {id:'m9',name:'KETTLEBELL FACE PULL',detail:'3 × 12 — pull kettlebell to chin, elbows flared high (rear delt + upper back)',sets:3,rn:'12 reps',xp:40},
+    {id:'m5',name:'OVERHEAD KETTLEBELL PRESS',detail:'3 × 10 per arm (35lb kettlebell)',sets:3,rn:'10/arm',xp:50,prog:'press'},
+    {id:'m6',name:'KETTLEBELL HIGH PULLS',detail:'3 × 12 (35lb kettlebell) — explosive pull to chest height',sets:3,rn:'12 reps',xp:60,prog:'rows'},
+    {id:'m7',name:'AB WHEEL ROLLOUT',detail:'3 × 8 reps — slow, hips tucked, full control back',sets:3,rn:'8 reps',xp:45,prog:'abwheel'}
+  ],bonuses:[{id:'m_b1',name:'⭐ +30 KETTLEBELL SWINGS',detail:'Extra round (40lb)',xp:30},{id:'m_b2',name:'⭐ +10 KETTLEBELL HIGH PULLS',detail:'Extra set',xp:25}],
+  supps:[
+    {id:'daily_s0',icon:'🧠',name:'SHAKE #1 + CREATINE',detail:'Pick your drink — creatine goes with this one',xp:15,type:'shake1'},
+    {id:'daily_s1',icon:'🥤',name:'SHAKE #2',detail:'Pick your drink',xp:15,type:'shake2'},
+    {id:'daily_s2',icon:'🥩',name:'CHOMPS x2',detail:'2 sticks · 20g protein',xp:10,type:'chomps',target:2}]},
+2:{label:'ABS + CONDITIONING',type:'abs',emoji:'💪',
+  workout:[
+    {id:'t1',name:'BURPEES',detail:'4 rounds × 10 reps',sets:4,rn:'10 reps',xp:50,prog:'burpees'},
+    {id:'t2',name:'AB WHEEL ROLLOUT',detail:'3 × 8 reps — the six pack maker',sets:3,rn:'8 reps',xp:45,prog:'abwheel'},
+    {id:'t3',name:'PLANK HOLD',detail:'3 × 45s holds',sets:3,rn:'45s',xp:30,prog:'plank'},
+    {id:'t4',name:'BICYCLE CRUNCH',detail:'3 × 20 per side',sets:3,rn:'20/side',xp:35},
+    {id:'t5',name:'DEAD BUG',detail:'3 × 30s — back flat',sets:3,rn:'30s',xp:30},
+    {id:'t8',name:'KETTLEBELL CLEAN AND PRESS',detail:'3 × 8 per arm (35lb) — power + shoulder compound',sets:3,rn:'8/arm',xp:50},
+    {id:'t9',name:'KETTLEBELL FACE PULL',detail:'3 × 12 — pull to chin, elbows flared high (rear delt)',sets:3,rn:'12 reps',xp:40},
+    {id:'t6',name:'ONE-ARM KETTLEBELL ROW',detail:'2 × 12 per arm (35lb) — back finisher',sets:2,rn:'12/arm',xp:40,prog:'rows'}
+  ],bonuses:[{id:'t_b1',name:'⭐ 2 EXTRA BURPEE ROUNDS',detail:'+20 reps',xp:40},{id:'t_b2',name:'⭐ AB WHEEL: 3 SLOW NEGATIVES',detail:'Roll out over 5 seconds, 3 reps',xp:35}],
+  supps:[
+    {id:'daily_s0',icon:'🧠',name:'SHAKE #1 + CREATINE',detail:'Pick your drink — creatine goes with this one',xp:15,type:'shake1'},
+    {id:'daily_s1',icon:'🥤',name:'SHAKE #2',detail:'Pick your drink',xp:15,type:'shake2'},
+    {id:'daily_s2',icon:'🥩',name:'CHOMPS x1',detail:'1 stick · 10g protein',xp:10,type:'chomps',target:1}]},
+3:{label:'KETTLEBELL STRENGTH',type:'kb',emoji:'🔥',
+  workout:[
+    {id:'w1',name:'JUMP ROPE',detail:'600 skips — warmup pace',sets:1,rn:'600 skips',xp:35},
+    {id:'w2',name:'SINGLE-LEG ROMANIAN DEADLIFT',detail:'5 × 8 per leg (40lb kettlebell)',sets:5,rn:'8/leg',xp:55},
+    {id:'w3',name:'REVERSE LUNGES',detail:'3 × 12 per leg',sets:3,rn:'12/leg',xp:50},
+    {id:'w4',name:'KETTLEBELL SWINGS',detail:'4 × 20 reps (40lb kettlebell)',sets:4,rn:'20 reps',xp:55,prog:'swings'},
+    {id:'w5',name:'PUSH-UPS',detail:'3 × 12-15 reps',sets:3,rn:'12-15',xp:40,prog:'pushups'},
+    {id:'w6',name:'RENEGADE ROWS',detail:'3 × 10 per arm (35lb kettlebells) — plank position, row alternating',sets:3,rn:'10/arm',xp:60,prog:'rows'},
+    {id:'w7',name:'HOLLOW BODY HOLD',detail:'3 × 30s',sets:3,rn:'30s',xp:25}
+  ],bonuses:[{id:'w_b1',name:'⭐ +20 KETTLEBELL SWINGS',detail:'Extra set (40lb)',xp:25},{id:'w_b2',name:'⭐ +15 PUSH-UPS',detail:'Extra set',xp:20}],
+  supps:[
+    {id:'daily_s0',icon:'🧠',name:'SHAKE #1 + CREATINE',detail:'Pick your drink — creatine goes with this one',xp:15,type:'shake1'},
+    {id:'daily_s1',icon:'🥤',name:'SHAKE #2',detail:'Pick your drink',xp:15,type:'shake2'},
+    {id:'daily_s2',icon:'🥩',name:'CHOMPS x2',detail:'2 sticks · 20g protein',xp:10,type:'chomps',target:2}]},
+4:{label:'ACTIVE RECOVERY + CARDIO',type:'cardio',emoji:'🌿',
+  workout:[
+    {id:'th1',name:'JUMP ROPE CIRCUIT',detail:'5 × 200 skips / 1 min rest',sets:5,rn:'200 skips',xp:55},
+    {id:'th2',name:'ONE-ARM KETTLEBELL ROW',detail:'2 × 12 per arm (35lb) — easy controlled pace',sets:2,rn:'12/arm',xp:35},
+    {id:'th3',name:'DEAD BUG',detail:'3 × 10 reps — back flat, slow',sets:3,rn:'10 reps',xp:25}
+  ],bonuses:[{id:'th_b1',name:'⭐ SAUNA SESSION',detail:'30-60 min post-workout — growth hormone boost + recovery',xp:40}],
+  supps:[
+    {id:'daily_s0',icon:'🧠',name:'SHAKE #1 + CREATINE',detail:'Pick your drink — creatine goes with this one',xp:15,type:'shake1'},
+    {id:'daily_s1',icon:'🥤',name:'SHAKE #2',detail:'Pick your drink',xp:15,type:'shake2'},
+    {id:'daily_s2',icon:'🥩',name:'CHOMPS x1',detail:'1 stick · 10g protein',xp:10,type:'chomps',target:1}]},
+5:{label:'KETTLEBELL + ABS + CONDITIONING',type:'combo',emoji:'🏆',
+  workout:[
+    {id:'f0',name:'JUMP ROPE WARMUP',detail:'150 skips — prime shoulders + hips',sets:1,rn:'150 skips',xp:15},
+    {id:'f1',name:'BURPEE TO SQUAT JUMP',detail:'3 × 8 reps',sets:3,rn:'8 reps',xp:45,prog:'burpeejump'},
+    {id:'f2',name:'GOBLET SQUATS',detail:'4 × 12 (40lb kettlebell)',sets:4,rn:'12 reps',xp:45,prog:'goblet'},
+    {id:'f3',name:'ONE-ARM KETTLEBELL ROW',detail:'3 × 12 per arm (35lb kettlebell)',sets:3,rn:'12/arm',xp:50,prog:'rows'},
+    {id:'f9',name:'KETTLEBELL FACE PULL',detail:'3 × 12 — pull to chin, elbows flared (rear delt finisher)',sets:3,rn:'12 reps',xp:40},
+    {id:'f4',name:'OVERHEAD KETTLEBELL PRESS',detail:'3 × 10 per arm (35lb kettlebell)',sets:3,rn:'10/arm',xp:50,prog:'press'},
+    {id:'f5',name:'KETTLEBELL SWINGS',detail:'3 × 25 reps (40lb kettlebell)',sets:3,rn:'25 reps',xp:55,prog:'swings'},
+    {id:'f6',name:'PLANK VARIATIONS',detail:'3 × 60s — standard / side / side',sets:3,rn:'60s',xp:35},
+    {id:'f7',name:'AB WHEEL ROLLOUT',detail:'3 × 10 reps — full send finisher',sets:3,rn:'10 reps',xp:60,prog:'abwheel'}
+  ],bonuses:[{id:'f_b1',name:'⭐ +10 KETTLEBELL PRESS/ARM',detail:'Extra set (35lb)',xp:30},{id:'f_b2',name:'⭐ +5 AB WHEEL ROLLOUTS',detail:'Slowest reps of your life',xp:35}],
+  supps:[
+    {id:'daily_s0',icon:'🧠',name:'SHAKE #1 + CREATINE',detail:'Pick your drink — creatine goes with this one',xp:15,type:'shake1'},
+    {id:'daily_s1',icon:'🥤',name:'SHAKE #2',detail:'Pick your drink',xp:15,type:'shake2'},
+    {id:'daily_s2',icon:'🥩',name:'CHOMPS x2',detail:'2 sticks · 20g protein',xp:10,type:'chomps',target:2}]},
+6:{label:'CARDIO (OPTIONAL)',type:'cardio',emoji:'🟢',
+  workout:[
+    {id:'sa1',name:'JUMP ROPE',detail:'10 × 150 skips / 30s rest',sets:10,rn:'150 skips',xp:45},
+    {id:'sa2',name:'KETTLEBELL HIGH PULLS',detail:'2 × 12 (35lb kettlebell)',sets:2,rn:'12 reps',xp:35},
+    {id:'sa3',name:'BICYCLE CRUNCH',detail:'3 × 20 each side',sets:3,rn:'20/side',xp:25}
+  ],bonuses:[{id:'sa_b1',name:'⭐ HIGH INTENSITY INTERVAL FINISHER',detail:'3 × 10 burpees',xp:40}],
+  supps:[
+    {id:'daily_s0',icon:'🧠',name:'SHAKE #1 + CREATINE',detail:'Pick your drink — creatine goes with this one',xp:15,type:'shake1'},
+    {id:'daily_s1',icon:'🥤',name:'SHAKE #2',detail:'Pick your drink',xp:15,type:'shake2'},
+    {id:'daily_s2',icon:'🥩',name:'CHOMPS x1',detail:'1 stick · 10g protein',xp:10,type:'chomps',target:1}]}
+},
+travel:{
+0:{label:'REST DAY',type:'rest',emoji:'💤',workout:[],bonuses:[{id:'r_b1',name:'⭐ SAUNA SESSION',detail:'30-60 min — if the hotel has one, take it',xp:40}],
+  supps:[
+    {id:'daily_s0',icon:'🧠',name:'SHAKE #1 + CREATINE',detail:'Pick your drink — creatine goes with this one',xp:15,type:'shake1'},
+    {id:'daily_s1',icon:'🥤',name:'SHAKE #2',detail:'Pick your drink',xp:15,type:'shake2'},
+    {id:'daily_s2',icon:'🥩',name:'CHOMPS x1',detail:'1 stick · 10g protein',xp:10,type:'chomps',target:1}]},
+1:{label:'TRAVEL CONDITIONING',type:'kb',emoji:'⚡',
+  workout:[
+    {id:'m0',name:'JUMP ROPE WARMUP',detail:'150 skips — easy pace, get blood moving',sets:1,rn:'150 skips',xp:15},
+    {id:'m1',name:'JUMP ROPE INTERVALS',detail:'5 × 100 skips / 30s rest',sets:5,rn:'100 skips',xp:40},
+    {id:'m2',name:'BODYWEIGHT SQUATS',detail:'4 × 20 reps — deep, full range (goblet squat sub)',sets:4,rn:'20 reps',xp:50,prog:'bwsquat'},
+    {id:'m3',name:'BURPEES',detail:'5 × 10 reps — swings sub, full power',sets:5,rn:'10 reps',xp:60,prog:'burpees'},
+    {id:'m4',name:'TABLE OR DOORFRAME ROWS',detail:'3 × 12 — lie under a sturdy table, pull chest to edge',sets:3,rn:'12 reps',xp:50,prog:'trows'},
+    {id:'m9',name:'PRONE Y-T-W RAISES',detail:'3 × 10 each — lie face down, raise arms to Y / T / W shape (rear delt sub)',sets:3,rn:'10 each',xp:40},
+    {id:'m5',name:'DIAMOND PUSH-UPS',detail:'3 × 12 reps — overhead press sub, elbows tight',sets:3,rn:'12 reps',xp:50,prog:'dpush'},
+    {id:'m6',name:'CLOSE-GRIP PUSH-UPS',detail:'3 × 10 reps — high pulls sub, hands shoulder-width',sets:3,rn:'10 reps',xp:60,prog:'dpush'},
+    {id:'m7',name:'LYING KNEE RAISES',detail:'3 × 12 — lie flat, knees to chest (ab wheel sub)',sets:3,rn:'12 reps',xp:45,prog:'lknee'}
+  ],bonuses:[{id:'m_b1',name:'⭐ +20 BURPEES',detail:'2 extra rounds × 10 reps',xp:30},{id:'m_b2',name:'⭐ +10 CLOSE-GRIP PUSH-UPS',detail:'Extra set',xp:25}],
+  supps:[
+    {id:'daily_s0',icon:'🧠',name:'SHAKE #1 + CREATINE',detail:'Pick your drink — creatine goes with this one',xp:15,type:'shake1'},
+    {id:'daily_s1',icon:'🥤',name:'SHAKE #2',detail:'Pick your drink',xp:15,type:'shake2'},
+    {id:'daily_s2',icon:'🥩',name:'CHOMPS x2',detail:'2 sticks · 20g protein',xp:10,type:'chomps',target:2}]},
+2:{label:'TRAVEL ABS + CORE',type:'abs',emoji:'💪',
+  workout:[
+    {id:'t1',name:'BURPEES',detail:'4 rounds × 10 reps',sets:4,rn:'10 reps',xp:50,prog:'burpees'},
+    {id:'t2',name:'LYING KNEE RAISES',detail:'3 × 12 — lie flat, knees to chest (ab wheel sub)',sets:3,rn:'12 reps',xp:45,prog:'lknee'},
+    {id:'t3',name:'PLANK HOLD',detail:'3 × 45s holds',sets:3,rn:'45s',xp:30,prog:'plank'},
+    {id:'t4',name:'BICYCLE CRUNCH',detail:'3 × 20 per side',sets:3,rn:'20/side',xp:35},
+    {id:'t5',name:'DEAD BUG',detail:'3 × 30s — back flat, opposite arm and leg',sets:3,rn:'30s',xp:30},
+    {id:'t8',name:'PUSH-UP TO SHOULDER TAP',detail:'3 × 8 per side — power + shoulder stability (clean and press sub)',sets:3,rn:'8/side',xp:50},
+    {id:'t9',name:'PRONE Y-T-W RAISES',detail:'3 × 12 — lie face down, arms to Y / T / W (rear delt sub)',sets:3,rn:'12 each',xp:40},
+    {id:'t6',name:'TABLE OR DOORFRAME ROWS',detail:'2 × 10 — back finisher',sets:2,rn:'10 reps',xp:40,prog:'trows'}
+  ],bonuses:[{id:'t_b1',name:'⭐ 2 EXTRA BURPEE ROUNDS',detail:'+20 reps',xp:40},{id:'t_b2',name:'⭐ V-SIT HOLD',detail:'3 × 20s — no equipment needed',xp:35}],
+  supps:[
+    {id:'daily_s0',icon:'🧠',name:'SHAKE #1 + CREATINE',detail:'Pick your drink — creatine goes with this one',xp:15,type:'shake1'},
+    {id:'daily_s1',icon:'🥤',name:'SHAKE #2',detail:'Pick your drink',xp:15,type:'shake2'},
+    {id:'daily_s2',icon:'🥩',name:'CHOMPS x1',detail:'1 stick · 10g protein',xp:10,type:'chomps',target:1}]},
+3:{label:'TRAVEL STRENGTH',type:'kb',emoji:'🔥',
+  workout:[
+    {id:'w1',name:'JUMP ROPE',detail:'600 skips — warmup pace',sets:1,rn:'600 skips',xp:35},
+    {id:'w2',name:'SINGLE-LEG ROMANIAN DEADLIFT',detail:'5 × 8 per leg — bodyweight, go slow for difficulty',sets:5,rn:'8/leg',xp:55},
+    {id:'w3',name:'REVERSE LUNGES',detail:'3 × 12 per leg',sets:3,rn:'12/leg',xp:50},
+    {id:'w4',name:'JUMP SQUATS',detail:'4 × 20 reps — explosive (swings cardio sub)',sets:4,rn:'20 reps',xp:55,prog:'jsquat'},
+    {id:'w5',name:'PUSH-UPS',detail:'3 × 12-15 reps',sets:3,rn:'12-15',xp:40,prog:'pushups'},
+    {id:'w6',name:'TABLE OR DOORFRAME ROWS',detail:'3 × 10 — renegade row sub',sets:3,rn:'10 reps',xp:60,prog:'trows'},
+    {id:'w7',name:'HOLLOW BODY HOLD',detail:'3 × 30s',sets:3,rn:'30s',xp:25}
+  ],bonuses:[{id:'w_b1',name:'⭐ +15 JUMP SQUATS',detail:'Extra set',xp:25},{id:'w_b2',name:'⭐ +15 PUSH-UPS',detail:'Extra set',xp:20}],
+  supps:[
+    {id:'daily_s0',icon:'🧠',name:'SHAKE #1 + CREATINE',detail:'Pick your drink — creatine goes with this one',xp:15,type:'shake1'},
+    {id:'daily_s1',icon:'🥤',name:'SHAKE #2',detail:'Pick your drink',xp:15,type:'shake2'},
+    {id:'daily_s2',icon:'🥩',name:'CHOMPS x2',detail:'2 sticks · 20g protein',xp:10,type:'chomps',target:2}]},
+4:{label:'TRAVEL RECOVERY + CARDIO',type:'cardio',emoji:'🌿',
+  workout:[
+    {id:'th1',name:'JUMP ROPE CIRCUIT',detail:'5 × 200 skips / 1 min rest',sets:5,rn:'200 skips',xp:55},
+    {id:'th2',name:'TABLE OR DOORFRAME ROWS',detail:'2 × 10 — controlled full range',sets:2,rn:'10 reps',xp:35},
+    {id:'th3',name:'DEAD BUG',detail:'3 × 10 reps — back flat, slow',sets:3,rn:'10 reps',xp:25}
+  ],bonuses:[{id:'th_b1',name:'⭐ SAUNA SESSION',detail:'30-60 min — if the hotel has one',xp:40}],
+  supps:[
+    {id:'daily_s0',icon:'🧠',name:'SHAKE #1 + CREATINE',detail:'Pick your drink — creatine goes with this one',xp:15,type:'shake1'},
+    {id:'daily_s1',icon:'🥤',name:'SHAKE #2',detail:'Pick your drink',xp:15,type:'shake2'},
+    {id:'daily_s2',icon:'🥩',name:'CHOMPS x1',detail:'1 stick · 10g protein',xp:10,type:'chomps',target:1}]},
+5:{label:'TRAVEL FULL SEND',type:'combo',emoji:'🏆',
+  workout:[
+    {id:'f0',name:'JUMP ROPE WARMUP',detail:'150 skips — prime cardio base',sets:1,rn:'150 skips',xp:15},
+    {id:'f1',name:'BURPEE TO SQUAT JUMP',detail:'3 × 8 reps',sets:3,rn:'8 reps',xp:45,prog:'burpeejump'},
+    {id:'f2',name:'BODYWEIGHT SQUATS',detail:'4 × 15 reps — goblet squat sub, slow tempo',sets:4,rn:'15 reps',xp:45,prog:'bwsquat'},
+    {id:'f3',name:'TABLE OR DOORFRAME ROWS',detail:'3 × 12 — kettlebell row sub, full range',sets:3,rn:'12 reps',xp:50,prog:'trows'},
+    {id:'f9',name:'PRONE Y-T-W RAISES',detail:'3 × 12 each — lie face down, rear delt sub',sets:3,rn:'12 each',xp:40},
+    {id:'f4',name:'DIAMOND PUSH-UPS',detail:'3 × 12 reps — overhead press sub',sets:3,rn:'12 reps',xp:50,prog:'dpush'},
+    {id:'f5',name:'BURPEES',detail:'3 × 15 reps — swings sub, max intensity',sets:3,rn:'15 reps',xp:55,prog:'burpees'},
+    {id:'f6',name:'PLANK VARIATIONS',detail:'3 × 60s — standard / side / side',sets:3,rn:'60s',xp:35},
+    {id:'f7',name:'LYING LEG RAISES',detail:'3 × 12 — lie flat, legs up and slow down (ab wheel sub)',sets:3,rn:'12 reps',xp:60,prog:'lknee'}
+  ],bonuses:[{id:'f_b1',name:'⭐ +10 DIAMOND PUSH-UPS',detail:'Extra set',xp:30},{id:'f_b2',name:'⭐ FLUTTER KICKS',detail:'3 × 15 — lie flat, small fast kicks',xp:35}],
+  supps:[
+    {id:'daily_s0',icon:'🧠',name:'SHAKE #1 + CREATINE',detail:'Pick your drink — creatine goes with this one',xp:15,type:'shake1'},
+    {id:'daily_s1',icon:'🥤',name:'SHAKE #2',detail:'Pick your drink',xp:15,type:'shake2'},
+    {id:'daily_s2',icon:'🥩',name:'CHOMPS x2',detail:'2 sticks · 20g protein',xp:10,type:'chomps',target:2}]},
+6:{label:'TRAVEL CARDIO',type:'cardio',emoji:'🟢',
+  workout:[
+    {id:'sa1',name:'JUMP ROPE',detail:'10 × 150 skips / 30s rest',sets:10,rn:'150 skips',xp:45},
+    {id:'sa2',name:'TABLE OR DOORFRAME ROWS',detail:'2 × 10',sets:2,rn:'10 reps',xp:35},
+    {id:'sa3',name:'BICYCLE CRUNCH',detail:'3 × 20 each side',sets:3,rn:'20/side',xp:25}
+  ],bonuses:[{id:'sa_b1',name:'⭐ HIGH INTENSITY INTERVAL FINISHER',detail:'3 × 10 burpees',xp:40}],
+  supps:[
+    {id:'daily_s0',icon:'🧠',name:'SHAKE #1 + CREATINE',detail:'Pick your drink — creatine goes with this one',xp:15,type:'shake1'},
+    {id:'daily_s1',icon:'🥤',name:'SHAKE #2',detail:'Pick your drink',xp:15,type:'shake2'},
+    {id:'daily_s2',icon:'🥩',name:'CHOMPS x1',detail:'1 stick · 10g protein',xp:10,type:'chomps',target:1}]}
+}};
+
+// ================================================================
+// WEEK-OVER-WEEK PROGRESSION — tiers at weeks 1 / 4 / 7 / 10
+// ================================================================
+const PROG={
+  goblet:{1:{sets:4,reps:15},4:{sets:4,reps:17},7:{sets:4,reps:20},10:{sets:5,reps:20}}, // 40lb
+  swings:{1:{sets:5,reps:20},4:{sets:5,reps:22},7:{sets:5,reps:25},10:{sets:6,reps:25}}, // 40lb
+  rows:{1:12,4:13,7:14,10:15},
+  press:{1:10,4:10,7:11,10:12},
+  abwheel:{1:{sets:3,reps:8},4:{sets:3,reps:10},7:{sets:3,reps:12},10:{sets:4,reps:12}},
+  pushups:{1:'12-15',4:'15-18',7:'18-20',10:'20-25'},
+  burpees:{1:[4,10],4:[5,10],7:[5,12],10:[6,12]},
+  burpeejump:{1:8,4:9,7:10,10:12},
+  plank:{1:45,4:50,7:60,10:75},
+  bwsquat:{1:20,4:22,7:25,10:28},
+  jsquat:{1:20,4:22,7:25,10:28},
+  trows:{1:10,4:11,7:12,10:14},
+  dpush:{1:10,4:12,7:13,10:15},
+  lknee:{1:12,4:14,7:16,10:18}
+};
+function progTier(key,week){const tiers=[10,7,4,1];for(const t of tiers){if(week>=t&&PROG[key][t]!==undefined)return PROG[key][t];}return PROG[key][1];}
+function applyProg(t,week){
+  if(!t.prog)return t;
+  const v=progTier(t.prog,week);let d={...t};
+  switch(t.prog){
+    case 'goblet': d.detail=`${v.sets} × ${v.reps} reps (40lb kettlebell)`;d.sets=v.sets;d.rn=`${v.reps} reps`;break;
+    case 'swings': d.detail=`${v.sets} × ${v.reps} reps (40lb kettlebell)`;d.sets=v.sets;d.rn=`${v.reps} reps`;break;
+    case 'rows': d.detail=d.detail.replace(/× \d+/,`× ${v}`).replace(/\d+\/arm/,`${v}/arm`).replace(/\d+ reps/,`${v} reps`);d.rn=d.rn.replace(/\d+/,String(v));break;
+    case 'press': d.detail=`3 × ${v} per arm (35lb kettlebell)`;d.rn=`${v}/arm`;break;
+    case 'abwheel': d.detail=`${v.sets} × ${v.reps} reps — slow, hips tucked, full control back`;d.sets=v.sets;d.rn=`${v.reps} reps`;break;
+    case 'pushups': d.detail=`3 × ${v} reps`;d.rn=v;break;
+    case 'burpees': d.detail=`${v[0]} rounds × ${v[1]} reps`;d.sets=v[0];d.rn=`${v[1]} reps`;break;
+    case 'burpeejump': d.detail=`3 × ${v} reps`;d.rn=`${v} reps`;break;
+    case 'plank': d.detail=`3 × ${v}s holds`;d.rn=`${v}s`;break;
+    case 'bwsquat': d.detail=d.detail.replace(/× \d+/,`× ${v}`);d.rn=`${v} reps`;break;
+    case 'jsquat': d.detail=d.detail.replace(/× \d+/,`× ${v}`);d.rn=`${v} reps`;break;
+    case 'trows': d.detail=d.detail.replace(/× \d+/,`× ${v}`);d.rn=`${v} reps`;break;
+    case 'dpush': d.detail=d.detail.replace(/× \d+/,`× ${v}`);d.rn=`${v} reps`;break;
+    case 'lknee': d.detail=d.detail.replace(/× \d+/,`× ${v}`);d.rn=`${v} reps`;break;
+  }
+  return d;
+}
+
+// ================================================================
+// BOSSES — one per world, story verbatim from the original quest
+// ================================================================
+const BOSSES=[
+  {week:1,name:'IGGY KOOPA',castle:'🏰',emoji:'🦖',world:"WORLD 1 — IGGY'S TOWER",story:"Iggy was laughing at your starting point. Now he's not laughing. Week 1 complete. You showed up every day. That's already more than most.",defeated:'IGGY KOOPA DEFEATED!'},
+  {week:2,name:'MORTON KOOPA',castle:'🌊',emoji:'🐗',world:"WORLD 2 — MORTON'S CASTLE",story:"Morton thought two weeks was nothing. But your body is already changing. Soreness dropping. Everything getting easier. Morton is speechless.",defeated:'MORTON KOOPA DEFEATED!'},
+  {week:3,name:'LEMMY KOOPA',castle:'🌋',emoji:'🤹',world:"WORLD 3 — LEMMY'S VOLCANO",story:"Lemmy tried to circus-trick you into skipping. But you're building a real habit. Arms and shoulders visibly different. Week 3 belongs to you.",defeated:'LEMMY KOOPA DEFEATED!'},
+  {week:4,name:'LUDWIG VON KOOPA',castle:'⭐',emoji:'🎼',world:'WORLD 4 ★ STAR ROAD',story:"The composer thought complexity would break you. Instead you're composing your own physique. Upper abs faintly showing. Ludwig falls silent.",defeated:'LUDWIG DEFEATED — ★ STAR POWER UNLOCKED ★'},
+  {week:5,name:'ROY KOOPA',castle:'👻',emoji:'😎',world:"WORLD 5 — ROY'S GHOST FORT",story:"Roy is the strongest Koopa. He bet you'd quit. He lost. Your strength is real now. The kettlebell feels lighter. Roy is shook.",defeated:'ROY KOOPA DEFEATED!'},
+  {week:6,name:'WENDY O. KOOPA',castle:'🪸',emoji:'🎀',world:"WORLD 6 — WENDY'S CORAL",story:"Wendy thought you were training for nothing. Look at you — visible recomposition, upper abs showing, back and arms popping. Wendy is shook.",defeated:'WENDY DEFEATED — HALFWAY TO THE PRINCESS!'},
+  {week:7,name:'LARRY KOOPA',castle:'⭐',emoji:'🌟',world:'WORLD 7 ★ SKY FORTRESS',story:"Larry tried to sneak a rest day past you. 7 weeks in — abs without flexing. Athletic look locked. Larry runs.",defeated:'LARRY DEFEATED — ★ UNSTOPPABLE ★'},
+  {week:8,name:'BOOM BOOM',castle:'🌙',emoji:'💥',world:"WORLD 8 — BOOM BOOM'S DUNGEON",story:"The castle dungeon guardian. Hits hard. So do you now. Boom Boom has never met someone who trained through hotel rooms and tour buses.",defeated:'BOOM BOOM DEFEATED!'},
+  {week:9,name:'REZNOR',castle:'⛰️',emoji:'🦕',world:"WORLD 9 — REZNOR'S TOWER",story:"Four dinosaurs on a moving platform. Just like your life — always moving. You learned to train anywhere. Clear abs. Back pops.",defeated:'REZNOR DEFEATED — 3 WEEKS LEFT!'},
+  {week:10,name:'BOWSER JR.',castle:'⭐',emoji:'👶',world:'WORLD 10 ★ AIRSHIP ARMADA',story:"The prince thinks he can stop you 2 weeks from the castle. Ten weeks of discipline. Ten weeks of proof. Junior cries back to daddy.",defeated:'BOWSER JR. DEFEATED — ★ FINAL STAR ★'},
+  {week:11,name:'KAMEK',castle:'❄️',emoji:'🧙',world:"WORLD 11 — KAMEK'S ICE TOWER",story:"The wizard tried to curse your last week with doubt. Eleven weeks built something doubt can't touch. The princess is one week away.",defeated:'KAMEK DEFEATED — FINAL WEEK UNLOCKED!'},
+  {week:12,name:'BOWSER',castle:'🏰',emoji:'🐲',world:"WORLD 12 — BOWSER'S FINAL CASTLE",story:"The final boss. He held her for 12 weeks believing you'd never make it. 12 weeks ago you had never worked out seriously. Today you defeat Bowser. Go get her.",defeated:'BOWSER DEFEATED — PRINCESS SAVED! 💖'}
+];
+
+// ================================================================
+// FOOD PRESETS
+// ================================================================
+const GO_TO_MEALS=[
+  {icon:'🥩',name:'Two Hands: Steak + Tamari Mushrooms',detail:'5oz seared steak med-well + slow cooked tamari mushrooms · ~350 cal · whole food, no processing',protein:39,calories:350,rank:1},
+  {icon:'🥗',name:'Chipotle: Chicken Salad',detail:'Chicken + extra chicken, no rice, black beans, fresh tomato salsa, corn salsa · ~600 cal',protein:73,calories:600,rank:2},
+  {icon:'🌮',name:'Taco Bell: 3x Chicken Soft Taco',detail:'Extra chicken, pico, no cheese, no beef, sauce packets · ~550 cal',protein:54,calories:550,rank:3}
+];
+const PRESET_FOODS=[
+  {icon:'🥛',name:'Slate Milk Ultra (42g)',detail:'42g protein ultra elite can',protein:42},
+  {icon:'🥛',name:'Core Power Elite',detail:'42g protein shake bottle',protein:42},
+  {icon:'🥛',name:'Ghost Protein Shake',detail:'1 scoop Ghost whey',protein:25},
+  {icon:'🥛',name:'Slate Milk Protein (30g)',detail:'30g protein chocolate milk can',protein:30},
+  {icon:'🥩',name:'Chomps Beef Stick',detail:'1 stick original beef',protein:10}
+];
+const SHAKE_OPTIONS=[
+  {name:'Slate Milk Ultra',protein:42,icon:'🥛',detail:'42g can'},
+  {name:'Core Power Elite',protein:42,icon:'🥤',detail:'42g bottle'},
+  {name:'Slate Milk Protein',protein:30,icon:'🥛',detail:'30g can'},
+  {name:'Ghost Protein Shake',protein:25,icon:'👻',detail:'25g scoop'}
+];
+const HIDDEN_REWARDS=[
+  {type:'coins',amount:10,label:'+10 COINS!'},
+  {type:'coins',amount:5,label:'+5 COINS!'},
+  {type:'mushroom',label:'1-UP MUSHROOM! +1 LIFE!'},
+  {type:'star',label:'★ SECRET STAR! +100XP!'},
+  {type:'coins',amount:20,label:'+20 COINS! JACKPOT!'},
+  {type:'nothing',label:'EMPTY... KEEP TRYING!'}
+];
+
+// ================================================================
+// SOUND — 8-bit WebAudio. There is NO running-Pakalu sound. There never will be.
+// ================================================================
+let actx=null;
+const AC=()=>{if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();return actx;};
+const muted=()=>!!S._muted;
+const tone=(f,t,d,v=0.14,start=0)=>{if(muted())return;try{const c=AC(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type=t;o.frequency.value=f;const st=c.currentTime+start;g.gain.setValueAtTime(v,st);g.gain.exponentialRampToValueAtTime(0.001,st+d);o.start(st);o.stop(st+d);}catch(e){}};
+const coinSfx=()=>{tone(1046,'square',.05,.2);setTimeout(()=>tone(1318,'square',.1,.2),50);};
+const checkSfx=()=>{tone(523,'square',.06,.14);setTimeout(()=>tone(659,'square',.06,.14),60);setTimeout(()=>tone(784,'square',.1,.14),120);};
+const uncheckSfx=()=>{tone(392,'square',.08,.1);};
+const setSfx=()=>{tone(440,'square',.07,.11);setTimeout(()=>tone(550,'square',.07,.11),65);};
+const bonusSfx=()=>[523,659,784,1046,1318].forEach((f,i)=>setTimeout(()=>tone(f,'square',.08,.18),i*60));
+const clearSfx=()=>[523,659,784,1046,784,1046,1318].forEach((f,i)=>setTimeout(()=>tone(f,'square',.12,.2),i*110));
+const bossSfx=()=>[220,180,160,140,120,100,80].forEach((f,i)=>setTimeout(()=>tone(f,'sawtooth',.18,.26),i*90));
+const puSfx=()=>[392,494,523,659,784,988,1047].forEach((f,i)=>tone(f,'square',.1,.16,i*.08));
+const starSfx=()=>[1046,1318,1568,2093].forEach((f,i)=>tone(f,'square',.12,.16,i*.09));
+const princSfx=()=>[523,659,784,659,784,1046,1318,1046,1318,1568].forEach((f,i)=>tone(f,'triangle',.2,.26,i*.15));
+const mushSfx=()=>{tone(784,'square',.08,.2);setTimeout(()=>tone(1047,'square',.12,.2),80);};
+
+// ================================================================
+// STATE + CLOUD SYNC (Supabase app_state, same model as the movie app)
+// ================================================================
+let S={v:1,_qs:null,_mode:'home',days:{},_bonusXP:0,_totalCoins:0,_bonusLives:0,_foodFreq:{},_waterFreq:{},_hidden:[],_cleared:[],_muted:false,_msgDay:null};
+let currentDate=new Date();currentDate.setHours(0,0,0,0);
+const dKey=d=>{const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');return`${y}-${m}-${dd}`;};
+const todayKey=()=>dKey(new Date());
+function getDS(k){if(!S.days[k])S.days[k]={done:[],sets:{},foods:[],water:0,chomps:0,shakes:{},extras:[]};return S.days[k];}
+function getDayMode(k){return (S.days[k]&&S.days[k]._mode)||S._mode||'home';}
+// --- undo (snapshot stack; toast persists until the next action) ---
+const undoStack=[];
+function snapshot(label){
+  undoStack.push({label,json:JSON.stringify(S)});
+  if(undoStack.length>25)undoStack.shift();
+  const t=document.getElementById('undoToast');
+  document.getElementById('undoMsg').textContent=label;
+  t.classList.add('show');
+}
+function doUndo(){
+  const u=undoStack.pop();if(!u)return;
+  S=JSON.parse(u.json);saveCloud();
+  document.getElementById('undoToast').classList.remove('show');
+  uncheckSfx();renderAll();showNotif('Undone','org');
+}
+// --- sync ---
+let lastRemote=null,syncTimer=null,cloudOK=false;
+function setBadge(state,txt){
+  const b=document.getElementById('syncBadge');
+  b.className='sync-badge '+state;
+  document.getElementById('syncTxt').textContent=txt;
+  b.onclick=state==='err'?()=>{pullCloud(true);}:null;
+}
+async function pullCloud(manual){
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/app_state?id=eq.${encodeURIComponent(SB_DOC)}&select=value,updated_at`,{headers:{apikey:SB_KEY,Authorization:`Bearer ${SB_KEY}`}});
+    if(!r.ok)throw new Error('sb '+r.status);
+    const rows=await r.json();
+    if(rows.length){
+      const remote=rows[0];
+      if(lastRemote===null||remote.updated_at>lastRemote){
+        lastRemote=remote.updated_at;
+        if(remote.value&&typeof remote.value==='object'){S=Object.assign(S,remote.value);}
+        try{localStorage.setItem('spq_cache',JSON.stringify(S));}catch(e){}
+        renderAll();
+      }
+    }
+    cloudOK=true;setBadge('ok','SYNCED');
+    if(manual)showNotif('Synced ✓');
+    return true;
+  }catch(e){cloudOK=false;setBadge('err','OFFLINE — TAP TO RETRY');return false;}
+}
+async function pushCloud(){
+  setBadge('busy','SYNCING…');
+  try{localStorage.setItem('spq_cache',JSON.stringify(S));}catch(e){}
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/app_state?on_conflict=id`,{
+      method:'POST',
+      headers:{apikey:SB_KEY,Authorization:`Bearer ${SB_KEY}`,'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'},
+      body:JSON.stringify({id:SB_DOC,value:S,updated_at:new Date().toISOString()})
+    });
+    if(!r.ok)throw new Error('sb '+r.status);
+    lastRemote=new Date().toISOString();cloudOK=true;setBadge('ok','SYNCED');
+  }catch(e){cloudOK=false;setBadge('err','OFFLINE — WILL RETRY');}
+}
+function saveCloud(){clearTimeout(syncTimer);setBadge('busy','SYNCING…');syncTimer=setTimeout(pushCloud,700);}
+// version watcher — self-updating app
+async function checkVersion(){
+  try{
+    const r=await fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'});
+    const t=await r.text();
+    const m=t.match(/APP_VERSION="(\d+)"/);
+    if(m&&Number(m[1])>Number(APP_VERSION)&&!sessionStorage.getItem('spq-wu')){
+      sessionStorage.setItem('spq-wu','1');
+      document.getElementById('updateToast').classList.add('show');
+    }
+  }catch(e){}
+}
+setInterval(checkVersion,60000);
+setInterval(()=>pullCloud(false),25000);
+
+// ================================================================
+// CALCULATIONS
+// ================================================================
+function getPlan(k){
+  const d=new Date(k+'T12:00:00');const dm=getDayMode(k);
+  return PLAN[dm][d.getDay()];
+}
+function getAllT(p){return[...(p.workout||[]),...(p.supps||[]),...(p.bonuses||[])];}
+function getCoreT(p){return[...(p.workout||[])];}
+function calcXP(done,sets,p,extras){let x=0;getAllT(p).forEach(t=>{if(done.includes(t.id)){x+=t.xp;}else if(t.sets&&sets&&sets[t.id]>0){x+=Math.floor(t.xp*(sets[t.id]/t.sets)*0.7);}});if(extras)extras.forEach(e=>x+=(e.xp||20));return x;}
+function calcPct(done,p){if(p.type==='rest')return 100;const c=p.workout||[];if(!c.length)return 100;return Math.round(c.filter(t=>done.includes(t.id)).length/c.length*100);}
+function calcProt(foods){return(foods||[]).reduce((a,f)=>a+(f.protein||0),0);}
+function questStart(){if(!S._qs){S._qs=todayKey();saveCloud();}return S._qs;}
+function getQW(){const qs=new Date(questStart()+'T12:00:00');return Math.min(12,Math.max(1,Math.floor((Date.now()-qs.getTime())/(7*86400000))+1));}
+function dayOfQuest(){const qs=new Date(questStart()+'T12:00:00');return Math.floor((Date.now()-qs.getTime())/86400000)+1;}
+function calcScore(){let t=0;Object.keys(S.days).forEach(k=>{const ds=S.days[k];try{const p=getPlan(k);t+=calcXP(ds.done||[],ds.sets||{},p,ds.extras)*10;}catch(e){}});return t+(S._bonusXP||0);}
+function calcCoins(){let c=0;Object.keys(S.days).forEach(k=>{const ds=S.days[k];try{const p=getPlan(k);getAllT(p).forEach(t=>{if((ds.done||[]).includes(t.id))c++;});}catch(e){}});return c+(S._totalCoins||0);}
+function calcLives(){
+  const today=new Date();today.setHours(0,0,0,0);
+  const qs=new Date(questStart()+'T12:00:00');
+  let missed=0;
+  for(let i=1;i<=7;i++){const d=new Date(today);d.setDate(today.getDate()-i);if(d<qs)continue;
+    const k=dKey(d),ds=S.days[k]||{done:[]},p=getPlan(k);if(p.type==='rest')continue;
+    if(calcPct(ds.done||[],p)<30)missed++;}
+  return Math.max(1,3-Math.floor(missed/2))+(S._bonusLives||0);
+}
+function calcStreak(){
+  const today=new Date();today.setHours(0,0,0,0);
+  const qs=new Date(questStart()+'T12:00:00');
+  let streak=0;
+  for(let i=0;i<90;i++){const d=new Date(today);d.setDate(today.getDate()-i);if(d<qs)break;
+    const k=dKey(d),ds=S.days[k]||{done:[]},p=getPlan(k);
+    if(p.type==='rest'){streak++;continue;}
+    if(calcPct(ds.done||[],p)>=80)streak++;else break;}
+  return streak;
+}
+function getWeekPct(w){
+  const qs=new Date(questStart()+'T12:00:00');let tot=0,comp=0;
+  for(let i=0;i<7;i++){const d=new Date(qs);d.setDate(qs.getDate()+(w-1)*7+i);
+    if(d>new Date())break;
+    const k=dKey(d),ds=S.days[k]||{done:[]},p=getPlan(k);
+    const ct=getCoreT(p);tot+=ct.length;comp+=ct.filter(t=>(ds.done||[]).includes(t.id)).length;}
+  return tot>0?Math.round(comp/tot*100):0;
+}
+function getPowerPct(){
+  const today=new Date();today.setHours(0,0,0,0);let done=0,total=0;
+  for(let i=0;i<7;i++){const d=new Date(today);d.setDate(today.getDate()-today.getDay()+i);if(d>today)break;
+    const k=dKey(d),ds=S.days[k]||{done:[]},p=getPlan(k);if(p.type==='rest')continue;
+    const ct=getCoreT(p);total+=ct.length;done+=ct.filter(t=>(ds.done||[]).includes(t.id)).length;}
+  return total>0?Math.round(done/total*100):0;
+}
+// carryover: missed items aggregate forward and check off on the RIGHT day
+function getSpillover(todayK){
+  const results=[];const qs=new Date(questStart()+'T12:00:00');
+  const today=new Date(todayK+'T12:00:00');
+  const maxDays=Math.floor((today-qs)/86400000);
+  const dayLabel=lb=>lb===1?'Yesterday':lb<8?lb+' days ago':Math.floor(lb/7)+'w ago';
+  for(let lb=1;lb<=Math.min(maxDays,30);lb++){
+    const d=new Date(today);d.setDate(d.getDate()-lb);if(d<qs)continue;
+    const k=dKey(d),ds=S.days[k]||{done:[]},p=getPlan(k);if(p.type==='rest')continue;
+    [...(p.workout||[]),...(p.bonuses||[])].filter(t=>!((ds.done||[]).includes(t.id)))
+      .forEach(t=>results.push({...t,_sf:k,_sl:dayLabel(lb)}));
+  }
+  return results;
+}
+
+// ================================================================
+// RENDERING
+// ================================================================
+const $=id=>document.getElementById(id);
+function showNotif(msg,cls){
+  const n=$('notif');n.textContent=msg;n.className='notif show '+(cls||'');
+  clearTimeout(n._t);n._t=setTimeout(()=>n.classList.remove('show'),2600);
+}
+function toggleSec(id){const b=$(id);b.classList.toggle('closed');$( 'arr_'+id).textContent=b.classList.contains('closed')?'▶':'▼';}
+function renderHUD(){
+  $('hudWeek').textContent=getQW();
+  $('hudCoins').textContent=calcCoins();
+  $('hudScore').textContent=calcScore();
+  $('hudStreak').textContent=calcStreak()+'🔥';
+  const pw=getPowerPct();$('powerPct').textContent=pw+'%';
+  $('dayOfQuest').textContent='DAY '+dayOfQuest()+' OF THE QUEST';
+  const pct=Math.min(100,Math.round(pw));
+  const lives=calcLives();
+  $('smoFill').style.background=`conic-gradient(#ff2244 ${pct*3.6}deg, #330a10 0deg)`;
+  $('smoLives').textContent='×'+lives;
+}
+function renderWorldMap(){
+  const cur=getQW();const el=$('wmap');el.innerHTML='';
+  for(let w=1;w<=12;w++){
+    const b=BOSSES[w-1];
+    const n=document.createElement('div');
+    n.className='wk'+(w<cur||S._cleared.includes(w)?' cleared':w===cur?' cur':' avail');
+    if(w>cur&&!S._cleared.includes(w-1)&&w!==cur)n.className='wk';
+    n.innerHTML=`<div class="castle">${b.castle}</div><div class="wnum">${w}</div>`;
+    el.appendChild(n);
+  }
+}
+function taskRow(t,ds,k,section){
+  const done=ds.done.includes(t.id);
+  const row=document.createElement('div');
+  row.className='task '+(section||'')+(done?' done':'');
+  let inner=`<div class="chk">${done?'✓':''}</div><div class="tinfo">`;
+  if(t._sf)inner+=`<span class="carry-tag">⏪ ${t._sl}</span><br>`;
+  inner+=`<div class="tname">${t.icon?t.icon+' ':''}${t.name}</div><div class="tdet">${t.detail||''}</div>`;
+  if(t.sets&&!done){
+    const cur=(ds.sets&&ds.sets[t.id])||0;
+    inner+=`<div class="sets-ctr"><button class="sbtn" data-act="dec">−</button><div class="sets-pips">${Array.from({length:t.sets},(_,i)=>`<div class="pip${i<cur?' on':''}"></div>`).join('')}</div><button class="sbtn" data-act="inc">+</button><span class="slbl">${cur}/${t.sets} ${t.rn||''}</span></div>`;
+  }
+  if(t.type==='chomps'){
+    const cur=ds.chomps||0;
+    inner+=`<div class="sets-ctr"><button class="sbtn" data-act="cdec">−</button><span class="slbl" style="font-size:.34rem;color:#ffaa44;">${cur}/${t.target||2} 🥩</span><button class="sbtn" data-act="cinc">+</button></div>`;
+  }
+  inner+=`</div><div class="txp">+${t.xp}XP</div>`;
+  row.innerHTML=inner;
+  row.addEventListener('click',e=>{
+    const act=e.target.dataset&&e.target.dataset.act;
+    if(act){e.stopPropagation();
+      if(act==='inc'||act==='dec'){bumpSet(k,t.id,act==='inc'?1:-1,t.sets);}
+      if(act==='cinc'||act==='cdec'){bumpChomps(k,t,act==='cinc'?1:-1);}
+      return;
+    }
+    if(t.type==='chomps'){bumpChomps(k,t,1);return;}
+    if(t.type==='shake1'||t.type==='shake2'){
+      if(done){uncheckTask(k,t);}else{openShake(k,t);}
+      return;
+    }
+    toggleTask(k,t);
+  });
+  return row;
+}
+function renderDay(){
+  const k=dKey(currentDate);const ds=getDS(k);const p=getPlan(k);
+  const week=getQW();
+  const area=$('todayArea');area.innerHTML='';
+  const isToday=k===todayKey();
+  $('dayLbl').innerHTML=(isToday?'TODAY':currentDate.toLocaleDateString('en-US',{weekday:'long'}).toUpperCase())+`<small>${p.emoji} ${p.label} · ${currentDate.toLocaleDateString('en-US',{month:'short',day:'numeric'})}</small>`;
+  // workout section
+  const sec=document.createElement('div');sec.className='sec';
+  sec.innerHTML=`<div class="sec-hdr" onclick="toggleSec('woSec')"><span class="t">${p.emoji} ${p.label}</span><span><span class="count" id="woCount"></span><span id="arr_woSec">▼</span></span></div><div class="sec-body" id="woSec"></div>`;
+  area.appendChild(sec);
+  const body=sec.querySelector('#woSec');
+  if(p.type==='rest'){
+    body.innerHTML=`<div class="rest-box"><div class="re">💤</div><div class="rt">REST DAY<br><span style="font-size:.2rem;color:#555;">RECOVER. HYDRATE. THE PRINCESS CAN WAIT ONE DAY.</span></div></div>`;
+  }else{
+    (p.workout||[]).forEach(t=>body.appendChild(taskRow(applyProg(t,week),ds,k,'')));
+  }
+  (p.bonuses||[]).forEach(t=>body.appendChild(taskRow(t,ds,k,'bonus')));
+  // non-negotiables
+  const suppSec=document.createElement('div');suppSec.className='sec';
+  suppSec.innerHTML=`<div class="sec-hdr blue" onclick="toggleSec('supSec')"><span class="t">🍄 NON-NEGOTIABLES</span><span><span class="count" id="supCount"></span><span id="arr_supSec">▼</span></span></div><div class="sec-body" id="supSec"></div>`;
+  area.appendChild(suppSec);
+  const supBody=suppSec.querySelector('#supSec');
+  (p.supps||[]).forEach(t=>supBody.appendChild(taskRow(t,ds,k,'supp')));
+  // carryover
+  if(isToday){
+    const spill=getSpillover(k);
+    if(spill.length){
+      const csec=document.createElement('div');csec.className='sec';
+      csec.innerHTML=`<div class="sec-hdr" onclick="toggleSec('carSec')"><span class="t" style="color:#ffaa44;">⚠ CARRYOVER — ${spill.length} MISSED</span><span><span class="count"></span><span id="arr_carSec">▼</span></span></div><div class="sec-body closed" id="carSec"></div>`;
+      area.appendChild(csec);
+      const cbody=csec.querySelector('#carSec');
+      spill.forEach(t=>cbody.appendChild(taskRow(applyProg(t,week),getDS(t._sf),t._sf,'carry')));
+    }
+  }
+  // counts
+  const all=getAllT(p);
+  const dn=all.filter(t=>ds.done.includes(t.id)).length;
+  const wc=$('woCount');if(wc)wc.textContent=(p.workout||[]).filter(t=>ds.done.includes(t.id)).length+'/'+(p.workout||[]).length;
+  const sc=$('supCount');if(sc)sc.textContent=(p.supps||[]).filter(t=>ds.done.includes(t.id)).length+'/'+(p.supps||[]).length;
+  renderProtein(k);renderHydration(k);renderFood(k);
+}
+function renderProtein(k){
+  const ds=getDS(k);const pro=calcProt(ds.foods);
+  $('pqbNumber').textContent=pro+'g / '+PROTEIN_GOAL+'g';
+  $('protCount').textContent=pro+'g/'+PROTEIN_GOAL+'g';
+  $('foodCount').textContent=pro+'g';
+  const pct=Math.min(100,pro/PROTEIN_GOAL*100);
+  $('pqbFill').style.width=pct+'%';
+  $('pqbFill').classList.toggle('max',pro>=PROTEIN_GOAL);
+  $('pqbStatus').textContent=pro>=PROTEIN_GOAL?'👑 PROTEIN QUEST COMPLETE! The princess approves.':pro>=PROTEIN_GOAL*0.75?'Almost there. One more shake does it.':pro>0?'Keep going — the bar is watching.':'Log food below to track progress';
+}
+function renderHydration(k){
+  const ds=getDS(k);const w=ds.water||0;
+  $('hydCount').textContent=w+'oz';
+  $('hydFill').style.width=Math.min(100,w/WATER_GOAL*100)+'%';
+  $('hydStatus').textContent=w>=WATER_GOAL?'💧 HYDRATED! '+w+'oz — Bowser hates well-hydrated plumbers.':w>0?w+'oz / '+WATER_GOAL+'oz — keep sipping':'Log water to track hydration';
+  // learned frequent amounts
+  const freq=Object.entries(S._waterFreq||{}).sort((a,b)=>b[1]-a[1]).slice(0,2).map(([oz])=>+oz);
+  const row=$('hydRow');row.innerHTML='';
+  const mk=(oz,sub)=>{const b=document.createElement('button');b.className='hbtn';b.innerHTML=`+${oz}oz<small>${sub}</small>`;b.onclick=()=>addWater(oz);row.appendChild(b);};
+  mk(24,'home cup');
+  freq.filter(oz=>oz!==24).forEach(oz=>mk(oz,'frequent'));
+}
+function renderFood(k){
+  const ds=getDS(k);
+  // meal cards
+  const mc=$('mealCards');mc.innerHTML='';
+  GO_TO_MEALS.forEach(m=>{
+    const c=document.createElement('div');c.className='meal-card rank-'+m.rank;
+    c.innerHTML=`<div class="mi">${m.icon}</div><div style="flex:1;"><div class="mn">${m.name}</div><div class="md">${m.detail}</div></div><div class="mp">${m.protein}g</div>`;
+    c.onclick=()=>addFood(k,{icon:m.icon,name:m.name,protein:m.protein,calories:m.calories,type:'meal'});
+    mc.appendChild(c);
+  });
+  // quick add (frequent learned first, dedup by protein)
+  const recent=Object.entries(S._foodFreq||{}).sort((a,b)=>b[1].count-a[1].count).slice(0,3).map(([key,v])=>({icon:'🔁',name:v.name,protein:v.protein,detail:'logged '+v.count+'x'}));
+  const rp=new Set(recent.map(r=>r.protein));
+  const row=$('quickAddRow');row.innerHTML='';
+  [...recent,...PRESET_FOODS.filter(p=>!rp.has(p.protein))].forEach(f=>{
+    const b=document.createElement('div');b.className='qadd';
+    b.innerHTML=`<div class="qi">${f.icon}</div><div class="qn">${f.name}</div><div class="qp">${f.protein}g</div>`;
+    b.onclick=()=>addFood(k,{icon:f.icon,name:f.name,protein:f.protein,type:'fuel'});
+    row.appendChild(b);
+  });
+  // entries
+  const list=$('foodList');list.innerHTML='';
+  (ds.foods||[]).forEach((f,i)=>{
+    const e=document.createElement('div');e.className='fentry '+(f.type||'meal');
+    e.innerHTML=`<div class="fi">${f.icon||'🍽'}</div><div class="fn">${f.name}</div><div class="fp">${f.protein||0}g</div><div class="fx" data-i="${i}">✕</div>`;
+    e.querySelector('.fx').onclick=()=>delFood(k,i);
+    list.appendChild(e);
+  });
+}
+function renderAll(){renderHUD();renderWorldMap();renderDay();}
+
+// ================================================================
+// INTERACTIONS
+// ================================================================
+function toggleTask(k,t){
+  const ds=getDS(k);const done=ds.done.includes(t.id);
+  snapshot(done?'Unchecked '+t.name:'+ '+(t.xp||0)+'XP — '+t.name);
+  if(done){ds.done=ds.done.filter(x=>x!==t.id);uncheckSfx();}
+  else{ds.done.push(t.id);if(t.sets)ds.sets[t.id]=t.sets;(t.name.startsWith('⭐')?bonusSfx():checkSfx());}
+  saveCloud();renderAll();checkBoss();
+}
+function uncheckTask(k,t){
+  const ds=getDS(k);
+  snapshot('Unchecked '+t.name);
+  ds.done=ds.done.filter(x=>x!==t.id);
+  if(t.type==='shake1'||t.type==='shake2'){
+    delete ds.shakes[t.id];
+    ds.foods=(ds.foods||[]).filter(f=>f._supp!==t.id);
+  }
+  uncheckSfx();saveCloud();renderAll();
+}
+function bumpSet(k,id,delta,max){
+  const ds=getDS(k);if(!ds.sets)ds.sets={};
+  const cur=ds.sets[id]||0;const nv=Math.max(0,Math.min(max,cur+delta));
+  if(nv===cur)return;
+  snapshot('Set progress updated');
+  ds.sets[id]=nv;
+  if(nv>=max&&!ds.done.includes(id)){ds.done.push(id);checkSfx();}
+  if(nv<max&&ds.done.includes(id)){ds.done=ds.done.filter(x=>x!==id);uncheckSfx();}
+  setSfx();saveCloud();renderAll();checkBoss();
+}
+// Chomps: one click per chomp, check AND uncheck, NEVER double-count
+function bumpChomps(k,t,delta){
+  const ds=getDS(k);const target=t.target||2;
+  const cur=ds.chomps||0;const nv=Math.max(0,Math.min(target,cur+delta));
+  if(nv===cur)return;
+  snapshot(delta>0?'Chomp logged 🥩':'Chomp removed');
+  ds.chomps=nv;
+  ds.foods=ds.foods||[];
+  if(delta>0){ds.foods.push({icon:'🥩',name:'Chomps Beef Stick',protein:10,type:'fuel',_supp:'chomp',_t:Date.now()});coinSfx();}
+  else{for(let i=ds.foods.length-1;i>=0;i--){if(ds.foods[i]._supp==='chomp'){ds.foods.splice(i,1);break;}}uncheckSfx();}
+  if(nv>=target&&!ds.done.includes(t.id)){ds.done.push(t.id);checkSfx();}
+  if(nv<target&&ds.done.includes(t.id)){ds.done=ds.done.filter(x=>x!==t.id);}
+  saveCloud();renderAll();
+}
+// shakes: picker adds protein to the log, linked so unchecking removes it
+let shakeCtx=null;
+function openShake(k,t){
+  shakeCtx={k,t};
+  $('shakeTitle').textContent=t.name+' — PICK YOUR DRINK';
+  const box=$('shakeOpts');box.innerHTML='';
+  SHAKE_OPTIONS.forEach(o=>{
+    const d=document.createElement('div');d.className='shake-opt';
+    d.innerHTML=`<div class="si">${o.icon}</div><div class="sn">${o.name}<br><span style="color:#666;font-size:.18rem;">${o.detail}</span></div><div class="sp">${o.protein}g</div>`;
+    d.onclick=()=>pickShake(o);
+    box.appendChild(d);
+  });
+  $('shakeModal').classList.add('show');
+}
+function pickShake(o){
+  const {k,t}=shakeCtx;const ds=getDS(k);
+  snapshot(t.name+' logged — '+o.name);
+  ds.done.push(t.id);ds.shakes[t.id]=o.name;
+  ds.foods=ds.foods||[];
+  ds.foods.push({icon:o.icon,name:o.name+(t.type==='shake1'?' + creatine':''),protein:o.protein,type:'fuel',_supp:t.id});
+  $('shakeModal').classList.remove('show');
+  checkSfx();saveCloud();renderAll();
+}
+function closeShake(){$('shakeModal').classList.remove('show');}
+function addWater(oz){
+  const k=todayKey();const ds=getDS(k);
+  snapshot('+'+oz+'oz water 💧');
+  ds.water=(ds.water||0)+oz;
+  if(oz!==24){S._waterFreq=S._waterFreq||{};S._waterFreq[oz]=(S._waterFreq[oz]||0)+1;}
+  tone(700,'sine',.08,.12);saveCloud();renderAll();
+}
+function addCustomWater(){
+  const v=parseInt($('hydCustom').value,10);
+  if(!v||v<1||v>200)return;
+  $('hydCustom').value='';addWater(v);
+}
+function resetWater(){
+  const k=todayKey();const ds=getDS(k);
+  snapshot('Water reset');
+  ds.water=0;saveCloud();renderAll();
+}
+let ftype='meal';
+function setFtype(t){ftype=t;['meal','fuel','cheat'].forEach(x=>$('ft'+x[0].toUpperCase()+x.slice(1)).classList.toggle('on',x===t));}
+function trackFoodFreq(name,protein){
+  S._foodFreq=S._foodFreq||{};
+  const k=name.toLowerCase().trim().slice(0,40);
+  if(!S._foodFreq[k])S._foodFreq[k]={count:0,protein,name};
+  S._foodFreq[k].count++;S._foodFreq[k].protein=protein;
+}
+function addFood(k,f){
+  const ds=getDS(k);
+  snapshot('Logged '+f.name+' ('+(f.protein||0)+'g)');
+  ds.foods=ds.foods||[];ds.foods.push(f);
+  if(!f._supp)trackFoodFreq(f.name,f.protein||0);
+  coinSfx();saveCloud();renderAll();
+}
+function addCustomFood(){
+  const name=$('cfName').value.trim();const pro=parseInt($('cfPro').value,10)||0;
+  if(!name)return;
+  addFood(todayKey(),{icon:ftype==='cheat'?'😈':ftype==='fuel'?'⚡':'🍽',name,protein:pro,type:ftype});
+  $('cfName').value='';$('cfPro').value='';
+}
+function delFood(k,i){
+  const ds=getDS(k);const f=ds.foods[i];if(!f)return;
+  if(f._supp){showNotif('Uncheck it in Non-Negotiables instead','org');return;}
+  snapshot('Removed '+f.name);
+  ds.foods.splice(i,1);
+  uncheckSfx();saveCloud();renderAll();
+}
+// nav + mode
+function navDay(d){currentDate.setDate(currentDate.getDate()+d);renderDay();}
+function setMode(m){
+  S._mode=m;const k=dKey(currentDate);getDS(k)._mode=m;
+  saveCloud();
+  showNotif(m==='home'?'🏠 HOME mode — full kit':'✈️ TRAVEL mode — hotel room approved','org');
+  renderAll();
+}
+$('muteBtn').onclick=()=>{S._muted=!S._muted;$('muteBtn').textContent=S._muted?'🔇':'🔊';saveCloud();};
+// ================================================================
+// BOSS FIGHTS + PRINCESS
+// ================================================================
+let bossPending=null;
+function checkBoss(){
+  const cur=getQW();
+  for(let w=1;w<=12;w++){
+    if(S._cleared.includes(w))continue;
+    if(w>cur)break;
+    const pct=getWeekPct(w);
+    if(pct>=80&&(w<cur||pct>=80)){bossPending=BOSSES[w-1];showBoss(BOSSES[w-1]);break;}
+  }
+}
+function showBoss(b){
+  drawSprite($('bossPortrait'),SPR_BOWSER);
+  drawSprite($('bossPlayer'),SPR_PAKALU);
+  $('bossTitleBar').textContent=b.world;
+  $('bossName').textContent=b.emoji+' '+b.name+' '+b.emoji;
+  $('bossStory').textContent=b.story;
+  $('bossDefeated').style.display='none';$('bossXp').style.display='none';
+  $('bossBtn').textContent='⚔ FIGHT!';
+  $('bossBtn').onclick=()=>defeatBoss(b);
+  $('bossOvl').classList.add('show');
+  bossSfx();
+}
+function defeatBoss(b){
+  $('bossDefeated').textContent=b.defeated;$('bossDefeated').style.display='block';
+  $('bossXp').textContent='+250 BONUS XP';$('bossXp').style.display='block';
+  $('bossBtn').textContent=b.week===12?'👸 SAVE THE PRINCESS':'▶ NEXT WORLD';
+  $('bossPortrait').style.animation='none';$('bossPortrait').style.filter='grayscale(1) brightness(.5)';
+  clearSfx();
+  $('bossBtn').onclick=()=>{
+    snapshot(b.name+' defeated!');
+    S._cleared.push(b.week);S._bonusXP=(S._bonusXP||0)+250;
+    saveCloud();renderAll();
+    $('bossOvl').classList.remove('show');
+    $('bossPortrait').style.filter='';$('bossPortrait').style.animation='';
+    if(b.week===12){princSfx();$('princessOvl').classList.add('show');}
+  };
+}
+// ================================================================
+// HIDDEN BLOCKS + QUOTE BUBBLE + TOAD NUDGE
+// ================================================================
+function setupHiddenBlocks(){
+  const sec=document.querySelector('.world-sec');if(!sec)return;
+  sec.style.position='relative';
+  for(let i=0;i<3;i++){
+    if((S._hidden||[]).includes(i))continue;
+    const b=document.createElement('div');b.className='hblock';
+    b.style.left=(12+i*37)+'%';b.style.top='-8px';
+    b.innerHTML='<div class="hb-q">🧱</div>';
+    b.onclick=()=>{
+      const r=HIDDEN_REWARDS[Math.floor(Math.random()*HIDDEN_REWARDS.length)];
+      snapshot('Hidden block found!');
+      S._hidden.push(i);
+      if(r.type==='coins'){S._totalCoins=(S._totalCoins||0)+r.amount;coinSfx();}
+      else if(r.type==='mushroom'){S._bonusLives=(S._bonusLives||0)+1;mushSfx();}
+      else if(r.type==='star'){S._bonusXP=(S._bonusXP||0)+100;starSfx();}
+      b.classList.add('found');
+      showNotif(r.label,'org');saveCloud();renderAll();
+    };
+    sec.appendChild(b);
+  }
+}
+let pmTyping=null;
+function showDailyMessage(){
+  const tk=todayKey();
+  if(sessionStorage.getItem('spq_msg')===tk||S._msgDay===tk)return;
+  sessionStorage.setItem('spq_msg',tk);S._msgDay=tk;saveCloud();
+  const dayNum=Math.floor(Date.now()/86400000);
+  const q=DAILY_QUOTES[dayNum%DAILY_QUOTES.length];
+  $('pmOverlay').classList.add('show');
+  drawSprite($('pmPortrait'),SPR_PAKALU);
+  const el=$('pmText');el.textContent='';
+  let i=0;clearInterval(pmTyping);
+  pmTyping=setInterval(()=>{
+    if(i<q.length){el.textContent+=q[i++];if(i%3===0)tone(1200,'square',.015,.04);}
+    else clearInterval(pmTyping);
+  },18);
+  tone(880,'square',.06,.12);setTimeout(()=>tone(1108,'square',.08,.12),70);
+}
+$('pmOverlay').onclick=()=>{$('pmOverlay').classList.remove('show');clearInterval(pmTyping);};
+function toadNudge(){
+  const h=new Date().getHours();
+  if(h<14||sessionStorage.getItem('spq_toad')===todayKey())return;
+  const ds=getDS(todayKey());
+  if(ds.done.includes('daily_s0'))return;
+  sessionStorage.setItem('spq_toad',todayKey());
+  showNotif("🍄 TOAD: It's past 2pm and shake #1 isn't logged! That's protein you're leaving on the table. Drink it NOW.",'toad');
+  mushSfx();
+}
+// ================================================================
+// INIT
+// ================================================================
+(function init(){
+  // restore cache first for instant paint
+  try{const raw=localStorage.getItem('spq_cache');if(raw)S=Object.assign(S,JSON.parse(raw));}catch(e){}
+  questStart();
+  $('muteBtn').textContent=S._muted?'🔇':'🔊';
+  renderAll();
+  setupHiddenBlocks();
+  pullCloud(false).then(()=>{setupHiddenBlocks();checkBoss();});
+  setTimeout(showDailyMessage,900);
+  setInterval(toadNudge,600000);
+  setTimeout(toadNudge,4000);
+})();
+</script>
+</body>
+</html>
