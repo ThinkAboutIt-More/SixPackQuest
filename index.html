@@ -1977,7 +1977,7 @@ function applyProg(t,week){
   if(t.id==='tm2'){const v=p('burpees',week);detail=v.replace('×','rounds ×');}
   if(t.id==='tm3'){const v=p('pushups',week);detail=`4 × ${v}`;}
   if(t.id==='tf1'){const r=week>=10?12:week>=7?10:10;detail=`6 × ${r} reps`;rn=`${r} reps`;}
-  if(week>=12&&sets){sets=Math.max(2,Math.round(sets*0.6));if(!/TAPER/.test(detail))detail+=' · TAPER WK — 60% volume, stay sharp';}
+  if(week>=12&&sets){sets=Math.max(2,Math.round(sets*0.6));detail=detail.replace(/^\d+ × /,sets+' × ');if(/^(m6|w6|f7|t6|sa2)$/.test(t.id)){const mm=detail.match(/Target (\d+) total — \d+ sets of (\d+) reps/);if(mm){const nt=Math.max(6,Math.round(+mm[1]*0.6));detail='Target '+nt+' total — '+sets+' sets of '+Math.ceil(nt/sets)+' reps';}}if(!/TAPER/.test(detail))detail+=' · TAPER WK — 60% volume, stay sharp';}
   return{...t,name,detail,sets,rn};
 }
 
@@ -4315,7 +4315,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=7;
+const APP_VERSION=8;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
