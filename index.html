@@ -1792,7 +1792,7 @@ function renderWorldMap(){
     const iconHtml=`<div class="wk-castle wk-boss" style="${glowStyle}">${getBossSVG(w)}</div>`;
     node.innerHTML=`${iconHtml}<div class="wk-lbl">W${w}</div><div class="wk-pct">${unlocked?pct+'%':'🔒'}</div>${w<12?'<div class="wk-conn"></div>':''}`;
     node.title=boss.world+' — '+boss.name;
-    node.onclick=()=>openWorldMap(w);
+    node.onclick=()=>openBossCard(w);
     el.appendChild(node);
   }
 }
@@ -2161,14 +2161,16 @@ function openBossCard(w){
   if(defeated){status='✓ DEFEATED';statusColor='#00ff88';}
   else if(isCurrent){status='⚔ CURRENT WEEK — '+Math.round(pct)+'%'+(pct>=80?' · THE FIGHT IS LIVE':' · HIT 80% TO FIGHT');statusColor=pct>=80?'#00ff88':'#ffd828';}
   else if(unlocked){status='⚠ '+Math.round(pct)+'% — GO BACK AND FINISH IT';statusColor='#ff8844';}
-  else{status='🔒 LOCKED';statusColor='#666';}
+  else{status='🔒 LOCKED — UNMASKS AT WEEK '+w;statusColor='#666';}
+  const cardName=unlocked?boss.name:'???';
+  const cardMotive=unlocked?(boss.motive||''):'A shadowy foe guards this world. Keep training — their identity is revealed when you reach Week '+w+'.';
   ov.innerHTML=`<div class="bosscard-box">
-    <div class="bosscard-hdr"><div class="bosscard-world">${boss.world}</div><button class="bosscard-x" onclick="closeBossCard()">✕</button></div>
+    <div class="bosscard-hdr"><div class="bosscard-world">${unlocked?boss.world:'UNKNOWN WORLD'}</div><button class="bosscard-x" onclick="closeBossCard()">✕</button></div>
     <div class="bosscard-body">
       <div style="${defeated?'filter:grayscale(.4);':!unlocked?'filter:grayscale(1) brightness(.6);':''}display:inline-block;image-rendering:pixelated;">${svg}</div>
-      <div class="bosscard-name">${boss.name}</div>
+      <div class="bosscard-name">${cardName}</div>
       <div class="bosscard-status" style="color:${statusColor};">${status}</div>
-      <div class="bosscard-motive">${boss.motive||''}</div>
+      <div class="bosscard-motive">${cardMotive}</div>
     </div>
   </div>`;
   ov.classList.add('show');
@@ -4194,7 +4196,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=25;
+const APP_VERSION=26;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
