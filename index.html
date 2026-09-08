@@ -536,6 +536,31 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
 .cue-dot{display:inline-block;margin-left:6px;background:#7a5800;color:#ffd700;font-size:0.2rem;padding:1px 4px;border-radius:3px;vertical-align:middle;}
 .cue-box{background:#1a1a00;border:2px solid #7a5800;margin:6px 0 2px;padding:8px 10px;font-family:'VT323',monospace;font-size:.85rem;color:#ffd700;line-height:1.25;}
 .cue-box canvas{image-rendering:pixelated;display:block;margin:6px auto 2px;background:#0a0a14;border:2px solid #333;}
+@media(max-width:859px){
+  .tn{font-size:0.42rem;}
+  .td{font-size:1.05rem;}
+  .txp{font-size:0.34rem;}
+  .chk{width:20px;height:20px;font-size:.7rem;}
+  .set-dot{width:19px;height:19px;font-size:.6rem;}
+  .set-label{font-size:.85rem;}
+  .supp-name{font-size:0.32rem;}
+  .supp-detail{font-size:.85rem;}
+  .supp-icon{font-size:1.5rem;}
+  .qa-pill .qa-name{font-size:0.3rem;}
+  .cue-box{font-size:1rem;}
+  .smc-l{font-size:0.3rem;}
+  .smc-v{font-size:0.66rem;}
+  .mini-day-n{font-size:0.3rem;}
+  .mini-day-p{font-size:0.42rem;}
+  .day-sub{font-size:1.15rem;}
+  .pu-status{font-size:.95rem;}
+  .quest-sub{font-size:1.1rem;}
+  .nav-btn,.today-btn{font-size:0.4rem;padding:8px 14px;}
+  .wk-lbl{font-size:0.3rem;}
+  .wk-pct{font-size:0.34rem;}
+  .wk-boss svg{width:30px;height:30px;image-rendering:pixelated;display:block;margin:0 auto;}
+}
+.wk-boss svg{width:36px;height:36px;image-rendering:pixelated;display:block;margin:0 auto;}
 @media(min-width:1100px){body{max-width:1060px;margin:0 auto;}.hud-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;}}
 </style>
 </head>
@@ -1540,277 +1565,150 @@ function getBossSVG(week){
       <rect x="12" y="42" width="2" height="1" fill="#ffffff"/><rect x="15" y="42" width="2" height="1" fill="#ffffff"/><rect x="25" y="42" width="2" height="1" fill="#ffffff"/><rect x="28" y="42" width="2" height="1" fill="#ffffff"/>
     </svg>`,
 
-    2:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
-      <!-- Morton: dark grey/black, huge star on face, wide flat head, hulking -->
-      <ellipse cx="22" cy="26" rx="16" ry="13" fill="#444"/>
-      <!-- Flat wide head -->
-      <ellipse cx="22" cy="18" rx="15" ry="9" fill="#555"/>
-      <!-- STAR on face (Morton's signature mark) -->
-      <polygon points="22,14 23.5,18 28,18 24.5,20.5 25.8,25 22,22.5 18.2,25 19.5,20.5 16,18 20.5,18" fill="#ffdd00" stroke="#cc8800" stroke-width=".5"/>
-      <!-- Small beady eyes -->
-      <circle cx="15" cy="17" r="2.5" fill="#fff"/><circle cx="29" cy="17" r="2.5" fill="#fff"/>
-      <circle cx="15" cy="17" r="1.2" fill="#111"/><circle cx="29" cy="17" r="1.2" fill="#111"/>
-      <!-- Flat squished nose -->
-      <ellipse cx="22" cy="22" rx="4" ry="2" fill="#333"/>
-      <!-- Wide flat mouth -->
-      <rect x="13" y="29" width="18" height="3" rx="1.5" fill="#222"/>
-      <rect x="15" y="29" width="3" height="3" fill="#eee"/><rect x="20" y="29" width="4" height="3" fill="#eee"/>
-      <rect x="26" y="29" width="3" height="3" fill="#eee"/>
-      <!-- Shell spike -->
-      <ellipse cx="22" cy="40" rx="12" ry="4" fill="#333" opacity=".8"/>
+    2:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+      <!-- Morton pixel: hulking dark grey, star face mark, 4 fangs, 3 hair strands -->
+      <rect x="19" y="1" width="2" height="4" fill="#111111"/><rect x="22" y="0" width="2" height="5" fill="#111111"/><rect x="25" y="1" width="2" height="4" fill="#111111"/>
+      <rect x="7" y="7" width="30" height="15" fill="#7a6a5a"/><rect x="7" y="7" width="3" height="15" fill="#5a4a3e"/><rect x="34" y="7" width="3" height="15" fill="#5a4a3e"/>
+      <rect x="10" y="8" width="5" height="5" fill="#c8c8d0"/><rect x="11" y="9" width="3" height="3" fill="#b0b0b8"/>
+      <rect x="17" y="10" width="5" height="4" fill="#ffffff"/><rect x="26" y="10" width="5" height="4" fill="#ffffff"/><rect x="18" y="11" width="2" height="2" fill="#111111"/><rect x="27" y="11" width="2" height="2" fill="#111111"/>
+      <rect x="12" y="19" width="22" height="2" fill="#2a1a1a"/>
+      <rect x="14" y="19" width="3" height="5" fill="#ffffff"/><rect x="20" y="19" width="3" height="5" fill="#ffffff"/><rect x="25" y="19" width="3" height="5" fill="#ffffff"/><rect x="31" y="19" width="3" height="5" fill="#ffffff"/>
+      <rect x="11" y="24" width="24" height="2" fill="#a89880"/>
+      <rect x="8" y="27" width="28" height="10" fill="#4a4a52"/>
+      <rect x="14" y="27" width="16" height="10" fill="#e8d8b0"/><rect x="14" y="30" width="16" height="1" fill="#c8b890"/><rect x="14" y="33" width="16" height="1" fill="#c8b890"/>
+      <rect x="4" y="27" width="4" height="8" fill="#7a6a5a"/><rect x="36" y="27" width="4" height="8" fill="#7a6a5a"/><rect x="4" y="34" width="4" height="3" fill="#222222"/><rect x="36" y="34" width="4" height="3" fill="#222222"/><rect x="5" y="34" width="2" height="1" fill="#ffffff"/><rect x="37" y="34" width="2" height="1" fill="#ffffff"/>
+      <rect x="13" y="38" width="8" height="5" fill="#7a6a5a"/><rect x="24" y="38" width="8" height="5" fill="#7a6a5a"/><rect x="13" y="42" width="2" height="1" fill="#ffffff"/><rect x="16" y="42" width="2" height="1" fill="#ffffff"/><rect x="24" y="42" width="2" height="1" fill="#ffffff"/><rect x="27" y="42" width="2" height="1" fill="#ffffff"/>
     </svg>`,
 
-    3:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
-      <!-- Lemmy: round cheerful face, tiny body, ball markings, propeller hat -->
-      <!-- Propeller beanie -->
-      <circle cx="22" cy="10" r="7" fill="#cc2222"/>
-      <polygon points="22,4 28,9 22,9" fill="#2244ff"/><polygon points="22,4 16,9 22,9" fill="#22bb44"/>
-      <circle cx="22" cy="10" r="2" fill="#ffd700"/>
-      <!-- Round head -->
-      <circle cx="22" cy="25" r="14" fill="#88cc44"/>
-      <!-- Googly eyes (Lemmy's childlike look) -->
-      <circle cx="16" cy="22" r="5" fill="#fff" stroke="#333" stroke-width="1"/>
-      <circle cx="28" cy="22" r="5" fill="#fff" stroke="#333" stroke-width="1"/>
-      <circle cx="17" cy="23" r="2.5" fill="#2244ff"/>
-      <circle cx="29" cy="23" r="2.5" fill="#2244ff"/>
-      <circle cx="16.5" cy="22" r="1" fill="#111"/><circle cx="28.5" cy="22" r="1" fill="#111"/>
-      <!-- Dot on nose -->
-      <circle cx="22" cy="28" r="2" fill="#558822"/>
-      <!-- Big smile -->
-      <path d="M14,31 Q22,38 30,31" stroke="#111" stroke-width="2" fill="none" stroke-linecap="round"/>
-      <!-- Circus ball under -->
-      <circle cx="22" cy="42" r="3" fill="#ff4422" stroke="#cc2200" stroke-width="1"/>
-      <line x1="22" y1="39" x2="22" y2="38" stroke="#888" stroke-width="1"/>
+    3:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+      <!-- Lemmy pixel: rainbow mohawk, lazy eye, circus ball with star -->
+      <rect x="14" y="2" width="3" height="8" fill="#e03030"/><rect x="18" y="1" width="3" height="9" fill="#f0d020"/><rect x="22" y="1" width="3" height="9" fill="#30b040"/><rect x="26" y="2" width="3" height="8" fill="#3050d0"/>
+      <rect x="11" y="9" width="22" height="12" fill="#f0a040"/><rect x="11" y="9" width="2" height="12" fill="#d08028"/><rect x="31" y="9" width="2" height="12" fill="#d08028"/>
+      <rect x="13" y="11" width="7" height="7" fill="#ffffff"/><rect x="15" y="13" width="3" height="3" fill="#111111"/>
+      <rect x="23" y="12" width="5" height="5" fill="#ffffff"/><rect x="24" y="13" width="2" height="2" fill="#111111"/>
+      <rect x="14" y="19" width="16" height="2" fill="#5a2a10"/><rect x="17" y="19" width="2" height="2" fill="#ffffff"/><rect x="25" y="19" width="2" height="2" fill="#ffffff"/>
+      <rect x="15" y="24" width="14" height="8" fill="#f0a040"/>
+      <rect x="10" y="25" width="3" height="6" fill="#f0a040"/><rect x="31" y="25" width="3" height="6" fill="#f0a040"/>
+      <rect x="10" y="33" width="24" height="3" fill="#f0d020"/><rect x="8" y="35" width="28" height="4" fill="#f0d020"/><rect x="10" y="39" width="24" height="4" fill="#f0d020"/><rect x="12" y="41" width="20" height="2" fill="#d8b018"/>
+      <rect x="20" y="35" width="4" height="4" fill="#e08018"/><rect x="21" y="34" width="2" height="6" fill="#e08018"/><rect x="19" y="36" width="6" height="2" fill="#e08018"/>
     </svg>`,
 
-    4:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
-      <!-- Ludwig: blue shell, wild huge hair mane, musical notes, furrowed brow -->
-      <!-- Giant wild hair -->
-      <ellipse cx="22" cy="12" rx="16" ry="10" fill="#4488cc"/>
-      <ellipse cx="10" cy="16" rx="7" ry="9" fill="#4488cc"/>
-      <ellipse cx="34" cy="16" rx="7" ry="9" fill="#4488cc"/>
-      <!-- Hair texture lines -->
-      <path d="M8,10 Q12,6 16,10" stroke="#2266aa" stroke-width="1.5" fill="none"/>
-      <path d="M22,4 Q26,1 30,5" stroke="#2266aa" stroke-width="1.5" fill="none"/>
-      <path d="M34,10 Q38,7 40,12" stroke="#2266aa" stroke-width="1.5" fill="none"/>
-      <!-- Face -->
-      <ellipse cx="22" cy="27" rx="12" ry="11" fill="#88cc44"/>
-      <!-- Furrowed villain brow -->
-      <path d="M13,22 Q17,19 21,22" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <path d="M23,22 Q27,19 31,22" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <!-- Eyes -->
-      <circle cx="18" cy="25" r="3.5" fill="#fff"/><circle cx="26" cy="25" r="3.5" fill="#fff"/>
-      <circle cx="18" cy="25.5" r="1.8" fill="#aa2222"/><circle cx="26" cy="25.5" r="1.8" fill="#aa2222"/>
-      <circle cx="18" cy="25" r=".8" fill="#111"/><circle cx="26" cy="25" r=".8" fill="#111"/>
-      <!-- Snout -->
-      <ellipse cx="22" cy="31" rx="5" ry="3" fill="#66aa33"/>
-      <ellipse cx="20.5" cy="30.5" rx="1.2" ry="1" fill="#446622"/><ellipse cx="23.5" cy="30.5" rx="1.2" ry="1" fill="#446622"/>
-      <!-- Music note -->
-      <text x="35" y="12" font-size="8" fill="#ffd700">♪</text>
+    4:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+      <!-- Ludwig pixel: wild blue hair mane, furrowed brow, single buck tooth -->
+      <rect x="8" y="2" width="28" height="8" fill="#2a4ad0"/><rect x="6" y="3" width="4" height="5" fill="#2a4ad0"/><rect x="14" y="0" width="4" height="3" fill="#2a4ad0"/><rect x="24" y="0" width="4" height="3" fill="#2a4ad0"/><rect x="34" y="3" width="4" height="5" fill="#2a4ad0"/><rect x="12" y="3" width="3" height="2" fill="#4a6af0"/><rect x="26" y="3" width="3" height="2" fill="#4a6af0"/>
+      <rect x="11" y="10" width="22" height="12" fill="#f0d080"/>
+      <rect x="13" y="12" width="8" height="2" fill="#1a2a80"/><rect x="23" y="12" width="8" height="2" fill="#1a2a80"/>
+      <rect x="14" y="14" width="6" height="4" fill="#ffffff"/><rect x="24" y="14" width="6" height="4" fill="#ffffff"/><rect x="16" y="15" width="2" height="2" fill="#111111"/><rect x="26" y="15" width="2" height="2" fill="#111111"/>
+      <rect x="15" y="18" width="14" height="5" fill="#f8e0a0"/><rect x="15" y="21" width="14" height="2" fill="#5a3a10"/><rect x="21" y="21" width="3" height="3" fill="#ffffff"/>
+      <rect x="10" y="25" width="24" height="12" fill="#2a4ad0"/><rect x="10" y="25" width="3" height="12" fill="#1a2a90"/><rect x="31" y="25" width="3" height="12" fill="#1a2a90"/>
+      <rect x="16" y="25" width="12" height="12" fill="#f5e6a0"/><rect x="16" y="29" width="12" height="1" fill="#d8c080"/><rect x="16" y="33" width="12" height="1" fill="#d8c080"/>
+      <rect x="6" y="26" width="4" height="8" fill="#f0d080"/><rect x="34" y="26" width="4" height="8" fill="#f0d080"/><rect x="6" y="33" width="4" height="3" fill="#222222"/><rect x="34" y="33" width="4" height="3" fill="#222222"/>
+      <rect x="13" y="38" width="7" height="5" fill="#f0d080"/><rect x="24" y="38" width="7" height="5" fill="#f0d080"/>
     </svg>`,
 
-    5:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
-      <!-- Roy: pink shell/skin, dark sunglasses, thick neck, spiked shell, intimidating -->
-      <ellipse cx="22" cy="26" rx="14" ry="12" fill="#dd88cc"/>
-      <!-- Thick beefy neck -->
-      <rect x="15" y="34" width="14" height="6" fill="#cc77bb" rx="2"/>
-      <!-- Spiked head -->
-      <polygon points="10,20 6,8 14,18" fill="#bb66aa"/>
-      <polygon points="16,16 14,3 20,15" fill="#bb66aa"/>
-      <polygon points="22,14 21,1 25,14" fill="#bb66aa"/>
-      <polygon points="28,16 30,3 26,15" fill="#bb66aa"/>
-      <polygon points="34,20 38,8 30,18" fill="#bb66aa"/>
-      <!-- Cool dark sunglasses (Roy signature) -->
-      <rect x="11" y="21" width="10" height="6" rx="2" fill="#111" stroke="#333" stroke-width="1"/>
-      <rect x="23" y="21" width="10" height="6" rx="2" fill="#111" stroke="#333" stroke-width="1"/>
-      <line x1="21" y1="24" x2="23" y2="24" stroke="#333" stroke-width="1.5"/>
-      <!-- Glint on glasses -->
-      <line x1="13" y1="23" x2="16" y2="23" stroke="#666" stroke-width=".8"/>
-      <line x1="25" y1="23" x2="28" y2="23" stroke="#666" stroke-width=".8"/>
-      <!-- Scowl mouth -->
-      <path d="M15,32 Q22,29 29,32" stroke="#772255" stroke-width="2" fill="none"/>
-      <!-- Shell ridges -->
-      <ellipse cx="22" cy="40" rx="11" ry="4" fill="#bb66aa" opacity=".8"/>
+    5:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+      <!-- Roy pixel: pink, black sunglasses, beefy, spiked shell -->
+      <rect x="20" y="5" width="4" height="3" fill="#c04888"/>
+      <rect x="10" y="7" width="24" height="15" fill="#e060a8"/><rect x="10" y="7" width="2" height="15" fill="#c04888"/><rect x="32" y="7" width="2" height="15" fill="#c04888"/>
+      <rect x="10" y="12" width="24" height="7" fill="#111111"/><rect x="13" y="13" width="3" height="2" fill="#66aaff"/><rect x="28" y="13" width="3" height="2" fill="#66aaff"/>
+      <rect x="14" y="20" width="16" height="2" fill="#4a1030"/><rect x="17" y="19" width="3" height="3" fill="#ffffff"/><rect x="25" y="19" width="3" height="3" fill="#ffffff"/>
+      <rect x="8" y="26" width="28" height="11" fill="#c04088"/><rect x="9" y="26" width="3" height="3" fill="#ffffff"/><rect x="32" y="26" width="3" height="3" fill="#ffffff"/>
+      <rect x="14" y="26" width="16" height="11" fill="#f5e6a0"/><rect x="14" y="30" width="16" height="1" fill="#d8c080"/><rect x="14" y="33" width="16" height="1" fill="#d8c080"/>
+      <rect x="4" y="25" width="5" height="10" fill="#e060a8"/><rect x="35" y="25" width="5" height="10" fill="#e060a8"/><rect x="4" y="33" width="5" height="3" fill="#222222"/><rect x="35" y="33" width="5" height="3" fill="#222222"/><rect x="5" y="33" width="2" height="2" fill="#ffffff"/><rect x="37" y="33" width="2" height="2" fill="#ffffff"/>
+      <rect x="13" y="38" width="8" height="5" fill="#e060a8"/><rect x="24" y="38" width="8" height="5" fill="#e060a8"/>
     </svg>`,
 
-    6:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
-      <!-- Wendy: pink bow, ring accessories, long eyelashes, bratty expression -->
-      <!-- Big pink bow on top -->
-      <ellipse cx="14" cy="8" rx="8" ry="5" fill="#ff3399" transform="rotate(-20,14,8)"/>
-      <ellipse cx="30" cy="8" rx="8" ry="5" fill="#ff3399" transform="rotate(20,30,8)"/>
-      <circle cx="22" cy="10" r="4" fill="#ff66bb"/>
-      <!-- Face -->
-      <circle cx="22" cy="25" r="13" fill="#ffaacc"/>
-      <!-- Long dramatic eyelashes -->
-      <ellipse cx="16" cy="23" rx="4.5" ry="3.5" fill="#fff"/>
-      <ellipse cx="28" cy="23" rx="4.5" ry="3.5" fill="#fff"/>
-      <line x1="12" y1="20" x2="10" y2="17" stroke="#111" stroke-width="1.2"/>
-      <line x1="14" y1="19" x2="13" y2="16" stroke="#111" stroke-width="1.2"/>
-      <line x1="16" y1="19" x2="16" y2="16" stroke="#111" stroke-width="1.2"/>
-      <line x1="24" y1="19" x2="24" y2="16" stroke="#111" stroke-width="1.2"/>
-      <line x1="26" y1="19" x2="27" y2="16" stroke="#111" stroke-width="1.2"/>
-      <line x1="28" y1="20" x2="30" y2="17" stroke="#111" stroke-width="1.2"/>
-      <circle cx="16" cy="23" r="2" fill="#cc00aa"/><circle cx="28" cy="23" r="2" fill="#cc00aa"/>
-      <!-- Bratty pout mouth -->
-      <path d="M17,31 Q22,28 27,31" stroke="#cc0055" stroke-width="2" fill="#ff88bb"/>
-      <!-- Ring accessories -->
-      <circle cx="8" cy="28" r="3" fill="none" stroke="#ffd700" stroke-width="2"/>
-      <circle cx="36" cy="28" r="3" fill="none" stroke="#ffd700" stroke-width="2"/>
-      <!-- Shell below -->
-      <ellipse cx="22" cy="40" rx="10" ry="4" fill="#ff3399" opacity=".6"/>
+    6:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+      <!-- Wendy pixel: polka-dot bow, eyelashes, pink lips, gold bracelets -->
+      <rect x="8" y="1" width="10" height="8" fill="#ff70b8"/><rect x="26" y="1" width="10" height="8" fill="#ff70b8"/><rect x="19" y="3" width="6" height="5" fill="#ff70b8"/>
+      <rect x="11" y="3" width="2" height="2" fill="#ffffff"/><rect x="14" y="6" width="2" height="2" fill="#ffffff"/><rect x="28" y="3" width="2" height="2" fill="#ffffff"/><rect x="31" y="6" width="2" height="2" fill="#ffffff"/><rect x="21" y="4" width="2" height="2" fill="#ffffff"/>
+      <rect x="12" y="8" width="20" height="13" fill="#f0d080"/>
+      <rect x="14" y="11" width="6" height="6" fill="#ffffff"/><rect x="24" y="11" width="6" height="6" fill="#ffffff"/><rect x="16" y="13" width="3" height="3" fill="#3050c0"/><rect x="26" y="13" width="3" height="3" fill="#3050c0"/>
+      <rect x="13" y="10" width="1" height="2" fill="#111111"/><rect x="19" y="10" width="1" height="2" fill="#111111"/><rect x="23" y="10" width="1" height="2" fill="#111111"/><rect x="29" y="10" width="1" height="2" fill="#111111"/>
+      <rect x="19" y="18" width="6" height="3" fill="#ff5080"/>
+      <rect x="12" y="24" width="20" height="13" fill="#e060a8"/>
+      <rect x="16" y="24" width="12" height="13" fill="#f5e6a0"/><rect x="16" y="28" width="12" height="1" fill="#d8c080"/><rect x="16" y="32" width="12" height="1" fill="#d8c080"/>
+      <rect x="8" y="25" width="3" height="8" fill="#f0d080"/><rect x="33" y="25" width="3" height="8" fill="#f0d080"/><rect x="8" y="31" width="3" height="2" fill="#ffd700"/><rect x="33" y="31" width="3" height="2" fill="#ffd700"/>
+      <rect x="14" y="38" width="6" height="5" fill="#e060a8"/><rect x="24" y="38" width="6" height="5" fill="#e060a8"/>
     </svg>`,
 
-    7:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
-      <!-- Larry: sneaky narrow eyes, blue-green shell, smug side-mouth, mohawk spike -->
-      <!-- Mohawk spike -->
-      <polygon points="22,2 18,14 26,14" fill="#2255cc"/>
-      <ellipse cx="22" cy="10" rx="4" ry="8" fill="#3366dd"/>
-      <!-- Face -->
-      <ellipse cx="22" cy="26" rx="13" ry="12" fill="#55bb44"/>
-      <!-- Narrow sneaky eyes -->
-      <ellipse cx="16" cy="24" rx="4" ry="2.5" fill="#fff"/>
-      <ellipse cx="28" cy="24" rx="4" ry="2.5" fill="#fff"/>
-      <!-- Narrow pupils (shifty look) -->
-      <ellipse cx="16.5" cy="24" rx="1.5" ry="2" fill="#222"/>
-      <ellipse cx="28.5" cy="24" rx="1.5" ry="2" fill="#222"/>
-      <!-- Smug sideways mouth -->
-      <path d="M15,31 Q20,34 26,30" stroke="#2a5a1a" stroke-width="2" fill="none" stroke-linecap="round"/>
-      <!-- Shell green ridges -->
-      <ellipse cx="22" cy="39" rx="11" ry="4" fill="#2255cc" opacity=".7"/>
-      <!-- Sneaky eyebrow -->
-      <path d="M12,21 Q16,18 20,21" stroke="#333" stroke-width="2" fill="none"/>
-      <path d="M24,21 Q27,18 32,20" stroke="#333" stroke-width="2" fill="none"/>
+    7:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+      <!-- Larry pixel: blue mohawk, light blue skin, blue star cheek mark -->
+      <rect x="12" y="2" width="20" height="6" fill="#2070e0"/><rect x="12" y="1" width="4" height="3" fill="#2070e0"/><rect x="20" y="0" width="4" height="3" fill="#2070e0"/><rect x="28" y="1" width="4" height="3" fill="#2070e0"/>
+      <rect x="10" y="7" width="24" height="14" fill="#78b0f0"/><rect x="10" y="7" width="2" height="14" fill="#5890d0"/><rect x="32" y="7" width="2" height="14" fill="#5890d0"/>
+      <rect x="11" y="14" width="3" height="3" fill="#1040a0"/><rect x="12" y="13" width="1" height="5" fill="#1040a0"/><rect x="10" y="15" width="5" height="1" fill="#1040a0"/>
+      <rect x="15" y="10" width="6" height="4" fill="#ffffff"/><rect x="24" y="10" width="6" height="4" fill="#ffffff"/><rect x="16" y="11" width="2" height="2" fill="#111111"/><rect x="25" y="11" width="2" height="2" fill="#111111"/>
+      <rect x="16" y="17" width="12" height="2" fill="#1a3a60"/><rect x="18" y="17" width="2" height="2" fill="#ffffff"/>
+      <rect x="10" y="25" width="24" height="12" fill="#1a8a70"/>
+      <rect x="16" y="25" width="12" height="12" fill="#f5e6a0"/><rect x="16" y="29" width="12" height="1" fill="#d8c080"/><rect x="16" y="33" width="12" height="1" fill="#d8c080"/>
+      <rect x="6" y="26" width="4" height="8" fill="#78b0f0"/><rect x="34" y="26" width="4" height="8" fill="#78b0f0"/><rect x="6" y="33" width="4" height="3" fill="#222222"/><rect x="34" y="33" width="4" height="3" fill="#222222"/>
+      <rect x="13" y="38" width="7" height="5" fill="#78b0f0"/><rect x="24" y="38" width="7" height="5" fill="#78b0f0"/>
     </svg>`,
 
-    8:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
-      <!-- Boom Boom: round red armor body, raised fists, no neck, angry eyes -->
-      <!-- Armored round body -->
-      <circle cx="22" cy="26" r="15" fill="#cc2222"/>
-      <!-- Armor ridges -->
-      <circle cx="22" cy="26" r="12" fill="none" stroke="#882200" stroke-width="2"/>
-      <circle cx="22" cy="26" r="8" fill="none" stroke="#882200" stroke-width="1.5"/>
-      <!-- Stubby fists raised -->
-      <ellipse cx="6" cy="18" rx="6" ry="5" fill="#dd4422" stroke="#882200" stroke-width="1"/>
-      <ellipse cx="38" cy="18" rx="6" ry="5" fill="#dd4422" stroke="#882200" stroke-width="1"/>
-      <!-- Knuckle lines -->
-      <line x1="3" y1="17" x2="9" y2="17" stroke="#882200" stroke-width=".8"/>
-      <line x1="35" y1="17" x2="41" y2="17" stroke="#882200" stroke-width=".8"/>
-      <!-- Angry face -->
-      <ellipse cx="17" cy="24" rx="4" ry="3.5" fill="#fff"/><ellipse cx="27" cy="24" rx="4" ry="3.5" fill="#fff"/>
-      <!-- Angry V-brow slant -->
-      <path d="M12,20 L18,22" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
-      <path d="M26,22 L32,20" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
-      <circle cx="17" cy="24" r="2.5" fill="#cc0000"/><circle cx="27" cy="24" r="2.5" fill="#cc0000"/>
-      <circle cx="17" cy="24" r="1" fill="#111"/><circle cx="27" cy="24" r="1" fill="#111"/>
-      <!-- Snarl mouth -->
-      <path d="M14,31 L30,31" stroke="#550000" stroke-width="2.5"/>
-      <rect x="16" y="29" width="3" height="3" fill="#fff"/><rect x="21" y="29" width="3" height="3" fill="#fff"/>
-      <rect x="26" y="29" width="3" height="3" fill="#fff"/>
+    8:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+      <!-- Boom Boom pixel: red spiked shell, huge fists, angry -->
+      <rect x="12" y="6" width="20" height="12" fill="#d0a060"/>
+      <rect x="13" y="8" width="7" height="2" fill="#6a4020"/><rect x="24" y="8" width="7" height="2" fill="#6a4020"/>
+      <rect x="14" y="10" width="5" height="4" fill="#ffffff"/><rect x="25" y="10" width="5" height="4" fill="#ffffff"/><rect x="15" y="11" width="2" height="2" fill="#111111"/><rect x="26" y="11" width="2" height="2" fill="#111111"/>
+      <rect x="14" y="14" width="16" height="5" fill="#e0b878"/><rect x="15" y="17" width="14" height="2" fill="#4a2808"/><rect x="17" y="15" width="2" height="3" fill="#ffffff"/><rect x="25" y="15" width="2" height="3" fill="#ffffff"/>
+      <rect x="13" y="19" width="18" height="4" fill="#b8884a"/>
+      <rect x="8" y="24" width="28" height="13" fill="#b83020"/><rect x="10" y="25" width="3" height="3" fill="#ffffff"/><rect x="31" y="25" width="3" height="3" fill="#ffffff"/><rect x="20" y="24" width="3" height="3" fill="#ffffff"/><rect x="8" y="35" width="28" height="2" fill="#8a2010"/>
+      <rect x="2" y="22" width="7" height="7" fill="#d0a060"/><rect x="35" y="22" width="7" height="7" fill="#d0a060"/><rect x="3" y="23" width="2" height="2" fill="#b8884a"/><rect x="6" y="23" width="2" height="2" fill="#b8884a"/><rect x="36" y="23" width="2" height="2" fill="#b8884a"/><rect x="39" y="23" width="2" height="2" fill="#b8884a"/>
+      <rect x="13" y="38" width="8" height="5" fill="#d0a060"/><rect x="24" y="38" width="8" height="5" fill="#d0a060"/>
     </svg>`,
 
-    9:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
-      <!-- Reznor: fire dinosaur head on a wheel/axle, breathing flame -->
-      <!-- Lava wheel base -->
-      <circle cx="22" cy="34" r="8" fill="#cc4400" stroke="#882200" stroke-width="1.5"/>
-      <circle cx="22" cy="34" r="4" fill="#ff8800"/>
-      <line x1="14" y1="34" x2="30" y2="34" stroke="#882200" stroke-width="2"/>
-      <line x1="22" y1="26" x2="22" y2="42" stroke="#882200" stroke-width="2"/>
-      <!-- Dino head -->
-      <ellipse cx="22" cy="18" rx="12" ry="9" fill="#dd5522"/>
-      <!-- Bony ridge on top -->
-      <polygon points="14,12 16,6 18,12" fill="#882200"/><polygon points="19,10 21,4 23,10" fill="#882200"/>
-      <polygon points="24,10 26,4 28,10" fill="#882200"/><polygon points="29,12 31,6 30,12" fill="#882200"/>
-      <!-- Eyes -->
-      <ellipse cx="16" cy="17" rx="3.5" ry="3" fill="#ffee00" stroke="#cc8800" stroke-width=".8"/>
-      <ellipse cx="28" cy="17" rx="3.5" ry="3" fill="#ffee00" stroke="#cc8800" stroke-width=".8"/>
-      <ellipse cx="16" cy="17" rx="1.5" ry="2" fill="#111"/><ellipse cx="28" cy="17" rx="1.5" ry="2" fill="#111"/>
-      <!-- Snout with fire breath -->
-      <rect x="14" y="22" width="16" height="5" rx="2" fill="#cc4400"/>
-      <path d="M30,24 Q36,20 40,22 Q36,26 34,24 Q38,28 36,30 Q32,27 30,24" fill="#ff6600"/>
-      <path d="M30,24 Q35,22 38,24 Q35,26 32,25" fill="#ffaa00"/>
+    9:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+      <!-- Reznor pixel: grey triceratops on wheel platform, fire breath -->
+      <rect x="10" y="3" width="24" height="7" fill="#7a8088"/>
+      <rect x="21" y="5" width="2" height="6" fill="#f0f0e0"/>
+      <rect x="11" y="9" width="22" height="11" fill="#9aa0a8"/>
+      <rect x="13" y="11" width="6" height="4" fill="#d03030"/><rect x="25" y="11" width="6" height="4" fill="#d03030"/><rect x="15" y="12" width="2" height="2" fill="#111111"/><rect x="27" y="12" width="2" height="2" fill="#111111"/>
+      <rect x="13" y="16" width="18" height="6" fill="#7a8088"/><rect x="14" y="18" width="16" height="4" fill="#3a0808"/><rect x="16" y="18" width="2" height="2" fill="#ffffff"/><rect x="21" y="18" width="2" height="2" fill="#ffffff"/><rect x="26" y="18" width="2" height="2" fill="#ffffff"/>
+      <rect x="17" y="22" width="10" height="3" fill="#ff7020"/><rect x="19" y="25" width="6" height="3" fill="#ffb020"/><rect x="21" y="28" width="2" height="2" fill="#ffe080"/>
+      <rect x="6" y="30" width="32" height="4" fill="#6a4a2a"/>
+      <rect x="12" y="34" width="6" height="6" fill="#8a6a3a"/><rect x="26" y="34" width="6" height="6" fill="#8a6a3a"/><rect x="14" y="36" width="2" height="2" fill="#4a3a2a"/><rect x="28" y="36" width="2" height="2" fill="#4a3a2a"/>
+      <rect x="4" y="40" width="36" height="2" fill="#4a3a2a"/>
     </svg>`,
 
-    10:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
-      <!-- Bowser Jr: small Bowser but with paintbrush and Jr bib/bandana, angry -->
-      <!-- Jr. bib with scary face painted on it -->
-      <ellipse cx="22" cy="34" rx="12" ry="8" fill="#fff" stroke="#333" stroke-width="1.5"/>
-      <!-- Painted scary face on bib -->
-      <circle cx="17" cy="34" r="2" fill="#111"/><circle cx="27" cy="34" r="2" fill="#111"/>
-      <path d="M15,38 Q22,35 29,38" stroke="#111" stroke-width="1.5" fill="none"/>
-      <!-- Face -->
-      <circle cx="22" cy="21" r="13" fill="#dd8833"/>
-      <!-- Small crown (Jr style) -->
-      <polygon points="12,12 14,6 18,11 22,5 26,11 30,6 32,12" fill="#ffd700" stroke="#cc8800" stroke-width=".8"/>
-      <circle cx="22" cy="7" r="2" fill="#ff2222"/>
-      <!-- Angry eyes -->
-      <ellipse cx="16" cy="20" rx="4" ry="3.5" fill="#fff"/><ellipse cx="28" cy="20" rx="4" ry="3.5" fill="#fff"/>
-      <path d="M12,17 Q16,15 20,18" stroke="#111" stroke-width="2" fill="none"/>
-      <path d="M24,18 Q28,15 32,17" stroke="#111" stroke-width="2" fill="none"/>
-      <ellipse cx="16" cy="21" rx="2" ry="2.5" fill="#aa2200"/><ellipse cx="28" cy="21" rx="2" ry="2.5" fill="#aa2200"/>
-      <circle cx="16" cy="21" r="1" fill="#111"/><circle cx="28" cy="21" r="1" fill="#111"/>
-      <!-- Paintbrush -->
-      <rect x="34" y="4" width="3" height="20" rx="1" fill="#aa6633"/>
-      <ellipse cx="35.5" cy="24" rx="3" ry="4" fill="#ff3300"/>
+    10:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+      <!-- Bowser Jr pixel: green head, orange ponytail, scary-grin bib -->
+      <rect x="19" y="1" width="6" height="5" fill="#f08018"/><rect x="19" y="5" width="6" height="2" fill="#d03030"/>
+      <rect x="11" y="8" width="22" height="13" fill="#4aa030"/><rect x="11" y="8" width="2" height="13" fill="#388020"/><rect x="31" y="8" width="2" height="13" fill="#388020"/>
+      <rect x="13" y="10" width="7" height="2" fill="#1a5a10"/><rect x="24" y="10" width="7" height="2" fill="#1a5a10"/>
+      <rect x="14" y="12" width="6" height="4" fill="#ffffff"/><rect x="24" y="12" width="6" height="4" fill="#ffffff"/><rect x="15" y="13" width="2" height="2" fill="#111111"/><rect x="25" y="13" width="2" height="2" fill="#111111"/>
+      <rect x="15" y="16" width="14" height="5" fill="#a8d878"/><rect x="16" y="19" width="12" height="2" fill="#1a4a08"/><rect x="18" y="19" width="2" height="2" fill="#ffffff"/><rect x="24" y="19" width="2" height="2" fill="#ffffff"/>
+      <rect x="10" y="23" width="24" height="12" fill="#f8f8f0"/>
+      <rect x="13" y="27" width="18" height="4" fill="#111111"/><rect x="15" y="27" width="3" height="3" fill="#f8f8f0"/><rect x="20" y="28" width="3" height="3" fill="#f8f8f0"/><rect x="25" y="27" width="3" height="3" fill="#f8f8f0"/>
+      <rect x="6" y="24" width="4" height="7" fill="#4aa030"/><rect x="34" y="24" width="4" height="7" fill="#4aa030"/><rect x="6" y="30" width="4" height="3" fill="#222222"/><rect x="34" y="30" width="4" height="3" fill="#222222"/><rect x="7" y="30" width="2" height="2" fill="#ffffff"/><rect x="35" y="30" width="2" height="2" fill="#ffffff"/>
+      <rect x="14" y="36" width="6" height="5" fill="#4aa030"/><rect x="24" y="36" width="6" height="5" fill="#4aa030"/>
     </svg>`,
 
-    11:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
-      <!-- Kamek: Magikoopa wizard - pointy hat, glasses, wand with star, robe -->
-      <!-- Pointy wizard hat -->
-      <polygon points="22,1 14,18 30,18" fill="#2244cc"/>
-      <rect x="10" y="17" width="24" height="4" rx="1" fill="#3355dd"/>
-      <circle cx="22" cy="5" r="2.5" fill="#ffd700"/>
-      <!-- Star on hat -->
-      <polygon points="22,8 23,11 26,11 24,13 25,16 22,14 19,16 20,13 18,11 21,11" fill="#ffd700" opacity=".7"/>
-      <!-- Robe/body -->
-      <rect x="12" y="34" width="20" height="10" rx="2" fill="#2244cc"/>
-      <!-- Face -->
-      <ellipse cx="22" cy="28" rx="10" ry="9" fill="#ffe0c0"/>
-      <!-- Large round glasses -->
-      <circle cx="16" cy="27" r="4.5" fill="#fff" stroke="#333" stroke-width="1.5"/>
-      <circle cx="28" cy="27" r="4.5" fill="#fff" stroke="#333" stroke-width="1.5"/>
-      <line x1="20.5" y1="27" x2="23.5" y2="27" stroke="#333" stroke-width="1.5"/>
-      <circle cx="16" cy="27" r="2.5" fill="#4488ff"/><circle cx="28" cy="27" r="2.5" fill="#4488ff"/>
-      <circle cx="16" cy="27" r="1" fill="#111"/><circle cx="28" cy="27" r="1" fill="#111"/>
-      <!-- Scheming frown -->
-      <path d="M17,34 Q22,32 27,34" stroke="#885500" stroke-width="1.5" fill="none"/>
-      <!-- Magic wand -->
-      <line x1="34" y1="20" x2="42" y2="8" stroke="#886633" stroke-width="2"/>
-      <polygon points="42,5 44,9 40,9" fill="#ffd700"/>
-      <!-- Magic sparkle from wand -->
-      <circle cx="41" cy="6" r="1.5" fill="#fff"/><circle cx="38" cy="4" r="1" fill="#aaddff"/>
+    11:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+      <!-- Kamek pixel: blue wizard hat + robe, round glasses, wand -->
+      <rect x="13" y="1" width="18" height="4" fill="#2a50c0"/><rect x="29" y="0" width="8" height="3" fill="#2a50c0"/><rect x="35" y="2" width="3" height="3" fill="#2a50c0"/><rect x="15" y="2" width="3" height="2" fill="#4a70e0"/>
+      <rect x="9" y="6" width="26" height="4" fill="#2a50c0"/>
+      <rect x="13" y="10" width="18" height="9" fill="#f0d080"/>
+      <rect x="13" y="11" width="8" height="7" fill="#111111"/><rect x="23" y="11" width="8" height="7" fill="#111111"/><rect x="14" y="12" width="6" height="5" fill="#ffffff"/><rect x="24" y="12" width="6" height="5" fill="#ffffff"/><rect x="16" y="13" width="2" height="2" fill="#111111"/><rect x="26" y="13" width="2" height="2" fill="#111111"/>
+      <rect x="18" y="17" width="8" height="4" fill="#e8c070"/><rect x="19" y="19" width="6" height="2" fill="#6a4a10"/>
+      <rect x="10" y="22" width="24" height="15" fill="#2a50c0"/><rect x="14" y="22" width="16" height="2" fill="#ffffff"/><rect x="21" y="24" width="2" height="13" fill="#ffffff"/><rect x="10" y="35" width="24" height="2" fill="#1a3a90"/>
+      <rect x="6" y="24" width="5" height="6" fill="#2a50c0"/><rect x="33" y="24" width="4" height="6" fill="#2a50c0"/><rect x="6" y="30" width="4" height="3" fill="#f0d080"/><rect x="33" y="30" width="4" height="3" fill="#f0d080"/>
+      <rect x="38" y="14" width="2" height="17" fill="#8a5a2a"/><rect x="37" y="11" width="4" height="4" fill="#40c0ff"/><rect x="38" y="12" width="1" height="1" fill="#ffffff"/>
+      <rect x="14" y="38" width="6" height="4" fill="#1a3a90"/><rect x="24" y="38" width="6" height="4" fill="#1a3a90"/>
     </svg>`,
 
-    12:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
-      <!-- BOWSER: iconic crown, horns, red eyes, fangs, spiked shell, green scales -->
-      <!-- Spiked shell behind -->
-      <ellipse cx="22" cy="30" rx="18" ry="14" fill="#228811"/>
-      <circle cx="10" cy="22" r="4" fill="#ffd700" stroke="#cc8800" stroke-width="1"/>
-      <circle cx="22" cy="18" r="4" fill="#ffd700" stroke="#cc8800" stroke-width="1"/>
-      <circle cx="34" cy="22" r="4" fill="#ffd700" stroke="#cc8800" stroke-width="1"/>
-      <circle cx="14" cy="32" r="3" fill="#ffd700" stroke="#cc8800" stroke-width="1"/>
-      <circle cx="30" cy="32" r="3" fill="#ffd700" stroke="#cc8800" stroke-width="1"/>
-      <!-- Crown -->
-      <polygon points="10,16 12,8 17,14 22,6 27,14 32,8 34,16" fill="#ffd700" stroke="#cc8800" stroke-width="1"/>
-      <circle cx="22" cy="8" r="2.5" fill="#ff2222"/>
-      <circle cx="14" cy="11" r="1.5" fill="#2244ff"/>
-      <circle cx="30" cy="11" r="1.5" fill="#2244ff"/>
-      <!-- Face (orange/tan) -->
-      <ellipse cx="22" cy="28" rx="13" ry="11" fill="#cc7722"/>
-      <!-- ANGRY red eyes with glow -->
-      <ellipse cx="15" cy="24" rx="5" ry="4" fill="#ff2200" stroke="#880000" stroke-width="1"/>
-      <ellipse cx="29" cy="24" rx="5" ry="4" fill="#ff2200" stroke="#880000" stroke-width="1"/>
-      <ellipse cx="15" cy="25" rx="2.5" ry="3" fill="#111"/><ellipse cx="29" cy="25" rx="2.5" ry="3" fill="#111"/>
-      <!-- Massive villain brow -->
-      <path d="M9,21 Q15,17 21,22" stroke="#440000" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <path d="M23,22 Q29,17 35,21" stroke="#440000" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <!-- Snout + nostrils -->
-      <ellipse cx="22" cy="31" rx="7" ry="5" fill="#bb6611"/>
-      <circle cx="19.5" cy="30" r="1.5" fill="#882200"/><circle cx="24.5" cy="30" r="1.5" fill="#882200"/>
-      <!-- Fangs -->
-      <polygon points="16,34 14,42 18,34" fill="#fff" stroke="#aaa" stroke-width=".5"/>
-      <polygon points="28,34 26,34 30,42" fill="#fff" stroke="#aaa" stroke-width=".5"/>
-      <!-- Fire breath hint -->
-      <path d="M30,32 Q36,28 42,30 Q38,34 36,32 Q40,36 38,38 Q34,34 30,32" fill="#ff6600" opacity=".8"/>
+    12:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+      <!-- Bowser pixel: horns, orange hair, red brows, spiked shell, big fangs -->
+      <rect x="8" y="2" width="5" height="8" fill="#f0e8c0"/><rect x="31" y="2" width="5" height="8" fill="#f0e8c0"/><rect x="8" y="2" width="5" height="3" fill="#ffffff"/><rect x="31" y="2" width="5" height="3" fill="#ffffff"/>
+      <rect x="18" y="1" width="8" height="8" fill="#f05018"/><rect x="16" y="2" width="3" height="4" fill="#f05018"/><rect x="26" y="2" width="3" height="4" fill="#f05018"/>
+      <rect x="7" y="9" width="30" height="13" fill="#3a8a20"/><rect x="7" y="9" width="3" height="13" fill="#2a6a14"/><rect x="34" y="9" width="3" height="13" fill="#2a6a14"/>
+      <rect x="11" y="12" width="9" height="3" fill="#d03018"/><rect x="24" y="12" width="9" height="3" fill="#d03018"/>
+      <rect x="13" y="15" width="7" height="4" fill="#ffffff"/><rect x="24" y="15" width="7" height="4" fill="#ffffff"/><rect x="15" y="16" width="2" height="2" fill="#111111"/><rect x="26" y="16" width="2" height="2" fill="#111111"/>
+      <rect x="13" y="19" width="18" height="6" fill="#f0d080"/><rect x="18" y="19" width="2" height="2" fill="#8a6a30"/><rect x="24" y="19" width="2" height="2" fill="#8a6a30"/>
+      <rect x="13" y="22" width="18" height="3" fill="#3a1008"/><rect x="15" y="21" width="3" height="4" fill="#ffffff"/><rect x="26" y="21" width="3" height="4" fill="#ffffff"/>
+      <rect x="6" y="26" width="32" height="11" fill="#1a5a10"/><rect x="8" y="27" width="3" height="3" fill="#ffffff"/><rect x="33" y="27" width="3" height="3" fill="#ffffff"/><rect x="20" y="26" width="3" height="3" fill="#ffffff"/>
+      <rect x="14" y="27" width="16" height="10" fill="#f5e6a0"/><rect x="14" y="30" width="16" height="1" fill="#d8c080"/><rect x="14" y="33" width="16" height="1" fill="#d8c080"/>
+      <rect x="2" y="26" width="5" height="9" fill="#3a8a20"/><rect x="37" y="26" width="5" height="9" fill="#3a8a20"/><rect x="2" y="32" width="5" height="4" fill="#222222"/><rect x="37" y="32" width="5" height="4" fill="#222222"/><rect x="3" y="32" width="2" height="2" fill="#ffffff"/><rect x="38" y="32" width="2" height="2" fill="#ffffff"/>
+      <rect x="11" y="38" width="9" height="5" fill="#3a8a20"/><rect x="24" y="38" width="9" height="5" fill="#3a8a20"/><rect x="11" y="42" width="2" height="1" fill="#ffffff"/><rect x="14" y="42" width="2" height="1" fill="#ffffff"/><rect x="17" y="42" width="2" height="1" fill="#ffffff"/><rect x="24" y="42" width="2" height="1" fill="#ffffff"/><rect x="27" y="42" width="2" height="1" fill="#ffffff"/><rect x="30" y="42" width="2" height="1" fill="#ffffff"/>
     </svg>`,
   };
   return svgs[week]||`<svg width="44" height="44" viewBox="0 0 44 44"><circle cx="22" cy="22" r="18" fill="#444"/><text x="22" y="28" font-size="18" text-anchor="middle" fill="#fff">?</text></svg>`;
@@ -2020,7 +1918,9 @@ function renderWorldMap(){
     const emoji=WORLD_EMOJIS[w-1];
     const dimStyle=!unlocked?'opacity:0.3':'';
     const glowStyle=pct>=80&&unlocked?'filter:drop-shadow(0 0 5px gold)':'';
-    node.innerHTML=`<div class="wk-castle" style="${dimStyle};${glowStyle}">${emoji}</div><div class="wk-lbl">W${w}</div><div class="wk-pct">${unlocked?pct+'%':'🔒'}</div>${w<12?'<div class="wk-conn"></div>':''}`;
+    const showBoss=unlocked&&(w===cw||pct>=80);
+    const iconHtml=showBoss?`<div class="wk-castle wk-boss" style="${glowStyle}">${getBossSVG(w)}</div>`:`<div class="wk-castle" style="${dimStyle};${glowStyle}">${emoji}</div>`;
+    node.innerHTML=`${iconHtml}<div class="wk-lbl">W${w}</div><div class="wk-pct">${unlocked?pct+'%':'🔒'}</div>${w<12?'<div class="wk-conn"></div>':''}`;
     node.title=boss.world+' — '+boss.name;
     node.onclick=()=>openWorldMap(w);
     el.appendChild(node);
@@ -4292,7 +4192,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=11;
+const APP_VERSION=12;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
@@ -4390,45 +4290,52 @@ function toggleCue(el){
   const key=cueKey(el.getAttribute('data-tn'));
   const cue=FORM_CUES[key];if(!cue)return;
   const box=document.createElement('div');box.className='cue-box';
-  box.textContent=cue;
-  if(key==='GOBLETSQUAT'||key==='GOBLETSQUATS'){
-    const cv=document.createElement('canvas');cv.width=32;cv.height=32;cv.style.width='128px';cv.style.height='128px';
-    box.appendChild(cv);startCueDemo(cv);
-    const cap=document.createElement('div');cap.style.cssText="text-align:center;font-size:.7rem;color:#a08000;";cap.textContent='PAKALU SHOWS THE MOVE';box.appendChild(cap);
-  }
+  box.onclick=function(e){e.stopPropagation();};
+  const cv=document.createElement('canvas');cv.width=32;cv.height=32;cv.style.width='128px';cv.style.height='128px';
+  box.appendChild(cv);startCueDemo(cv,key);
+  const cap=document.createElement('div');cap.style.cssText="text-align:center;font-size:.7rem;color:#a08000;margin-bottom:3px;";cap.textContent='PAKALU SHOWS THE MOVE';box.appendChild(cap);
+  const txt=document.createElement('div');txt.textContent=cue;box.appendChild(txt);
+  const x=document.createElement('button');x.textContent='✕ CLOSE';x.style.cssText="display:block;margin:6px auto 0;background:#330000;border:2px solid #7a2000;color:#ff6666;font-family:'Press Start 2P',monospace;font-size:.22rem;padding:6px 12px;cursor:pointer;";x.onclick=function(e){e.stopPropagation();box.remove();};
+  box.appendChild(x);
   row.appendChild(box);
 }
-function startCueDemo(cv){
+function startCueDemo(cv,key){
   const ctx=cv.getContext('2d');
-  const R='#e52222',S='#c8783c',B='#2255cc',K='#222',W='#ffd700';
+  const R='#e52222',S='#c8783c',B='#2255cc',K='#222',G='#666';
+  const hat=(x,y)=>{ctx.fillStyle=R;ctx.fillRect(x,y+1,8,3);ctx.fillRect(x+2,y,5,1);};
+  const head=(x,y)=>{ctx.fillStyle=S;ctx.fillRect(x,y,6,4);ctx.fillStyle=K;ctx.fillRect(x,y+3,6,1);};
+  const bell=(x,y)=>{ctx.fillStyle=K;ctx.fillRect(x,y,5,4);ctx.fillRect(x+1,y-1,3,1);};
+  const bar=()=>{ctx.fillStyle=G;ctx.fillRect(2,2,28,2);};
+  const floor=()=>{ctx.fillStyle=G;ctx.fillRect(0,28,32,1);};
+  const stand=(dx,dy)=>{hat(12+dx,2+dy);head(13+dx,5+dy);ctx.fillStyle=B;ctx.fillRect(13+dx,9+dy,6,9);ctx.fillStyle=S;ctx.fillRect(10+dx,10+dy,3,5);ctx.fillRect(19+dx,10+dy,3,5);ctx.fillStyle=B;ctx.fillRect(13+dx,18+dy,3,9);ctx.fillRect(16+dx,18+dy,3,9);ctx.fillStyle=K;ctx.fillRect(12+dx,27+dy,4,2);ctx.fillRect(16+dx,27+dy,4,2);};
+  const hang=(dy)=>{bar();ctx.fillStyle=S;ctx.fillRect(12,3+dy,2,6);ctx.fillRect(18,3+dy,2,6);hat(13,4+dy);head(13,7+dy);ctx.fillStyle=B;ctx.fillRect(13,11+dy,6,8);ctx.fillRect(13,19+dy,3,10);ctx.fillRect(16,19+dy,3,10);};
+  const plank=(dy)=>{hat(3,9+dy);head(4,12+dy);ctx.fillStyle=B;ctx.fillRect(10,13+dy,13,4);ctx.fillRect(23,13+dy,7,3);ctx.fillStyle=S;ctx.fillRect(11,17+dy,2,7);ctx.fillRect(19,17+dy,2,7);ctx.fillStyle=K;ctx.fillRect(28,15+dy,3,3);floor();};
+  const DEMOS={
+    GOBLETSQUAT:f=>f?(()=>{hat(12,6);head(13,9);ctx.fillStyle=B;ctx.fillRect(13,13,6,6);bell(13,15);ctx.fillStyle=B;ctx.fillRect(8,19,6,3);ctx.fillRect(18,19,6,3);ctx.fillRect(8,22,3,5);ctx.fillRect(21,22,3,5);ctx.fillStyle=K;ctx.fillRect(7,27,4,2);ctx.fillRect(21,27,4,2);})():(()=>{stand(0,0);bell(13,12);})(),
+    KETTLEBELLSWINGS:f=>f?(()=>{hat(12,2);head(13,5);ctx.fillStyle=B;ctx.fillRect(13,9,6,9);ctx.fillStyle=S;ctx.fillRect(19,10,7,2);bell(25,8);ctx.fillStyle=B;ctx.fillRect(13,18,3,10);ctx.fillRect(16,18,3,10);ctx.fillStyle=K;ctx.fillRect(12,28,4,2);ctx.fillRect(16,28,4,2);})():(()=>{hat(15,6);head(16,9);ctx.fillStyle=B;ctx.fillRect(14,13,7,6);ctx.fillRect(15,19,3,9);ctx.fillRect(18,19,3,9);ctx.fillStyle=S;ctx.fillRect(12,14,3,5);bell(10,19);ctx.fillStyle=K;ctx.fillRect(14,28,4,2);ctx.fillRect(18,28,4,2);})(),
+    PULLUPS:f=>f?(()=>{bar();ctx.fillStyle=S;ctx.fillRect(11,4,3,3);ctx.fillRect(18,4,3,3);hat(13,0);head(13,3);ctx.fillStyle=B;ctx.fillRect(13,7,6,8);ctx.fillRect(13,15,3,10);ctx.fillRect(16,15,3,10);})():(()=>{hang(0);})(),
+    KNEESUP:f=>f?(()=>{bar();ctx.fillStyle=S;ctx.fillRect(12,3,2,6);ctx.fillRect(18,3,2,6);hat(13,4);head(13,7);ctx.fillStyle=B;ctx.fillRect(13,11,6,7);ctx.fillRect(13,16,7,3);ctx.fillRect(17,13,3,4);})():(()=>{hang(0);})(),
+    PRESS:f=>f?(()=>{hat(12,4);head(13,7);ctx.fillStyle=B;ctx.fillRect(13,11,6,9);ctx.fillStyle=S;ctx.fillRect(10,12,3,5);ctx.fillRect(20,5,3,7);bell(19,0);ctx.fillStyle=B;ctx.fillRect(13,20,3,8);ctx.fillRect(16,20,3,8);ctx.fillStyle=K;ctx.fillRect(12,28,4,2);ctx.fillRect(16,28,4,2);})():(()=>{hat(12,4);head(13,7);ctx.fillStyle=B;ctx.fillRect(13,11,6,9);ctx.fillStyle=S;ctx.fillRect(10,12,3,5);ctx.fillRect(19,11,3,4);bell(18,7);ctx.fillStyle=B;ctx.fillRect(13,20,3,8);ctx.fillRect(16,20,3,8);ctx.fillStyle=K;ctx.fillRect(12,28,4,2);ctx.fillRect(16,28,4,2);})(),
+    ROW:f=>f?(()=>{hat(5,6);head(6,9);ctx.fillStyle=B;ctx.fillRect(11,10,10,5);ctx.fillRect(14,15,3,11);ctx.fillRect(18,15,3,11);ctx.fillStyle=S;ctx.fillRect(12,15,2,6);ctx.fillRect(21,10,3,4);bell(20,6);ctx.fillStyle=K;ctx.fillRect(13,26,4,2);ctx.fillRect(18,26,4,2);})():(()=>{hat(5,8);head(6,11);ctx.fillStyle=B;ctx.fillRect(11,11,10,5);ctx.fillRect(14,16,3,10);ctx.fillRect(18,16,3,10);ctx.fillStyle=S;ctx.fillRect(12,16,2,6);ctx.fillRect(22,15,2,7);bell(21,22);ctx.fillStyle=K;ctx.fillRect(13,26,4,2);ctx.fillRect(18,26,4,2);})(),
+    FACEPULL:f=>f?(()=>{hat(5,6);head(6,9);ctx.fillStyle=B;ctx.fillRect(11,10,10,5);ctx.fillRect(14,15,3,11);ctx.fillRect(18,15,3,11);ctx.fillStyle=S;ctx.fillRect(12,9,5,2);ctx.fillRect(12,13,5,2);bell(6,7);ctx.fillStyle=K;ctx.fillRect(13,26,4,2);ctx.fillRect(18,26,4,2);})():(()=>{hat(5,8);head(6,11);ctx.fillStyle=B;ctx.fillRect(11,11,10,5);ctx.fillRect(14,16,3,10);ctx.fillRect(18,16,3,10);ctx.fillStyle=S;ctx.fillRect(12,16,2,6);ctx.fillRect(22,15,2,7);bell(21,22);ctx.fillStyle=K;ctx.fillRect(13,26,4,2);ctx.fillRect(18,26,4,2);})(),
+    PUSHUP:f=>f?plank(3):plank(0),
+    PLANK:f=>f?plank(1):plank(0),
+    BURPEE:f=>f?plank(0):stand(0,0),
+    CORE:f=>{floor();if(f){hat(4,20);head(5,23);ctx.fillStyle=B;ctx.fillRect(11,23,11,4);ctx.fillStyle=S;ctx.fillRect(11,18,2,5);ctx.fillRect(17,17,2,6);ctx.fillStyle=B;ctx.fillRect(20,21,8,3);}else{hat(4,20);head(5,23);ctx.fillStyle=B;ctx.fillRect(11,23,11,4);ctx.fillStyle=S;ctx.fillRect(12,18,2,5);ctx.fillRect(15,18,2,5);ctx.fillStyle=B;ctx.fillRect(19,19,4,4);ctx.fillRect(22,16,3,4);}},
+    LUNGE:f=>f?(()=>{hat(12,5);head(13,8);ctx.fillStyle=B;ctx.fillRect(13,12,6,8);ctx.fillStyle=S;ctx.fillRect(10,13,3,4);ctx.fillRect(19,13,3,4);ctx.fillStyle=B;ctx.fillRect(12,20,8,3);ctx.fillRect(18,23,3,5);ctx.fillRect(7,21,7,2);ctx.fillRect(7,23,2,5);ctx.fillStyle=K;ctx.fillRect(17,28,4,2);ctx.fillRect(6,28,4,2);})():stand(0,0),
+    PRONEY:f=>{floor();ctx.fillStyle=B;ctx.fillRect(8,20,14,4);hat(3,17);head(4,20);if(f){ctx.fillStyle=S;ctx.fillRect(3,13,4,2);ctx.fillRect(2,11,3,2);ctx.fillRect(23,17,4,2);ctx.fillRect(26,15,3,2);}else{ctx.fillStyle=S;ctx.fillRect(8,24,5,2);ctx.fillRect(19,24,5,2);}},
+    FLEX:f=>{stand(0,0);if(f){ctx.fillStyle=B;ctx.fillRect(13,9,6,9);ctx.fillStyle=S;ctx.fillRect(9,6,3,5);ctx.fillRect(20,6,3,5);hat(12,2);head(13,5);}}
+  };
+  const MAP={GOBLETSQUAT:'GOBLETSQUAT',GOBLETSQUATS:'GOBLETSQUAT',BODYWEIGHTSQUATS:'GOBLETSQUAT',JUMPSQUATS:'GOBLETSQUAT',
+    KETTLEBELLSWINGS:'KETTLEBELLSWINGS',PULLUPS:'PULLUPS',HANGINGKNEERAISES:'KNEESUP',HANGINGLEGRAISES:'KNEESUP',LSITATTEMPT:'KNEESUP',
+    OVERHEADKETTLEBELLPRESS:'PRESS',KETTLEBELLCLEANPRESS:'PRESS',ONEARMKETTLEBELLROW:'ROW',TABLEDOORFRAMEROWS:'ROW',
+    KETTLEBELLFACEPULLBENTROWHIGH:'FACEPULL',PUSHUPS:'PUSHUP',DIAMONDPUSHUPS:'PUSHUP',CLOSEGRIPPUSHUPS:'PUSHUP',PUSHUPTOSHOULDERTAP:'PUSHUP',
+    PLANKVARIATIONS:'PLANK',PLANKHOLD:'PLANK',BURPEES:'BURPEE',BURPEETOSQUATJUMP:'BURPEE',
+    DEADBUG:'CORE',FLUTTERKICKS:'CORE',LYINGKNEERAISES:'CORE',BICYCLECRUNCH:'CORE',HOLLOWBODYHOLD:'CORE',VSITHOLD:'CORE',
+    REVERSELUNGES:'LUNGE',SINGLELEGROMANIANDEADLIFT:'LUNGE',SINGLELEGRDLBODYWEIGHT:'LUNGE',PRONEYTWRAISES:'PRONEY'};
+  const fn=DEMOS[MAP[key]]||DEMOS.FLEX;
   let frame=0;
-  function draw(f){
-    ctx.clearRect(0,0,32,32);
-    // hat
-    ctx.fillStyle=R;ctx.fillRect(12,f?4:2,8,3);ctx.fillRect(14,f?3:1,5,1);
-    // head
-    ctx.fillStyle=S;ctx.fillRect(13,f?7:5,6,4);
-    // mustache
-    ctx.fillStyle=K;ctx.fillRect(13,f?10:8,6,1);
-    if(f===0){
-      // standing: body + bell at chest
-      ctx.fillStyle=B;ctx.fillRect(13,11,6,8);
-      ctx.fillStyle=S;ctx.fillRect(10,12,3,4);ctx.fillRect(19,12,3,4);
-      ctx.fillStyle=K;ctx.fillRect(13,13,6,3);
-      ctx.fillStyle=W;ctx.fillRect(15,12,2,1);
-      ctx.fillStyle=B;ctx.fillRect(13,19,3,7);ctx.fillRect(16,19,3,7);
-      ctx.fillStyle=K;ctx.fillRect(12,26,4,2);ctx.fillRect(16,26,4,2);
-    }else{
-      // squat: body lower, knees bent out
-      ctx.fillStyle=B;ctx.fillRect(13,11,6,6);
-      ctx.fillStyle=S;ctx.fillRect(10,12,3,4);ctx.fillRect(19,12,3,4);
-      ctx.fillStyle=K;ctx.fillRect(13,13,6,3);
-      ctx.fillStyle=W;ctx.fillRect(15,12,2,1);
-      ctx.fillStyle=B;ctx.fillRect(9,17,5,3);ctx.fillRect(18,17,5,3);
-      ctx.fillStyle=B;ctx.fillRect(9,20,3,6);ctx.fillRect(20,20,3,6);
-      ctx.fillStyle=K;ctx.fillRect(8,26,4,2);ctx.fillRect(20,26,4,2);
-    }
-  }
+  const draw=f=>{ctx.clearRect(0,0,32,32);fn(f);};
   draw(0);
   const iv=setInterval(()=>{frame^=1;if(!cv.isConnected){clearInterval(iv);return;}draw(frame);},450);
 }
