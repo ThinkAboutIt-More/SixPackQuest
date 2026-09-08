@@ -569,8 +569,8 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
   .chk{width:20px;height:20px;font-size:.7rem;}
   .set-dot{width:19px;height:19px;font-size:.6rem;}
   .set-label{font-size:.85rem;}
-  .supp-name{font-size:0.32rem;}
-  .supp-detail{font-size:.85rem;}
+  .supp-name{font-size:0.4rem;}
+  .supp-detail{font-size:.95rem;}
   .supp-icon{font-size:1.5rem;}
   .qa-pill .qa-name{font-size:0.36rem;}
   .cue-box{font-size:1rem;}
@@ -2725,14 +2725,17 @@ function makeSuppSection(supps, done){
       const cnt=groups.reduce((n,g)=>n+g.ids.filter(cid=>suppDone[cid]&&suppDone[cid].checked).length,0);
       const tracks=groups.map(g=>{
         const dots=g.ids.map(cid=>{const c=!!(suppDone[cid]&&suppDone[cid].checked);return`<div class="set-dot${c?' done-set':''}" onclick="event.stopPropagation();toggleSupp('${cid}',${g.p},'${g.name}')">${c?'✓':''}</div>`;}).join('');
-        return`<div class="set-tracker" style="margin-top:4px;">${dots}<span class="set-label">${g.label}</span></div>`;
+        return`<div class="set-tracker" style="flex:1;min-width:140px;justify-content:center;margin-top:4px;">${dots}<span class="set-label">${g.label}</span></div>`;
       }).join('');
       return`<div class="supp-row${cnt>0?' done':''}" id="tr_${t.id}">
         <span class="supp-icon">🥩</span>
-        <div class="supp-info">
-          <div class="supp-name">CHOMPS <span style="color:#555;">— ${cnt} stick${cnt!==1?'s':''}</span></div>
-          <div class="supp-detail">flex slot · tap a dot per stick</div>
-          ${tracks}
+        <div class="supp-info" style="flex:1;">
+          <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;">
+            <div class="supp-name">CHOMPS</div>
+            <div class="supp-detail" style="margin:0;">flex slot · tap a dot per stick</div>
+            <div class="supp-detail" style="margin:0;margin-left:auto;color:#888;">${cnt} stick${cnt!==1?'s':''} today</div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-between;">${tracks}</div>
         </div>
       </div>`;
     }
@@ -2745,7 +2748,7 @@ function makeSuppSection(supps, done){
     // ── CREATINE — its own big daily tap ──
     if(t.id==='daily_creatine'){
       return`<div class="supp-row${isChecked?' done':''}" id="tr_${t.id}" onclick="toggleSupp('${t.id}',0,'Creatine')" style="cursor:pointer;border-color:${isChecked?'':'#886600'};background:${isChecked?'':'#141000'};">
-        <span class="supp-icon" style="font-size:1.8rem;">💊</span>
+        <span class="supp-icon">💊</span>
         <div class="supp-info">
           <div class="supp-name" style="color:#ffcc44;">CREATINE</div>
           <div class="supp-detail">${isChecked?'<span style="color:#00cc44;">✓ taken today</span>':'5g · every single day — tap when taken'}</div>
@@ -2772,9 +2775,9 @@ function makeSuppSection(supps, done){
         <div onclick="pickDrinkForSupp('${t.id}','${opt.name}',${opt.protein})"
           style="background:#0a0a1a;border:2px solid #1a1a44;padding:8px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;">
           <span style="font-size:1.6rem;">${opt.icon}</span>
-          <div style="font-size:0.32rem;color:#ccc;line-height:1.4;">${opt.name}</div>
-          <div style="font-family:VT323,monospace;font-size:.85rem;color:#555;">${opt.detail}</div>
-          <div style="font-size:0.38rem;color:#00ff88;font-weight:bold;margin-top:2px;">+${opt.protein}g</div>
+          <div style="font-size:0.38rem;color:#ccc;line-height:1.4;">${opt.name}</div>
+          <div style="font-family:VT323,monospace;font-size:.95rem;color:#555;">${opt.detail}</div>
+          <div style="font-size:0.44rem;color:#00ff88;font-weight:bold;margin-top:2px;">+${opt.protein}g</div>
         </div>`).join('')+
       `</div>`;
     const shakeName=t.type==='shake1'?t.name.replace(/\s*\+\s*CREATINE/i,''):t.name;
@@ -4191,7 +4194,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=17;
+const APP_VERSION=18;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
