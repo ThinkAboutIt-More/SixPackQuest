@@ -107,7 +107,7 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
 .map-node:hover .map-node-icon{transform:scale(1.12);}
 .map-node.node-cleared .map-node-icon{border-color:#ffd700;box-shadow:0 0 8px rgba(255,215,0,.6);}
 .map-node.node-current .map-node-icon{border-color:#fff;box-shadow:0 0 12px #fff;animation:mnPulse .7s infinite alternate;}
-.map-node.node-locked .map-node-icon{border-color:#333;filter:brightness(.4);cursor:default;}
+.map-node.node-locked .map-node-icon{border-color:#333;filter:brightness(.4);cursor:pointer;}
 .map-node.node-available .map-node-icon{border-color:#ff4444;box-shadow:0 0 6px rgba(255,68,68,.5);}
 @keyframes mnPulse{from{box-shadow:0 0 6px #fff}to{box-shadow:0 0 18px #fff,0 0 30px rgba(255,255,255,.4)}}
 .map-node-lbl{font-family:'Press Start 2P',monospace;font-size:0.16rem;color:#fff;text-shadow:1px 1px 0 #000,-1px -1px 0 #000;margin-top:2px;white-space:nowrap;max-width:70px;text-align:center;line-height:1.4;overflow:hidden;text-overflow:ellipsis;}
@@ -471,6 +471,19 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
 .boss-xp{font-size:0.32rem;color:#00ff88;padding-bottom:10px;}
 .boss-close{background:var(--red);color:#fff;border:none;padding:7px 16px;cursor:pointer;font-family:'Press Start 2P',monospace;font-size:0.32rem;border-bottom:4px solid #880000;margin-bottom:10px;}
 
+
+/* BOSS INFO CARD */
+.bosscard-overlay{position:fixed;inset:0;z-index:10003;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;padding:14px;box-sizing:border-box;}
+.bosscard-overlay.show{opacity:1;pointer-events:all;}
+.bosscard-box{background:#05050f;border:4px solid #c8a020;max-width:330px;width:100%;box-shadow:0 0 0 2px #000,0 0 30px rgba(200,160,32,.35);animation:bossIn .35s cubic-bezier(.4,0,.2,1);text-align:center;}
+.bosscard-hdr{background:#1a1200;border-bottom:3px solid #c8a020;padding:7px 10px;display:flex;align-items:center;justify-content:space-between;}
+.bosscard-world{font-family:'Press Start 2P',monospace;font-size:0.22rem;color:#c8a020;text-align:left;}
+.bosscard-x{background:var(--red);color:#fff;border:none;padding:3px 8px;cursor:pointer;font-family:'Press Start 2P',monospace;font-size:0.24rem;border-bottom:3px solid #880000;}
+.bosscard-body{padding:12px 14px;}
+.bosscard-name{font-family:'Press Start 2P',monospace;font-size:0.4rem;color:#fff;text-shadow:2px 2px 0 #7a5800;margin:8px 0 4px;}
+.bosscard-status{font-family:'Press Start 2P',monospace;font-size:0.22rem;margin-bottom:8px;}
+.bosscard-motive{font-family:'VT323',monospace;font-size:1.05rem;color:#ccc;line-height:1.45;text-align:left;background:#0a0a18;border:2px solid #222;padding:10px;}
+
 /* PAUSE OVERLAY */
 .pause-overlay{position:fixed;inset:0;z-index:10002;background:rgba(0,0,0,.97);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s;}
 .pause-overlay.show{opacity:1;pointer-events:all;}
@@ -805,21 +818,21 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
 
 <!-- SMW FULL MAP OVERLAY -->
 <div id="smwMapOverlay" style="display:none;position:fixed;inset:0;z-index:9500;background:#000;overflow-y:auto;">
-  <div style="position:relative;max-width:420px;margin:0 auto;padding:8px 8px 80px;">
+  <div style="position:relative;max-width:460px;margin:0 auto;padding:8px 8px 80px;">
     <!-- Header -->
     <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 4px;margin-bottom:6px;">
-      <div style="font-family:'Press Start 2P',monospace;font-size:0.36rem;color:var(--coin);text-shadow:2px 2px 0 #7a5800;">🗺 WORLD MAP</div>
+      <div><div style="font-family:'Press Start 2P',monospace;font-size:0.4rem;color:var(--coin);text-shadow:2px 2px 0 #7a5800;">🗺 WORLD MAP</div><div style="font-family:'Press Start 2P',monospace;font-size:0.2rem;color:#998;margin-top:4px;">12 WEEKS TO THE PRINCESS · TAP ANY BOSS</div></div>
       <button onclick="closeWorldMap()" style="background:var(--red);color:#fff;border:none;padding:5px 10px;font-family:'Press Start 2P',monospace;font-size:0.28rem;border-bottom:3px solid #880000;cursor:pointer;">✕ CLOSE</button>
     </div>
     <!-- Canvas terrain -->
     <div style="position:relative;">
-      <canvas id="mapCanvas" width="400" height="540" style="width:100%;display:block;image-rendering:pixelated;border:3px solid #333;"></canvas>
+      <canvas id="mapCanvas" width="400" height="540" style="width:100%;display:block;image-rendering:pixelated;border:4px solid #c8a020;box-shadow:0 0 0 2px #2a1a00,0 0 24px rgba(200,160,32,.35);border-radius:3px;"></canvas>
       <!-- Node overlays injected by JS -->
       <div id="mapNodeOverlay" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;"></div>
     </div>
     <!-- Legend -->
     <div style="display:flex;gap:10px;flex-wrap:wrap;padding:8px 4px;font-family:'VT323',monospace;font-size:.68rem;color:#777;">
-      <span>🟡 CURRENT WEEK</span><span>✓ CLEARED</span><span>🔒 LOCKED</span><span>⚔ TAP TO FIGHT BOSS</span>
+      <span>🟡 CURRENT</span><span>✓ CLEARED</span><span>🔒 LOCKED</span><span>👆 TAP A BOSS FOR HIS STORY</span>
     </div>
   </div>
 </div>
@@ -1582,18 +1595,18 @@ function getBossSVG(week){
 
 // BOSS DATA + WEEK CASTLE ICONS
 const BOSSES=[
-  {week:1,name:'GOOMBOSS',castle:'\u{1F451}',world:'WORLD 1 — GOOMBA PLAINS',story:'The king of all Goombas marched out to stop day one. You walked right through him. Week 1 complete. You showed up every day. That\'s already more than most.',defeated:'GOOMBOSS DEFEATED!'},
-  {week:2,name:'PETEY PIRANHA',castle:'\u{1F337}',world:'WORLD 2 — PETEY\'S GARDEN',story:'Petey rooted himself in your meadow. Two weeks in, your body is already changing. Soreness dropping. Pull-ups getting easier. Petey wilts.',defeated:'PETEY PIRANHA DEFEATED!'},
-  {week:3,name:'WHOMP KING',castle:'\u{1F5FF}',world:'WORLD 3 — WHOMP\'S CAVE',story:'The stone king tried to flatten your new habit. But you\'re building something real. Arms and shoulders visibly different. Week 3 belongs to you.',defeated:'WHOMP KING DEFEATED!'},
-  {week:4,name:'BOO',castle:'\u2B50',world:'WORLD 4 \u2605 BOO\'S BRIDGE',story:'A shy little Boo guarded the bridge. You crossed anyway, stronger every rep. Upper abs faintly showing. He covers his eyes and floats away.',defeated:'BOO DEFEATED — \u2605 STAR POWER UNLOCKED \u2605'},
-  {week:5,name:'BOOM BOOM',castle:'\u{1F4A5}',world:'WORLD 5 — BOOM BOOM\'S WOODS FORT',story:'Boom Boom guarded the dark woods. He bet you\'d quit. He lost. Your strength is real now. The kettlebell feels lighter. Boom Boom is shook.',defeated:'BOOM BOOM DEFEATED!'},
-  {week:6,name:'GOOPER BLOOPER',castle:'\u{1F991}',world:'WORLD 6 — BLOOPER BAY',story:'Gooper Blooper inked the whole bay black. Look at you — visible recomposition, upper abs showing, back and arms popping. The tide turns.',defeated:'GOOPER BLOOPER DEFEATED — HALFWAY TO THE PRINCESS!'},
-  {week:7,name:'KING BOB-OMB',castle:'\u2B50',world:'WORLD 7 \u2605 BOB-OMB HILL',story:'The King of Bob-ombs rolled down from his hill to stop you. 7 weeks in — abs without flexing. Athletic look locked. The king self-destructs.',defeated:'KING BOB-OMB DEFEATED — \u2605 UNSTOPPABLE \u2605'},
-  {week:8,name:'KAMEK',castle:'\u{1F52E}',world:'WORLD 8 — KAMEK\'S MOON',story:'The wizard cursed your darkest week with doubt. His magic hits hard. You hit harder. Kamek never met someone who trained through hotel rooms and tour buses.',defeated:'KAMEK DEFEATED!'},
-  {week:9,name:'DRY BOWSER',castle:'\u{1F480}',world:'WORLD 9 — THE DRY BONES LAIR',story:'Even bones climb out of the lava. Just like your life — always moving. You learned to train anywhere. Clear abs. Back pops.',defeated:'DRY BOWSER DEFEATED — 3 WEEKS LEFT!'},
-  {week:10,name:'BOWSER JR.',castle:'\u2B50',world:'WORLD 10 \u2605 AIRSHIP ARMADA',story:'The prince thinks he can stop you 2 weeks from the castle. Ten weeks of discipline. Ten weeks of proof. Junior cries back to daddy.',defeated:'BOWSER JR. DEFEATED — \u2605 FINAL STAR \u2605'},
-  {week:11,name:'KING BOO',castle:'\u2744\uFE0F',world:'WORLD 11 — KING BOO\'S ICE MANSION',story:'The King of Boos froze your final stretch in doubt. Eleven weeks built something doubt can\'t touch. The princess is one week away.',defeated:'KING BOO DEFEATED — FINAL WEEK UNLOCKED!'},
-  {week:12,name:'BOWSER',castle:'\u{1F3F0}',world:'WORLD 12 — BOWSER\'S FINAL CASTLE',story:'The final boss. He held her for 12 weeks believing you\'d never make it. 12 weeks ago you had never worked out seriously. Today you defeat Bowser. Go get her.',defeated:'BOWSER DEFEATED — PRINCESS SAVED! \u{1F496}'},
+  {week:1,name:'GOOMBOSS',castle:'\u{1F451}',world:'WORLD 1 — GOOMBA PLAINS',story:'The king of all Goombas marched out to stop day one. You walked right through him. Week 1 complete. You showed up every day. That\'s already more than most.',defeated:'GOOMBOSS DEFEATED!',motive:'The self-crowned King of Goombas has stomped these plains since before you could do a single pull-up. He thinks you\'re a tourist who quits by Wednesday. Show him what twelve weeks of showing up looks like.'},
+  {week:2,name:'PETEY PIRANHA',castle:'\u{1F337}',world:'WORLD 2 — PETEY\'S GARDEN',story:'Petey rooted himself in your meadow. Two weeks in, your body is already changing. Soreness dropping. Pull-ups getting easier. Petey wilts.',defeated:'PETEY PIRANHA DEFEATED!',motive:'Petey\'s roots run deep in this garden, and he\'s been feeding on skipped workouts and midnight snacks. He\'s sure you\'ll wilt. Water yourself instead — protein, sleep, reps — and watch him droop.'},
+  {week:3,name:'WHOMP KING',castle:'\u{1F5FF}',world:'WORLD 3 — WHOMP\'S CAVE',story:'The stone king tried to flatten your new habit. But you\'re building something real. Arms and shoulders visibly different. Week 3 belongs to you.',defeated:'WHOMP KING DEFEATED!',motive:'The Whomp King flattens anyone without a foundation. He heard you groan through week one\'s squats and placed his bet. Every plank, every showed-up day, cracks his stone a little more.'},
+  {week:4,name:'BOO',castle:'\u2B50',world:'WORLD 4 \u2605 BOO\'S BRIDGE',story:'A shy little Boo guarded the bridge. You crossed anyway, stronger every rep. Upper abs faintly showing. He covers his eyes and floats away.',defeated:'BOO DEFEATED — \u2605 STAR POWER UNLOCKED \u2605',motive:'Boo only moves when you look away. He haunts this bridge whispering that nobody\'s watching, so why bother? Someone\'s keeping score. You are. Cross without looking back.'},
+  {week:5,name:'BOOM BOOM',castle:'\u{1F4A5}',world:'WORLD 5 — BOOM BOOM\'S WOODS FORT',story:'Boom Boom guarded the dark woods. He bet you\'d quit. He lost. Your strength is real now. The kettlebell feels lighter. Boom Boom is shook.',defeated:'BOOM BOOM DEFEATED!',motive:'Boom Boom respects exactly one thing: momentum. He spins through these woods smashing anything that slows down. Skip a day and he knows. String them together and even his fists can\'t catch you.'},
+  {week:6,name:'GOOPER BLOOPER',castle:'\u{1F991}',world:'WORLD 6 — BLOOPER BAY',story:'Gooper Blooper inked the whole bay black. Look at you — visible recomposition, upper abs showing, back and arms popping. The tide turns.',defeated:'GOOPER BLOOPER DEFEATED — HALFWAY TO THE PRINCESS!',motive:'Gooper Blooper inked the whole bay black so nobody could see their own reflection. Yours is starting to scare him — the recomposition shows and the ink can\'t hide it. Halfway bosses hit hardest. Hit back.'},
+  {week:7,name:'KING BOB-OMB',castle:'\u2B50',world:'WORLD 7 \u2605 BOB-OMB HILL',story:'The King of Bob-ombs rolled down from his hill to stop you. 7 weeks in — abs without flexing. Athletic look locked. The king self-destructs.',defeated:'KING BOB-OMB DEFEATED — \u2605 UNSTOPPABLE \u2605',motive:'The King of Bob-ombs rolls downhill with a short fuse and a shorter memory. He forgot week one happened. He forgot every rep you banked. Remind him — light the fuse and don\'t be there when he blows.'},
+  {week:8,name:'KAMEK',castle:'\u{1F52E}',world:'WORLD 8 — KAMEK\'S MOON',story:'The wizard cursed your darkest week with doubt. His magic hits hard. You hit harder. Kamek never met someone who trained through hotel rooms and tour buses.',defeated:'KAMEK DEFEATED!',motive:'Kamek\'s magic can\'t touch muscle, so he casts the only spell that works on you: doubt. Plateaued. Peaked. Done. Eight weeks of evidence says his wand is out of charge.'},
+  {week:9,name:'DRY BOWSER',castle:'\u{1F480}',world:'WORLD 9 — THE DRY BONES LAIR',story:'Even bones climb out of the lava. Just like your life — always moving. You learned to train anywhere. Clear abs. Back pops.',defeated:'DRY BOWSER DEFEATED — 3 WEEKS LEFT!',motive:'Bowser\'s bones dragged themselves out of the lava for one reason: if you stop here, nobody ever knows how the story ends. Skeletons don\'t get tired. Neither do you. Keep moving.'},
+  {week:10,name:'BOWSER JR.',castle:'\u2B50',world:'WORLD 10 \u2605 AIRSHIP ARMADA',story:'The prince thinks he can stop you 2 weeks from the castle. Ten weeks of discipline. Ten weeks of proof. Junior cries back to daddy.',defeated:'BOWSER JR. DEFEATED — \u2605 FINAL STAR \u2605',motive:'Junior called daddy. Daddy said handle it. So the prince painted on his scariest grin and parked the whole armada in your sky. He\'s about to learn what ten weeks of discipline does to a kid who skips leg day.'},
+  {week:11,name:'KING BOO',castle:'\u2744\uFE0F',world:'WORLD 11 — KING BOO\'S ICE MANSION',story:'The King of Boos froze your final stretch in doubt. Eleven weeks built something doubt can\'t touch. The princess is one week away.',defeated:'KING BOO DEFEATED — FINAL WEEK UNLOCKED!',motive:'The King of Boos froze this mansion at the exact temperature of your last excuse. He\'s been saving it for week eleven, when you\'re tired enough to believe it. One more week of proof melts the whole place.'},
+  {week:12,name:'BOWSER',castle:'\u{1F3F0}',world:'WORLD 12 — BOWSER\'S FINAL CASTLE',story:'The final boss. He held her for 12 weeks believing you\'d never make it. 12 weeks ago you had never worked out seriously. Today you defeat Bowser. Go get her.',defeated:'BOWSER DEFEATED — PRINCESS SAVED! \u{1F496}',motive:'Twelve weeks ago Bowser saw your day one and laughed. He\'s not laughing now. He\'s standing between you and her with everything he has left — and you\'re holding twelve weeks of receipts. Go get her.'},
 ];
 
 // ================================================================
@@ -1951,9 +1964,9 @@ function drawSMWMap(focusWeek){
 
   // WINDING PATH — thick dotted line connecting nodes
   ctx.save();
-  ctx.setLineDash([8,5]);
-  ctx.lineWidth=4;
-  ctx.strokeStyle='rgba(255,215,0,0.65)';
+  ctx.setLineDash([0.1,12]);
+  ctx.lineWidth=5;
+  ctx.strokeStyle='rgba(255,232,160,0.95)';
   ctx.lineCap='round';
   ctx.beginPath();
   MAP_NODES.forEach((n,i)=>{
@@ -1969,9 +1982,9 @@ function drawSMWMap(focusWeek){
   ctx.stroke();
 
   // Dim future path
-  ctx.strokeStyle='rgba(80,80,80,0.4)';
-  ctx.setLineDash([4,6]);
-  ctx.lineWidth=3;
+  ctx.strokeStyle='rgba(150,150,150,0.5)';
+  ctx.setLineDash([0.1,12]);
+  ctx.lineWidth=4;
   ctx.beginPath();
   let pastCurrent=false;
   MAP_NODES.forEach((n,i)=>{
@@ -1994,9 +2007,70 @@ function drawSMWMap(focusWeek){
     ctx.restore();
   }
 
+
+  // SMB3-style hills with eyes in grassland
+  [[60,368],[180,360],[300,368]].forEach(([hx,hy])=>{
+    ctx.fillStyle='#2a6a14';ctx.beginPath();ctx.arc(hx,hy,16,Math.PI,0);ctx.fill();
+    ctx.fillStyle='#fff';ctx.fillRect(hx-7,hy-12,5,6);ctx.fillRect(hx+2,hy-12,5,6);
+    ctx.fillStyle='#000';ctx.fillRect(hx-5,hy-10,2,3);ctx.fillRect(hx+4,hy-10,2,3);
+  });
+  // Green pipes
+  [[120,440],[340,400]].forEach(([px,py])=>{
+    ctx.fillStyle='#1a7a10';ctx.fillRect(px-9,py-14,18,14);ctx.fillRect(px-11,py-18,22,5);
+    ctx.fillStyle='#3aaa1a';ctx.fillRect(px-9,py-14,5,14);ctx.fillRect(px-11,py-18,22,2);
+    ctx.fillStyle='#0a4a08';ctx.fillRect(px-11,py-6,22,2);
+  });
+  // Piranha plant peeking from a pipe near the forest
+  ctx.fillStyle='#1a7a10';ctx.fillRect(200,268,16,10);ctx.fillRect(198,264,20,4);
+  ctx.fillStyle='#d03030';ctx.beginPath();ctx.arc(208,258,7,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#fff';ctx.fillRect(204,254,3,3);ctx.fillRect(210,257,3,3);
+  ctx.fillStyle='#fff';ctx.fillRect(202,258,12,2);
+  ctx.fillStyle='#3aaa1a';ctx.fillRect(206,262,4,6);
+  // Mushroom house in grassland
+  ctx.fillStyle='#f0e0c0';ctx.fillRect(34,462,16,12);
+  ctx.fillStyle='#d03030';ctx.beginPath();ctx.arc(42,462,11,Math.PI,0);ctx.fill();
+  ctx.fillStyle='#fff';ctx.fillRect(36,455,4,4);ctx.fillRect(46,458,4,4);
+  ctx.fillStyle='#5a3010';ctx.fillRect(39,466,6,8);
+  // Crescent moon in star zone
+  ctx.fillStyle='#ffe9a8';ctx.beginPath();ctx.arc(95,120,10,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#000033';ctx.beginPath();ctx.arc(99,117,9,0,Math.PI*2);ctx.fill();
+  // Purple crystals in cave zone
+  [[35,300],[70,320],[110,310]].forEach(([cx,cy])=>{
+    ctx.fillStyle='#7a3aaa';
+    ctx.beginPath();ctx.moveTo(cx,cy-12);ctx.lineTo(cx+6,cy);ctx.lineTo(cx,cy+3);ctx.lineTo(cx-6,cy);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#b070e0';ctx.fillRect(cx-2,cy-9,2,7);
+  });
+  // Bones in lava zone
+  ctx.strokeStyle='#e8e0d0';ctx.lineWidth=3;
+  [[140,180],[205,150],[240,175]].forEach(([bx,by])=>{
+    ctx.beginPath();ctx.moveTo(bx-6,by-3);ctx.lineTo(bx+6,by+3);ctx.moveTo(bx+6,by-3);ctx.lineTo(bx-6,by+3);ctx.stroke();
+  });
+  // Cheep-cheep arcs over the water zone
+  [[285,310],[325,330]].forEach(([fx,fy])=>{
+    ctx.fillStyle='#e04030';ctx.beginPath();ctx.ellipse(fx,fy,6,4,-0.4,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.moveTo(fx+5,fy);ctx.lineTo(fx+10,fy-4);ctx.lineTo(fx+10,fy+4);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#fff';ctx.fillRect(fx-3,fy-2,2,2);ctx.fillStyle='#000';ctx.fillRect(fx-3,fy-2,1,1);
+    ctx.fillStyle='#ffe0a0';ctx.fillRect(fx-2,fy+2,5,2);
+  });
+  // Snowman in ice zone
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(255,148,8,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(255,137,5,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#000';ctx.fillRect(253,135,1,1);ctx.fillRect(256,135,1,1);
+  ctx.fillStyle='#e08020';ctx.fillRect(254,137,3,1);
+  ctx.fillStyle='#333';ctx.fillRect(252,131,7,2);ctx.fillRect(253,128,5,3);
+  // Question block near start
+  ctx.fillStyle='#f8b800';ctx.fillRect(38,436,12,12);ctx.strokeStyle='#7a5800';ctx.lineWidth=2;ctx.strokeRect(38,436,12,12);
+  ctx.fillStyle='#7a5800';ctx.font='bold 9px monospace';ctx.textAlign='center';ctx.fillText('?',44,445);
+  // Zone labels above each node
+  ctx.font='7px "Press Start 2P",monospace';ctx.textAlign='center';
+  MAP_NODES.forEach(n=>{
+    ctx.fillStyle='rgba(0,0,0,0.55)';ctx.fillText(n.name,n.x+1,n.y-31);
+    ctx.fillStyle='#fff';ctx.fillText(n.name,n.x,n.y-32);
+  });
+
   // DRAW PAKALU at current week (tiny pixel art)
   const pakN=MAP_NODES[cw-1];
-  drawMapPakalu(ctx,pakN.x,pakN.y-26);
+  drawMapPakalu(ctx,pakN.x,pakN.y-46);
 
   // INJECT HTML NODES OVER CANVAS
   buildMapNodeOverlay(cw);
@@ -2059,25 +2133,46 @@ function buildMapNodeOverlay(cw){
       ${pctLabel}
     `;
 
-    if(unlocked){
-      div.onclick=()=>{
-        closeWorldMap();
-        const s=loadS();
-        if(s['_boss_'+n.w]){
-          showNotif(`WORLD ${n.w} — ${BOSSES[n.w-1].name} DEFEATED ✓`,'grn');
-        }else if(isCurrent){
-          showNotif(`WORLD ${n.w} — ${Math.round(pct)}% · HIT 80% TO FIGHT ${BOSSES[n.w-1].name.split(' ')[0]}!`,'');
-        }else{
-          // Past incomplete week — never frame as failed, always as catchable
-          const left=Math.max(0,80-pct);
-          showNotif(`WEEK ${n.w} — ${Math.round(pct)}% · ${left}% left to unlock the boss · go back and finish it!`,'grn');
-        }
-      };
-      div.style.pointerEvents='all';
-    }
+    div.onclick=()=>{openBossCard(n.w);};
+    div.style.pointerEvents='all';
 
     overlay.appendChild(div);
   });
+}
+
+
+// BOSS INFO CARD — tap any boss on the map
+function openBossCard(w){
+  const boss=BOSSES[w-1];if(!boss)return;
+  const cw=getQW();const pct=getWeekPct(w);
+  const unlocked=w<=cw;
+  const defeated=!!loadS()['_boss_'+w];
+  const isCurrent=w===cw;
+  let ov=document.getElementById('bosscardOverlay');
+  if(!ov){
+    ov=document.createElement('div');ov.id='bosscardOverlay';ov.className='bosscard-overlay';
+    ov.onclick=e=>{if(e.target===ov)closeBossCard();};
+    document.body.appendChild(ov);
+  }
+  const svg=getBossSVG(w).replace('width="44"','width="96"').replace('height="44"','height="96"');
+  let status,statusColor;
+  if(defeated){status='✓ DEFEATED';statusColor='#00ff88';}
+  else if(isCurrent){status='⚔ CURRENT WEEK — '+Math.round(pct)+'%'+(pct>=80?' · THE FIGHT IS LIVE':' · HIT 80% TO FIGHT');statusColor=pct>=80?'#00ff88':'#ffd828';}
+  else if(unlocked){status='⚠ '+Math.round(pct)+'% — GO BACK AND FINISH IT';statusColor='#ff8844';}
+  else{status='🔒 LOCKED';statusColor='#666';}
+  ov.innerHTML=`<div class="bosscard-box">
+    <div class="bosscard-hdr"><div class="bosscard-world">${boss.world}</div><button class="bosscard-x" onclick="closeBossCard()">✕</button></div>
+    <div class="bosscard-body">
+      <div style="${defeated?'filter:grayscale(.4);':!unlocked?'filter:grayscale(1) brightness(.6);':''}display:inline-block;image-rendering:pixelated;">${svg}</div>
+      <div class="bosscard-name">${boss.name}</div>
+      <div class="bosscard-status" style="color:${statusColor};">${status}</div>
+      <div class="bosscard-motive">${boss.motive||''}</div>
+    </div>
+  </div>`;
+  ov.classList.add('show');
+}
+function closeBossCard(){
+  const ov=document.getElementById('bosscardOverlay');if(ov)ov.classList.remove('show');
 }
 
 function renderPowerupBar(){
@@ -4014,7 +4109,7 @@ renderAll();renderQuickAdd();
 setupHiddenBlocks();
 setTimeout(showDailyMessage, 800);
 document.addEventListener('click',()=>{if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();},{once:true});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeWorldMap();closeSyncPanel();closeStats();closeWeeklyRecap();closePR();closePhotoLog();}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeBossCard();closeWorldMap();closeSyncPanel();closeStats();closeWeeklyRecap();closePR();closePhotoLog();}});
 window.addEventListener('resize',()=>{if(document.getElementById('smwMapOverlay').style.display!=='none')drawSMWMap();});
 setInterval(renderAll,60000);
 
@@ -4097,7 +4192,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=23;
+const APP_VERSION=24;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
