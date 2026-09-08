@@ -4191,7 +4191,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=16;
+const APP_VERSION=17;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
@@ -4282,6 +4282,27 @@ FLUTTERKICKS:'On your back, legs straight, small fast alternating kicks just off
 JUMPSQUATS:'Squat deep, explode off the floor, land soft straight into the next rep.',
 PULLUPS:'Dead hang to chin over the bar, control the way down. No kicking - leave 1-2 reps in the tank every set.',
 KETTLEBELLSWINGS:'Hike the bell back between your legs, snap your hips forward to float it to chest height. Arms are ropes - the hips do ALL the work.',
+JUMPROPEWARMUP:'Easy single bounces, one turn of the rope per hop. Stay on the balls of your feet, elbows tucked, wrists do the turning. Just getting the blood moving.',
+JUMPROPE:'One bounce per rope turn, knees soft, jumps barely off the ground. Elbows in, wrists spin - the arms stay quiet.',
+JUMPROPEINTERVALS:'Fast feet for the work block: quick small hops, chest up, rope speed from the wrists. Rest fully between blocks so every interval stays crisp.',
+JUMPROPECIRCUIT:'Move station to station with the rope as your pacer. Rhythm first, speed second - a missed rep just means restart on the next turn.',
+JUMPINGJACKSWARMUP:'Feet together, arms at your sides - jump to feet wide with hands overhead, back to start. Full range, light landings. Wake the shoulders and calves up.',
+SHADOWJUMPJUMPINGJACKS:'No rope needed - mime the turn or do jumping jacks. Same light bounces, same wrist action. Travel-proof cardio.',
+SHADOWJUMPCIRCUIT:'Shadow rope between stations keeps the heart rate up without packing a rope. Small hops, quick feet, breathe through the nose if you can.',
+BURPEEINTERVALS:'Sprint blocks of burpees with full rest between. Chest to floor every rep, pop up fast, small jump. Stop the block when form slips, not when lungs give out.',
+KBSWINGS:'Hike the bell back between your legs, snap your hips forward to float it to chest height. Arms are ropes - the hips do ALL the work.',
+KBROW:'One hand braced on your knee, flat back. Row the bell to your hip pocket and squeeze the lat one second at the top.',
+'6PULLUPS':'Dead hang to chin over the bar, control the way down. No kicking - leave 1-2 reps in the tank every set.',
+'15PUSHUPS':'Chest to the floor, body one straight line, full lockout at the top. Drop to knees before the form breaks.',
+'20BURPEES':'Down, chest to floor, pop up, small jump. Pace yourself - smooth reps beat sprinting the first round.',
+'20KETTLEBELLSWINGS':'Hike the bell back between your legs, snap your hips forward to float it to chest height. Arms are ropes - the hips do ALL the work.',
+'30KETTLEBELLSWINGS':'Hike the bell back between your legs, snap your hips forward to float it to chest height. Arms are ropes - the hips do ALL the work.',
+'10CLOSEGRIPPUSHUPS':'Hands just inside shoulder width, elbows skim your ribs on the way down. Triceps and inner chest.',
+'10DIAMONDPUSHUPS':'Thumbs and fingers form a diamond under your chest, elbows track tight along your ribs. All triceps.',
+'10KETTLEBELLPRESSARM':'Bell in one hand at shoulder, press straight up until bicep touches ear. Ribs down, no back lean. Alternate arms each set.',
+'10TABLEROWS':'Hang under a sturdy table edge (or hold a doorframe), body one straight line, pull your chest to the edge. The flatter your body, the harder it is.',
+'15JUMPSQUATS':'Squat deep, explode off the floor, land soft straight into the next rep.',
+'2EXTRABURPEEROUNDS':'Down, chest to floor, pop up, small jump. Pace yourself - smooth reps beat sprinting the first round.',
 };
 function toggleCue(el){
   const row=el.closest('.task-row');if(!row)return;
@@ -4323,6 +4344,26 @@ function startCueDemo(cv,key){
     CORE:f=>{floor();if(f){hat(4,20);head(5,23);ctx.fillStyle=B;ctx.fillRect(11,23,11,4);ctx.fillStyle=S;ctx.fillRect(11,18,2,5);ctx.fillRect(17,17,2,6);ctx.fillStyle=B;ctx.fillRect(20,21,8,3);}else{hat(4,20);head(5,23);ctx.fillStyle=B;ctx.fillRect(11,23,11,4);ctx.fillStyle=S;ctx.fillRect(12,18,2,5);ctx.fillRect(15,18,2,5);ctx.fillStyle=B;ctx.fillRect(19,19,4,4);ctx.fillRect(22,16,3,4);}},
     LUNGE:f=>f?(()=>{hat(12,5);head(13,8);ctx.fillStyle=B;ctx.fillRect(13,12,6,8);ctx.fillStyle=S;ctx.fillRect(10,13,3,4);ctx.fillRect(19,13,3,4);ctx.fillStyle=B;ctx.fillRect(12,20,8,3);ctx.fillRect(18,23,3,5);ctx.fillRect(7,21,7,2);ctx.fillRect(7,23,2,5);ctx.fillStyle=K;ctx.fillRect(17,28,4,2);ctx.fillRect(6,28,4,2);})():stand(0,0),
     PRONEY:f=>{floor();ctx.fillStyle=B;ctx.fillRect(8,20,14,4);hat(3,17);head(4,20);if(f){ctx.fillStyle=S;ctx.fillRect(3,13,4,2);ctx.fillRect(2,11,3,2);ctx.fillRect(23,17,4,2);ctx.fillRect(26,15,3,2);}else{ctx.fillStyle=S;ctx.fillRect(8,24,5,2);ctx.fillRect(19,24,5,2);}},
+    JUMPROPE:f=>{
+      if(f){ // airborne, rope under feet
+        stand(0,-3);
+        ctx.fillStyle=S;
+        [[7,26],[9,29],[13,30],[19,30],[23,29],[25,26]].forEach(p=>ctx.fillRect(p[0],p[1],2,1));
+      }else{ // standing, rope overhead
+        stand(0,0);
+        ctx.fillStyle=S;
+        [[7,6],[8,3],[11,1],[20,1],[23,3],[24,6]].forEach(p=>ctx.fillRect(p[0],p[1],2,1));
+      }
+    },
+    JACKS:f=>{
+      if(f){ // arms up, legs spread
+        hat(12,0);head(13,3);
+        ctx.fillStyle=B;ctx.fillRect(13,7,6,9);
+        ctx.fillStyle=S;ctx.fillRect(9,2,3,5);ctx.fillRect(20,2,3,5);
+        ctx.fillStyle=B;ctx.fillRect(9,16,4,10);ctx.fillRect(19,16,4,10);
+        ctx.fillStyle=K;ctx.fillRect(8,26,4,2);ctx.fillRect(20,26,4,2);
+      }else stand(0,0);
+    },
     FLEX:f=>{stand(0,0);if(f){ctx.fillStyle=B;ctx.fillRect(13,9,6,9);ctx.fillStyle=S;ctx.fillRect(9,6,3,5);ctx.fillRect(20,6,3,5);hat(12,2);head(13,5);}}
   };
   const MAP={GOBLETSQUAT:'GOBLETSQUAT',GOBLETSQUATS:'GOBLETSQUAT',BODYWEIGHTSQUATS:'GOBLETSQUAT',JUMPSQUATS:'GOBLETSQUAT',
@@ -4331,7 +4372,12 @@ function startCueDemo(cv,key){
     KETTLEBELLFACEPULLBENTROWHIGH:'FACEPULL',PUSHUPS:'PUSHUP',DIAMONDPUSHUPS:'PUSHUP',CLOSEGRIPPUSHUPS:'PUSHUP',PUSHUPTOSHOULDERTAP:'PUSHUP',
     PLANKVARIATIONS:'PLANK',PLANKHOLD:'PLANK',BURPEES:'BURPEE',BURPEETOSQUATJUMP:'BURPEE',
     DEADBUG:'CORE',FLUTTERKICKS:'CORE',LYINGKNEERAISES:'CORE',BICYCLECRUNCH:'CORE',HOLLOWBODYHOLD:'CORE',VSITHOLD:'CORE',
-    REVERSELUNGES:'LUNGE',SINGLELEGROMANIANDEADLIFT:'LUNGE',SINGLELEGRDLBODYWEIGHT:'LUNGE',PRONEYTWRAISES:'PRONEY'};
+    REVERSELUNGES:'LUNGE',SINGLELEGROMANIANDEADLIFT:'LUNGE',SINGLELEGRDLBODYWEIGHT:'LUNGE',PRONEYTWRAISES:'PRONEY',
+    JUMPROPEWARMUP:'JUMPROPE',JUMPROPE:'JUMPROPE',JUMPROPEINTERVALS:'JUMPROPE',JUMPROPECIRCUIT:'JUMPROPE',SHADOWJUMPCIRCUIT:'JUMPROPE',
+    JUMPINGJACKSWARMUP:'JACKS',SHADOWJUMPJUMPINGJACKS:'JACKS',BURPEEINTERVALS:'BURPEE',
+    KBSWINGS:'KETTLEBELLSWINGS',KBROW:'ROW',
+    '6PULLUPS':'PULLUPS','15PUSHUPS':'PUSHUP','20BURPEES':'BURPEE','20KETTLEBELLSWINGS':'KETTLEBELLSWINGS','30KETTLEBELLSWINGS':'KETTLEBELLSWINGS',
+    '10CLOSEGRIPPUSHUPS':'PUSHUP','10DIAMONDPUSHUPS':'PUSHUP','10KETTLEBELLPRESSARM':'PRESS','10TABLEROWS':'ROW','15JUMPSQUATS':'GOBLETSQUAT','2EXTRABURPEEROUNDS':'BURPEE'};
   const fn=DEMOS[MAP[key]]||DEMOS.FLEX;
   let frame=0;
   const draw=f=>{ctx.clearRect(0,0,32,32);fn(f);};
