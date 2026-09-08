@@ -1345,7 +1345,7 @@ const PLAN={
         {id:'m9',name:'KETTLEBELL FACE PULL (BENT ROW HIGH)',detail:'3 × 12 — pull KB to chin, elbows flared high (rear delt + upper back)',sets:3,rn:'12 reps',xp:40},
         {id:'m5',name:'OVERHEAD KETTLEBELL PRESS',detail:'3 × 10 per arm (35lb kettlebell)',sets:3,rn:'10/arm',xp:50},
         {id:'m6',name:'PULL-UPS',detail:'Target 18 total — 2 short of failure per set',sets:3,rn:'~6 each',xp:60},
-        {id:'m7',name:'HANGING KNEE RAISES',detail:'3 × 12 reps — ab finisher',sets:3,rn:'12 reps',xp:30},
+        {id:'m7',name:'SUITCASES',detail:'3 × 15 reps — seated V-tucks, knees to chest, slow — ab finisher',sets:3,rn:'15 reps',xp:30},
       ],bonuses:[{id:'m_b1',name:'⭐ +30 KETTLEBELL SWINGS',detail:'Extra round',xp:30},{id:'m_b2',name:'⭐ +6 PULL-UPS',detail:'Extra set',xp:25}],
       supps:[
         {id:'daily_s0',icon:'🧠',name:'SHAKE #1 + CREATINE',detail:'Pick your drink — creatine goes with this one',xp:15,type:'shake1'},
@@ -1355,10 +1355,11 @@ const PLAN={
     2:{label:'ABS + CONDITIONING',type:'abs',emoji:'💪',
       workout:[
         {id:'t1',name:'BURPEES',detail:'4 rounds × 10 reps',sets:4,rn:'10 reps',xp:50},
-        {id:'t2',name:'HANGING KNEE RAISES',detail:'3 × 12 on pull-up bar',sets:3,rn:'12 reps',xp:40},
+        {id:'t2',name:'SUITCASES',detail:'3 × 15 — seated V-tucks, slow + controlled',sets:3,rn:'15 reps',xp:40},
         {id:'t3',name:'PLANK HOLD',detail:'3 × 45s holds',sets:3,rn:'45s',xp:30},
         {id:'t4',name:'BICYCLE CRUNCH',detail:'3 × 20 per side',sets:3,rn:'20/side',xp:35},
         {id:'t5',name:'DEAD BUG',detail:'3 × 30s — back flat',sets:3,rn:'30s',xp:30},
+        {id:'t7',name:'RUSSIAN TWISTS',detail:'3 × 25 reps — slow + controlled, touch each side',sets:3,rn:'25 reps',xp:35},
         {id:'t8',name:'KETTLEBELL CLEAN & PRESS',detail:'3 × 8 per arm (35lb) — power + shoulder compound',sets:3,rn:'8/arm',xp:50},
         {id:'t9',name:'KETTLEBELL FACE PULL (BENT ROW HIGH)',detail:'3 × 12 — pull to chin, elbows flared high (rear delt)',sets:3,rn:'12 reps',xp:40},
         {id:'t6',name:'PULL-UPS',detail:'Target 12 total',sets:2,rn:'~6 each',xp:40},
@@ -1442,7 +1443,7 @@ const PLAN={
         {id:'m9',name:'PRONE Y-T-W RAISES',detail:'3 × 10 each — lie face down, raise arms to Y/T/W shape (rear delt sub)',sets:3,rn:'10 each',xp:40},
         {id:'m5',name:'DIAMOND PUSH-UPS',detail:'3 × 12 reps — overhead press sub, elbows tight',sets:3,rn:'12 reps',xp:50},
         {id:'m6',name:'CLOSE-GRIP PUSH-UPS',detail:'3 × 10 reps — pull-up sub, hands shoulder-width',sets:3,rn:'10 reps',xp:60},
-        {id:'m7',name:'LYING KNEE RAISES',detail:'3 × 12 — lie flat, bring knees to chest (hanging knee raise sub)',sets:3,rn:'12 reps',xp:30},
+        {id:'m7',name:'SUITCASES',detail:'3 × 15 — seated V-tucks, knees to chest, slow (travel-proof)',sets:3,rn:'15 reps',xp:30},
       ],bonuses:[
         {id:'m_b1',name:'⭐ +20 BURPEES',detail:'2 extra rounds × 10 reps — KB swings bonus sub',xp:30},
         {id:'m_b2',name:'⭐ +10 CLOSE-GRIP PUSH-UPS',detail:'Extra set — pull-up bonus sub',xp:25}
@@ -1455,10 +1456,11 @@ const PLAN={
     2:{label:'TRAVEL ABS + CORE',type:'abs',emoji:'💪',
       workout:[
         {id:'t1',name:'BURPEES',detail:'4 rounds × 10 reps',sets:4,rn:'10 reps',xp:50},
-        {id:'t2',name:'LYING KNEE RAISES',detail:'3 × 12 — lie flat, bring knees to chest (hanging knee raise sub)',sets:3,rn:'12 reps',xp:40},
+        {id:'t2',name:'SUITCASES',detail:'3 × 15 — seated V-tucks, slow + controlled (travel-proof)',sets:3,rn:'15 reps',xp:40},
         {id:'t3',name:'PLANK HOLD',detail:'3 × 45s holds',sets:3,rn:'45s',xp:30},
         {id:'t4',name:'BICYCLE CRUNCH',detail:'3 × 20 per side',sets:3,rn:'20/side',xp:35},
         {id:'t5',name:'DEAD BUG',detail:'3 × 30s — back flat, opposite arm/leg',sets:3,rn:'30s',xp:30},
+        {id:'t7',name:'RUSSIAN TWISTS',detail:'3 × 25 reps — slow + controlled, touch each side',sets:3,rn:'25 reps',xp:35},
         {id:'t8',name:'PUSH-UP TO SHOULDER TAP',detail:'3 × 8/side — power + shoulder stability (KB clean & press sub)',sets:3,rn:'8/side',xp:50},
         {id:'t9',name:'PRONE Y-T-W RAISES',detail:'3 × 12 — lie face down, raise arms to Y/T/W (rear delt sub)',sets:3,rn:'12 each',xp:40},
         {id:'t6',name:'TABLE / DOORFRAME ROWS',detail:'3 × 10 — pull-up sub',sets:2,rn:'10 reps',xp:40},
@@ -2245,11 +2247,11 @@ const HOME_ONLY_IDS=new Set([
   'f2','f3','f4','f5','f9',
   'w2','w4',
   // Home pull-up bar / hanging exercises
-  'm6','m7','w6','th2','f7','f_b2','sa2',
+  'm6','w6','th2','f7','f_b2','sa2',
   // Home bonus tasks requiring equipment
   'm_b1','m_b2','w_b1','f_b1',
   // Travel plan exercises that still need KB or pull-up bar
-  't2','t6','t8','t9',
+  't6','t8','t9',
 ]);
 // Keyed by home exercise ID, value is {name, detail} of what to do instead on the road
 const HOME_TO_TRAVEL={
@@ -2262,7 +2264,7 @@ const HOME_TO_TRAVEL={
   m9:{name:'PRONE Y-T-W RAISES',detail:'3 × 10 each — lie face down, arms to Y/T/W (rear delt sub)'},
   m5:{name:'DIAMOND PUSH-UPS',detail:'3 × 12 reps — shoulder press sub'},
   m6:{name:'TABLE / DOORFRAME ROWS',detail:'3 × 10 reps — best hotel pull-up sub'},
-  m7:{name:'LYING KNEE RAISES',detail:'3 × 12 — lie flat, bring knees to chest (no bar needed)'},
+  m7:{name:'SUITCASES',detail:'3 × 15 — seated V-tucks, knees to chest, slow (no equipment)'},
   // Monday bonus subs
   m_b1:{name:'⭐ +20 BURPEES',detail:'2 extra rounds × 10 reps — KB swings bonus sub'},
   m_b2:{name:'⭐ +10 TABLE ROWS',detail:'1 extra set × 10 reps — pull-ups bonus sub'},
@@ -2272,7 +2274,7 @@ const HOME_TO_TRAVEL={
   f_b1:{name:'⭐ +10 DIAMOND PUSH-UPS',detail:'Extra set — KB press bonus sub'},
   f_b2:{name:'FLUTTER KICKS',detail:'3 × 15 — lying leg raise sub, no bar needed'},
   // Travel plan KB / pull-up bar exercises
-  t2:{name:'LYING KNEE RAISES',detail:'3 × 12 — lying ab sub for hanging knee raises'},
+  t2:{name:'SUITCASES',detail:'3 × 15 — seated V-tucks, slow + controlled (no equipment)'},
   t6:{name:'TABLE / DOORFRAME ROWS',detail:'3 × 10 — pull-up sub'},
   t8:{name:'DIAMOND PUSH-UPS',detail:'3 × 12 — KB clean & press sub'},
   t9:{name:'PRONE Y-T-W RAISES',detail:'3 × 10 each — lie face down, arms to Y/T/W (rear delt sub)'},
@@ -4197,7 +4199,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=29;
+const APP_VERSION=30;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
@@ -4283,6 +4285,8 @@ PUSHUPTOSHOULDERTAP:'Push-up, then at the top tap each shoulder without your hip
 DIAMONDPUSHUPS:'Thumbs and fingers form a diamond under your chest, elbows track tight along your ribs. All triceps.',
 CLOSEGRIPPUSHUPS:'Hands just inside shoulder width, elbows skim your ribs on the way down. Triceps and inner chest.',
 PUSHUPS:'Chest to the floor, body one straight line, full lockout at the top. Drop to knees before the form breaks.',
+RUSSIANTWISTS:'Sit tall, lean back until your abs switch on, feet off the floor if you can. Clasp your hands and rotate your whole torso to touch the floor each side. Slow and controlled - the twist is the work, not the speed. Hold the kettlebell at your chest when bodyweight gets easy.',
+SUITCASES:'Sit on the floor, lean back slightly, hands light behind you for balance. Extend your legs out, then pull knees to your chest while your torso meets them in the middle - like closing a suitcase. No yanking with the arms, no bouncing. Slow both directions.',
 LSITATTEMPT:'Hands on the floor or two chairs, press down and lift your legs straight out front. Any hang time counts - bent knees to start is fine.',
 VSITHOLD:'Sit, lean back slightly, lift legs and reach arms forward. Body makes a V. Hold and breathe.',
 FLUTTERKICKS:'On your back, legs straight, small fast alternating kicks just off the floor. Hands under hips, lower back pressed down.',
