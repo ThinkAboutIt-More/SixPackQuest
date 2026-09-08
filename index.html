@@ -533,6 +533,10 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
   [onclick*="quickAddFood"],[onclick*="logShake"],[onclick*="pickDrinkForSupp"]{min-height:48px;}
   .sec-hdr{min-height:44px;}
 }
+.cue-dot{display:inline-block;margin-left:6px;background:#7a5800;color:#ffd700;font-size:0.2rem;padding:1px 4px;border-radius:3px;vertical-align:middle;}
+.cue-box{background:#1a1a00;border:2px solid #7a5800;margin:6px 0 2px;padding:8px 10px;font-family:'VT323',monospace;font-size:.85rem;color:#ffd700;line-height:1.25;}
+.cue-box canvas{image-rendering:pixelated;display:block;margin:6px auto 2px;background:#0a0a14;border:2px solid #333;}
+@media(min-width:1100px){body{max-width:1060px;margin:0 auto;}}
 </style>
 </head>
 <body>
@@ -791,6 +795,7 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
   </div>
   <div style="text-align:center;margin-bottom:7px;">
     <button class="today-btn" onclick="goToday()">▶ TODAY ◀</button>
+    <button class="today-btn" id="expressBtn" onclick="toggleExpress()" style="margin-left:6px;">⏱ 20-MIN DAY</button>
   </div>
   <div class="stats-mini">
     <div class="smc"><span class="smc-l" id="smcPctLbl">TODAY</span><span class="smc-v" id="smcPct">0%</span></div>
@@ -861,38 +866,6 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
     </div>
     <div id="foodSec">
       <div class="food-area">
-
-        <!-- SECTION 1: YOUR GO-TO MEALS (ranked healthiest to least) -->
-        <div class="food-section-lbl">🏆 YOUR GO-TO MEALS <span style="color:#555;font-size:0.2rem;">— ranked healthiest → least</span></div>
-        <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px;">
-          <div class="meal-card rank-1" onclick="quickAddFood({icon:'🥩',name:'Two Hands: Steak + Tamari Mushrooms',detail:'5oz seared steak med-well + slow cooked tamari mushrooms · ~350 cal · whole food, no processing',protein:39,calories:350,health:5})">
-            <div class="meal-rank">#1</div>
-            <div class="meal-icon">🥩</div>
-            <div class="meal-info">
-              <div class="meal-name">Two Hands: Steak + Tamari Mushrooms</div>
-              <div class="meal-detail">5oz steak · tamari mushrooms · cleanest whole food option</div>
-            </div>
-            <div class="meal-right"><div class="meal-prot">39g</div><div class="meal-stars">★★★★★</div></div>
-          </div>
-          <div class="meal-card rank-2" onclick="quickAddFood({icon:'🥗',name:'Chipotle: Chicken Salad',detail:'Chicken + extra chicken, no rice, black beans, fresh tomato salsa, corn salsa · ~600 cal',protein:73,calories:600,health:4})">
-            <div class="meal-rank">#2</div>
-            <div class="meal-icon">🥗</div>
-            <div class="meal-info">
-              <div class="meal-name">Chipotle: Chicken Salad</div>
-              <div class="meal-detail">Double chicken · black beans · fresh + corn salsa · no rice</div>
-            </div>
-            <div class="meal-right"><div class="meal-prot">73g</div><div class="meal-stars">★★★★☆</div></div>
-          </div>
-          <div class="meal-card rank-3" onclick="quickAddFood({icon:'🌮',name:'Taco Bell: 3x Chicken Soft Taco',detail:'Extra chicken, pico, no cheese, no beef, sauce packets · ~550 cal',protein:54,calories:550,health:3})">
-            <div class="meal-rank">#3</div>
-            <div class="meal-icon">🌮</div>
-            <div class="meal-info">
-              <div class="meal-name">Taco Bell: 3x Chicken Soft Taco</div>
-              <div class="meal-detail">Extra chicken · pico · no cheese · no beef · sauce packets</div>
-            </div>
-            <div class="meal-right"><div class="meal-prot">54g</div><div class="meal-stars">★★★☆☆</div></div>
-          </div>
-        </div>
 
         <!-- SECTION 2: QUICK DRINKS + EXTRAS -->
         <div class="food-section-lbl">⚡ QUICK ADD — DRINKS + EXTRAS</div>
@@ -1541,25 +1514,23 @@ const PLAN={
 // ================================================================
 function getBossSVG(week){
   const svgs={
-    1:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
-      <!-- Iggy: green skin, crazy wild hair spikes, swirly eyes, sharp grin -->
-      <ellipse cx="22" cy="26" rx="13" ry="11" fill="#5aaa44"/>
-      <!-- Wild hair spikes -->
-      <polygon points="8,20 5,5 13,17" fill="#228811"/><polygon points="14,16 11,2 18,14" fill="#228811"/>
-      <polygon points="22,14 20,1 26,13" fill="#228811"/><polygon points="30,16 33,2 28,14" fill="#228811"/>
-      <polygon points="36,20 39,5 31,17" fill="#228811"/>
-      <!-- Eyes: swirly spiral look (Iggy's signature) -->
-      <circle cx="16" cy="25" r="4" fill="#fff"/><circle cx="28" cy="25" r="4" fill="#fff"/>
-      <circle cx="16" cy="25" r="2.5" fill="#33aaff"/>
-      <path d="M14.5,24 Q16,22.5 17.5,24 Q16,25.5 14.5,24" fill="#001188" stroke="none"/>
-      <circle cx="28" cy="25" r="2.5" fill="#33aaff"/>
-      <path d="M26.5,24 Q28,22.5 29.5,24 Q28,25.5 26.5,24" fill="#001188" stroke="none"/>
-      <!-- Grin with jagged teeth -->
-      <path d="M15,32 Q22,37 29,32" stroke="#111" stroke-width="1.5" fill="none"/>
-      <rect x="17" y="32" width="3" height="3" fill="#fff"/><rect x="21" y="32" width="3" height="3" fill="#fff"/>
-      <rect x="25" y="32" width="3" height="3" fill="#fff"/>
-      <!-- Shell ridge -->
-      <ellipse cx="22" cy="38" rx="10" ry="4" fill="#33881a" opacity=".7"/>
+    1:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+      <!-- Iggy pixel: green mohawk stalk, glasses, fang grin -->
+      <rect x="20" y="2" width="4" height="7" fill="#22aa11"/>
+      <rect x="14" y="4" width="3" height="6" fill="#1a8a0d"/><rect x="27" y="4" width="3" height="6" fill="#1a8a0d"/>
+      <rect x="17" y="3" width="3" height="6" fill="#22aa11"/><rect x="24" y="3" width="3" height="6" fill="#22aa11"/>
+      <rect x="10" y="9" width="24" height="15" fill="#5aaa44"/>
+      <rect x="12" y="21" width="20" height="6" fill="#7cc466"/>
+      <rect x="11" y="12" width="10" height="9" fill="#1a3a8f"/><rect x="12" y="13" width="8" height="7" fill="#ffffff"/>
+      <rect x="23" y="12" width="10" height="9" fill="#1a3a8f"/><rect x="24" y="13" width="8" height="7" fill="#ffffff"/>
+      <rect x="21" y="15" width="2" height="2" fill="#1a3a8f"/>
+      <rect x="15" y="15" width="3" height="3" fill="#111111"/><rect x="26" y="15" width="3" height="3" fill="#111111"/>
+      <rect x="14" y="22" width="16" height="4" fill="#3a0d0d"/>
+      <rect x="16" y="22" width="3" height="3" fill="#ffffff"/><rect x="21" y="22" width="3" height="3" fill="#ffffff"/><rect x="26" y="22" width="3" height="3" fill="#ffffff"/>
+      <rect x="8" y="27" width="28" height="4" fill="#f0f0f0"/>
+      <rect x="8" y="30" width="28" height="9" fill="#2a7a1a"/>
+      <rect x="14" y="31" width="16" height="8" fill="#f5e6a0"/>
+      <rect x="14" y="31" width="2" height="2" fill="#e0cc88"/><rect x="28" y="31" width="2" height="2" fill="#e0cc88"/>
     </svg>`,
 
     2:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
@@ -1868,16 +1839,16 @@ const setDS=(k,ds)=>{const s=loadS();s[k]=ds;saveS(s)};
 function getAllT(p){return[...(p.workout||[]),...(p.supps||[]),...(p.bonuses||[])]}
 function getCoreT(p){return[...(p.workout||[])]}
 function calcXP(done,sets,p,extras){let x=0;getAllT(p).forEach(t=>{if(done.includes(t.id)){x+=t.xp;}else if(t.sets&&sets&&sets[t.id]>0){x+=Math.floor(t.xp*(sets[t.id]/t.sets)*0.7);}});if(extras)extras.forEach(e=>x+=(e.xp||20));return x;}
-function calcPct(done,p){if(p.type==='rest')return 100;const c=(p.workout||[]);if(!c.length)return 100;return Math.round(c.filter(t=>done.includes(t.id)).length/c.length*100);}
+function calcPct(done,p,ds){if(p.type==='rest')return 100;let c=(p.workout||[]);if(ds&&Array.isArray(ds._express))c=c.filter(t=>ds._express.includes(t.id));if(!c.length)return 100;return Math.round(c.filter(t=>done.includes(t.id)).length/c.length*100);}
 function calcProt(foods){return(foods||[]).reduce((a,f)=>a+(f.protein||0),0)}
 function calcCals(foods){return(foods||[]).reduce((a,f)=>a+(f.calories||0),0)}
 function calcScore(){const s=loadS();let t=0;Object.keys(s).forEach(k=>{if(!k.startsWith('_')){const ds=s[k];try{const dm=ds._mode||mode;const p=PLAN[dm][new Date(k+'T12:00:00').getDay()];t+=calcXP(ds.done||[],ds.sets||{},p,ds.extras)*10;}catch(e){}}});return t+(s._bonusXP||0);}
 function calcCoins(){const s=loadS();let c=0;Object.keys(s).forEach(k=>{if(!k.startsWith('_')){const ds=s[k];try{const dm=ds._mode||mode;const p=PLAN[dm][new Date(k+'T12:00:00').getDay()];getAllT(p).forEach(t=>{if((ds.done||[]).includes(t.id))c++;});}catch(e){}}});return c+(s._totalCoins||0);}
-function calcLives(){const today=new Date();today.setHours(0,0,0,0);const s=loadS();const questStart=s._qs?new Date(s._qs+'T12:00:00'):today;questStart.setHours(0,0,0,0);let missed=0;for(let i=1;i<=7;i++){const d=new Date(today);d.setDate(today.getDate()-i);if(d<questStart)continue;const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=PLAN[dm][d.getDay()];if(p.type==='rest')continue;if(calcPct(ds.done||[],p)<30)missed++;}return Math.max(1,3-Math.floor(missed/2));}
-function calcStreak(){const today=new Date();today.setHours(0,0,0,0);const s=loadS();const questStart=s._qs?new Date(s._qs+'T12:00:00'):today;questStart.setHours(0,0,0,0);let streak=0;for(let i=0;i<90;i++){const d=new Date(today);d.setDate(today.getDate()-i);if(d<questStart)break;const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=PLAN[dm][d.getDay()];if(p.type==='rest'){streak++;continue;}if(calcPct(ds.done||[],p)>=80)streak++;else break;}return streak;}
-function getWeekPct(w){const s=loadS();if(!s._qs)return 0;const start=new Date(s._qs+'T12:00:00');let tot=0,comp=0;for(let i=0;i<7;i++){const d=new Date(start);d.setDate(start.getDate()+(w-1)*7+i);const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=PLAN[dm][d.getDay()];const ct=getCoreT(p);tot+=ct.length;comp+=ct.filter(t=>(ds.done||[]).includes(t.id)).length;}return tot>0?Math.round(comp/tot*100):0;}
+function calcLives(){const today=new Date();today.setHours(0,0,0,0);const s=loadS();const questStart=s._qs?new Date(s._qs+'T12:00:00'):today;questStart.setHours(0,0,0,0);let missed=0;for(let i=1;i<=7;i++){const d=new Date(today);d.setDate(today.getDate()-i);if(d<questStart)continue;const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=PLAN[dm][d.getDay()];if(p.type==='rest')continue;if(calcPct(ds.done||[],p,ds)<30)missed++;}return Math.max(1,3-Math.floor(missed/2));}
+function calcStreak(){const today=new Date();today.setHours(0,0,0,0);const s=loadS();const questStart=s._qs?new Date(s._qs+'T12:00:00'):today;questStart.setHours(0,0,0,0);let streak=0;for(let i=0;i<90;i++){const d=new Date(today);d.setDate(today.getDate()-i);if(d<questStart)break;const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=PLAN[dm][d.getDay()];if(p.type==='rest'){streak++;continue;}if(calcPct(ds.done||[],p,ds)>=80)streak++;else break;}return streak;}
+function getWeekPct(w){const s=loadS();if(!s._qs)return 0;const start=new Date(s._qs+'T12:00:00');let tot=0,comp=0;for(let i=0;i<7;i++){const d=new Date(start);d.setDate(start.getDate()+(w-1)*7+i);const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=PLAN[dm][d.getDay()];const ct=getCoreT(p).filter(t=>!Array.isArray(ds._express)||ds._express.includes(t.id));tot+=ct.length;comp+=ct.filter(t=>(ds.done||[]).includes(t.id)).length;}return tot>0?Math.round(comp/tot*100):0;}
 function getPowerPct(){const today=new Date();today.setHours(0,0,0,0);let done=0,total=0;for(let i=0;i<7;i++){const d=new Date(today);d.setDate(today.getDate()-today.getDay()+i);if(d>today)break;const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=PLAN[dm][d.getDay()];if(p.type==='rest')continue;const ct=getCoreT(p);total+=ct.length;done+=ct.filter(t=>(ds.done||[]).includes(t.id)).length;}return total>0?Math.round(done/total*100):0;}
-function checkPause(){const today=new Date();today.setHours(0,0,0,0);const s=loadS();const questStart=s._qs?new Date(s._qs+'T12:00:00'):today;questStart.setHours(0,0,0,0);let missed=0;const d=new Date(questStart);while(d<today){const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=PLAN[dm][d.getDay()];if(p.type!=='rest'&&calcPct(ds.done||[],p)<50)missed++;d.setDate(d.getDate()+1);}return missed;}
+function checkPause(){const today=new Date();today.setHours(0,0,0,0);const s=loadS();const questStart=s._qs?new Date(s._qs+'T12:00:00'):today;questStart.setHours(0,0,0,0);let missed=0;const d=new Date(questStart);while(d<today){const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=PLAN[dm][d.getDay()];if(p.type!=='rest'&&calcPct(ds.done||[],p,ds)<50)missed++;d.setDate(d.getDate()+1);}return missed;}
 function getSpillover(todayKey){
   const results=[];
   const s=loadS();
@@ -2317,7 +2288,6 @@ function renderPowerupBar(){
     let type='';
     if(ms){
       if(ms.at<=days) type=ms.type;         // passed milestone — show its color
-      else if(ms.at===pus.find(p=>p.at>days)?.at) type='next-milestone'; // very next milestone
       // else future milestone — leave empty
     } else {
       if(dv<days) type='filled';
@@ -2338,7 +2308,7 @@ function renderWeekDaysRow(){
   for(let i=0;i<7;i++){
     const d=new Date(weekStart);d.setDate(weekStart.getDate()+i);
     const k=dKey(d);const dm=getDayMode(k);const p=PLAN[dm][d.getDay()];
-    const pct=calcPct(getDS(k).done||[],p);const isCurr=dKey(d)===dKey(currentDate);
+    const pct=calcPct(getDS(k).done||[],p,getDS(k));const isCurr=dKey(d)===dKey(currentDate);
     const cell=document.createElement('div');
     cell.className='mini-day'+(isCurr?' active-day':pct===100?' done-day':'');
     cell.innerHTML=`<div class="mini-day-n">${['S','M','T','W','T','F','S'][i]}</div><div class="mini-day-p">${pct>0?pct+'%':'·'}</div>`;
@@ -2432,7 +2402,7 @@ function renderDay(){
   // Show mode indicator + switch button if needed
   const modeTag=`<span style="font-size:0.18rem;color:${dayMode==='home'?'#4488ff':'#ffaa00'};margin-left:6px;cursor:pointer;" onclick="switchDayMode('${key}')" title="Tap to switch this day's mode">${dayMode==='home'?'🏠 HOME':'✈️ TRAVEL'} ↺</span>`;
   document.getElementById('daySubTitle').innerHTML=p.label+modeTag;
-  const pct=calcPct(done,p);const xp=calcXP(done,sets,p,ds.extras);
+  const pct=calcPct(done,p,ds);const xp=calcXP(done,sets,p,ds.extras);
   document.getElementById('smcPct').textContent=pct+'%';document.getElementById('smcXp').textContent=xp;
   document.getElementById('smcStreak').textContent=calcStreak()+'🔥';document.getElementById('smcProt').textContent=(calcProt(ds.foods)+calcSuppProt(key))+'g';
   const today=new Date();today.setHours(0,0,0,0);let wxp=0;
@@ -2442,7 +2412,7 @@ function renderDay(){
   document.getElementById('pgDay').style.width=pct+'%';document.getElementById('pgDayP').textContent=pct+'%';
   const prot=calcProt(ds.foods)+calcSuppProt(key);const pp=Math.min(100,Math.round(prot/160*100));
   document.getElementById('pgProt').style.width=pp+'%';document.getElementById('pgProtP').textContent=prot+'g';
-  let wt=0,wc=0;for(let i=0;i<7;i++){const d=new Date(viewedWeekStart);d.setDate(viewedWeekStart.getDate()+i);const dk=dKey(d);const dm=getDayMode(dk);const pl=PLAN[dm][d.getDay()];const ct=getCoreT(pl);const dd=getDS(dk).done||[];wt+=ct.length;wc+=ct.filter(t=>dd.includes(t.id)).length;}
+  let wt=0,wc=0;for(let i=0;i<7;i++){const d=new Date(viewedWeekStart);d.setDate(viewedWeekStart.getDate()+i);const dk=dKey(d);const dm=getDayMode(dk);const pl=PLAN[dm][d.getDay()];const ct=getCoreT(pl).filter(t=>{const _e=getDS(dk)._express;return!Array.isArray(_e)||_e.includes(t.id);});const dd=getDS(dk).done||[];wt+=ct.length;wc+=ct.filter(t=>dd.includes(t.id)).length;}
   const wpct=wt>0?Math.round(wc/wt*100):0;document.getElementById('pgWk').style.width=wpct+'%';document.getElementById('pgWkP').textContent=wpct+'%';
   const todayStart=new Date();todayStart.setHours(0,0,0,0);
   const thisWeekStart=new Date(todayStart);thisWeekStart.setDate(todayStart.getDate()-todayStart.getDay());
@@ -2506,7 +2476,7 @@ function renderDay(){
     rb.appendChild(createZzzEasterEgg());
     cont.appendChild(rb);
   }else{
-    if(p.workout&&p.workout.length) cont.appendChild(makeSection('⚡ WORKOUT','red',p.workout,done,sets,false));
+    if(p.workout&&p.workout.length){const _wl=ds._express;cont.appendChild(makeSection(Array.isArray(_wl)?'⚡ EXPRESS DAY — 20-MIN FLOOR':'⚡ WORKOUT','red',Array.isArray(_wl)?p.workout.filter(t=>_wl.includes(t.id)):p.workout,done,sets,false));}
     if(p.bonuses&&p.bonuses.length) cont.appendChild(makeSection('⭐ BONUS TASKS','gold',p.bonuses,done,sets,true));
     cont.appendChild(makeExtraSection(key));
   }
@@ -2530,7 +2500,7 @@ function makeSection(title,hdrCls,tasks,done,sets,isBonus){
     let setHtml='';
     if(st>1&&!isDone){setHtml=`<div class="set-tracker" onclick="event.stopPropagation()">${Array.from({length:st},(_,i)=>`<div class="set-dot${i<sd?' done-set':''}" onclick="addSet('${t.id}',${st},${i})">${i<sd?'✓':i+1}</div>`).join('')}<span class="set-label${sd>0?' ok':''}">${sd}/${st} sets${t.rn?' ('+t.rn+')':''}</span></div>`;}
     else if(st>1&&isDone){setHtml=`<div class="set-tracker"><span class="set-label ok">ALL ${st} SETS ✓</span></div>`;}
-    return`<div class="task-row${isBonus?' bonus-row':''}${isDone?' done':''}" id="tr_${t.id}" onclick="toggleTask('${t.id}')"><div class="chk">${isDone?'✓':''}</div><div class="ti"><div class="tn">${displayName}${subTag}</div><div class="td">${displayDetail}</div>${setHtml}</div><div class="txp">+${t.xp}XP</div></div>`;
+    return`<div class="task-row${isBonus?' bonus-row':''}${isDone?' done':''}" id="tr_${t.id}" onclick="toggleTask('${t.id}')"><div class="chk">${isDone?'✓':''}</div><div class="ti"><div class="tn" onclick="event.stopPropagation();toggleCue(this)" data-tn="${t.name}" style="cursor:pointer;">${displayName}${subTag}${FORM_CUES[cueKey(t.name)]?'<span class="cue-dot">?</span>':''}</div><div class="td">${displayDetail}</div>${setHtml}</div><div class="txp">+${t.xp}XP</div></div>`;
   }).join('')}</div>`;
   return b;
 }
@@ -3040,7 +3010,7 @@ function toggleTask(id){
     const el=document.getElementById('tr_'+id);if(el){const r=el.getBoundingClientRect();spawnCoin(r.left+r.width/2,r.top);}
     if(isBonus){bonusSfx();showNotif(`⭐ BONUS! +${task?task.xp:0}XP`,'');spawnStars(5);}
     else{
-      checkSfx();const pct=calcPct(ds.done,p);
+      checkSfx();const pct=calcPct(ds.done,p,ds);
       if(pct===100){clearSfx();showDayComplete(dow,p,ds.done,ds.sets||{});spawnStars(15);checkWeekComplete();}
       else if(pct>=50&&pct<60){puSfx();showNotif('🍄 HALFWAY — MUSHROOM GET!','grn');spawnMushroom();spawnStars(3);}
       else{
@@ -3188,7 +3158,7 @@ function calcAllTimeStats(){
     if(k.startsWith('_'))return;
     const ds=s[k];const dm=getDayMode(k);
     try{const p=PLAN[dm][new Date(k+'T12:00:00').getDay()];
-    if(p.type!=='rest'&&calcPct(ds.done||[],p)===100)perfectDays++;}catch(e){}
+    if(p.type!=='rest'&&calcPct(ds.done||[],p,ds)===100)perfectDays++;}catch(e){}
   });
   return{totalXP,totalCoins,totalProtein:Math.round(totalProtein),bestStreak,bestWeekXP,bestWeekNum,totalWorkoutDays,perfectDays,perfect100,currentWeek:qw};
 }
@@ -3642,7 +3612,7 @@ function quickAddFood(item){
   ds.foods.push({name:item.name,protein:item.protein,calories:item.calories||0,detail:item.detail||'',health,category});
   setDS(key,ds);
   trackFoodFreq(item.name,item.protein);
-  renderFoodLog();
+  renderFoodLog();renderProtBar();
   coinSfx();spawnCoin(window.innerWidth/2,200);
   checkNutritionInsights(key);
   const tot=calcProt(ds.foods)+calcSuppProt(key);
@@ -4315,7 +4285,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=8;
+const APP_VERSION=9;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
@@ -4367,6 +4337,116 @@ setInterval(async()=>{try{
 try{const _s0=loadS();if(_s0._qs){let _moved=false;Object.keys(_s0).forEach(k=>{if(/^\d{4}-\d{2}-\d{2}$/.test(k)&&k<_s0._qs){_s0._archive=_s0._archive||{};_s0._archive[k]=_s0[k];delete _s0[k];_moved=true;}});if(_moved)saveS(_s0);}}catch(e){}
 const __origRenderAll=renderAll;
 renderAll=function(){__origRenderAll();try{const s=loadS();const b=document.querySelector('[onclick="changeDay(-1)"]');if(b){if(s._qs){const qs=new Date(s._qs+'T12:00:00');const cur=new Date(currentDate);cur.setHours(0,0,0,0);const atStart=cur<=qs;b.disabled=atStart;b.style.opacity=atStart?'0.35':'1';}else{b.disabled=false;b.style.opacity='1';}}}catch(e){}};
+renderAll();
+
+// ================================================================
+// EXERCISE FORM CUES - tap the exercise name
+// ================================================================
+function cueKey(n){return (n||'').toUpperCase().replace(/[^A-Z0-9]/g,'');}
+const FORM_CUES={
+GOBLETSQUAT:'Hold the bell at your chest, elbows inside your knees. Squat deep, chest tall, drive through your heels. The bell is a counterweight - let it pull you deeper.',
+GOBLETSQUATS:'Hold the bell at your chest, elbows inside your knees. Squat deep, chest tall, drive through your heels.',
+BODYWEIGHTSQUATS:'Feet shoulder-width, chest up, hips drop below your knees, drive through your heels. Arms out front for balance.',
+KETTLEBELLFACEPULLBENTROWHIGH:'Bent over, flat back. Pull the bell to your chin with elbows flared HIGH - this hits rear delts and upper back, not your arms.',
+HANGINGKNEERAISES:'Hang from the bar, raise knees to chest WITHOUT swinging. Slow on the way down - that lowering half is where the abs get built.',
+LYINGKNEERAISES:'Flat on your back, hands under your hips. Knees to chest, lower back pressed into the floor, slow on the way down.',
+HANGINGLEGRAISES:'Same as knee raises but legs straight - lift to hip height or higher, zero swing. Bend knees slightly if form breaks.',
+SINGLELEGROMANIANDEADLIFT:'Stand on one leg, soft knee. Hinge at the hips, bell hangs toward the floor, back flat. Stand up by squeezing the glute, not yanking the back.',
+SINGLELEGRDLBODYWEIGHT:'Same hinge as the weighted version, hands on hips. Balance is the work here - slow and controlled.',
+OVERHEADKETTLEBELLPRESS:'Bell in one hand at shoulder, press straight up until bicep touches ear. Ribs down, no back lean. Alternate arms each set.',
+ONEARMKETTLEBELLROW:'One hand braced on your knee, flat back. Row the bell to your hip pocket and squeeze the lat one second at the top.',
+KETTLEBELLCLEANPRESS:'One fluid move: hike the bell back, snap hips to bring it to your shoulder (soft wrist, no banging), then press overhead.',
+DEADBUG:'On your back, arms to the ceiling, knees at 90. Lower opposite arm and leg slowly while your lower back stays GLUED to the floor. Exhale as you lower.',
+HOLLOWBODYHOLD:'On your back, press your lower back into the floor, lift shoulders and straight legs. Body forms a shallow banana. Keep breathing - short holds done right beat long holds done loose.',
+BICYCLECRUNCH:'Elbow to opposite knee, shoulder blades off the floor the whole set. Slow rotation - the twist is the work, not the speed.',
+PLANKVARIATIONS:'Forearms down, one straight line head to heels. Squeeze glutes and abs. Variations: shoulder taps, side plank, slow hip dips.',
+PLANKHOLD:'Forearms down, one straight line head to heels. Squeeze everything. Stop when the hips sag - quality seconds only.',
+BURPEETOSQUATJUMP:'Down to the floor, chest touches, pop to your feet, explode into a squat jump. Land soft and flow straight into the next rep.',
+BURPEES:'Down, chest to floor, pop up, small jump. Pace yourself - smooth reps beat sprinting the first round.',
+REVERSELUNGES:'Step BACK into the lunge, front knee tracks over the foot, back knee hovers just off the floor. Drive through the front heel to stand.',
+PRONEYTWRAISES:'Face down, forehead resting. Arms sweep Y, then T, then W, thumbs up, lifting off the floor each rep. Squeeze shoulder blades together.',
+TABLEDOORFRAMEROWS:'Hang under a sturdy table edge (or hold a doorframe), body one straight line, pull your chest to the edge. The flatter your body, the harder it is.',
+PUSHUPTOSHOULDERTAP:'Push-up, then at the top tap each shoulder without your hips rocking. Feet wider makes it easier.',
+DIAMONDPUSHUPS:'Thumbs and fingers form a diamond under your chest, elbows track tight along your ribs. All triceps.',
+CLOSEGRIPPUSHUPS:'Hands just inside shoulder width, elbows skim your ribs on the way down. Triceps and inner chest.',
+PUSHUPS:'Chest to the floor, body one straight line, full lockout at the top. Drop to knees before the form breaks.',
+LSITATTEMPT:'Hands on the floor or two chairs, press down and lift your legs straight out front. Any hang time counts - bent knees to start is fine.',
+VSITHOLD:'Sit, lean back slightly, lift legs and reach arms forward. Body makes a V. Hold and breathe.',
+FLUTTERKICKS:'On your back, legs straight, small fast alternating kicks just off the floor. Hands under hips, lower back pressed down.',
+JUMPSQUATS:'Squat deep, explode off the floor, land soft straight into the next rep.',
+PULLUPS:'Dead hang to chin over the bar, control the way down. No kicking - leave 1-2 reps in the tank every set.',
+KETTLEBELLSWINGS:'Hike the bell back between your legs, snap your hips forward to float it to chest height. Arms are ropes - the hips do ALL the work.',
+};
+function toggleCue(el){
+  const row=el.closest('.task-row');if(!row)return;
+  const old=row.querySelector('.cue-box');if(old){old.remove();return;}
+  const key=cueKey(el.getAttribute('data-tn'));
+  const cue=FORM_CUES[key];if(!cue)return;
+  const box=document.createElement('div');box.className='cue-box';
+  box.textContent=cue;
+  if(key==='GOBLETSQUAT'||key==='GOBLETSQUATS'){
+    const cv=document.createElement('canvas');cv.width=32;cv.height=32;cv.style.width='128px';cv.style.height='128px';
+    box.appendChild(cv);startCueDemo(cv);
+    const cap=document.createElement('div');cap.style.cssText="text-align:center;font-size:.7rem;color:#a08000;";cap.textContent='PAKALU SHOWS THE MOVE';box.appendChild(cap);
+  }
+  row.appendChild(box);
+}
+function startCueDemo(cv){
+  const ctx=cv.getContext('2d');
+  const R='#e52222',S='#c8783c',B='#2255cc',K='#222',W='#ffd700';
+  let frame=0;
+  function draw(f){
+    ctx.clearRect(0,0,32,32);
+    // hat
+    ctx.fillStyle=R;ctx.fillRect(12,f?4:2,8,3);ctx.fillRect(14,f?3:1,5,1);
+    // head
+    ctx.fillStyle=S;ctx.fillRect(13,f?7:5,6,4);
+    // mustache
+    ctx.fillStyle=K;ctx.fillRect(13,f?10:8,6,1);
+    if(f===0){
+      // standing: body + bell at chest
+      ctx.fillStyle=B;ctx.fillRect(13,11,6,8);
+      ctx.fillStyle=S;ctx.fillRect(10,12,3,4);ctx.fillRect(19,12,3,4);
+      ctx.fillStyle=K;ctx.fillRect(13,13,6,3);
+      ctx.fillStyle=W;ctx.fillRect(15,12,2,1);
+      ctx.fillStyle=B;ctx.fillRect(13,19,3,7);ctx.fillRect(16,19,3,7);
+      ctx.fillStyle=K;ctx.fillRect(12,26,4,2);ctx.fillRect(16,26,4,2);
+    }else{
+      // squat: body lower, knees bent out
+      ctx.fillStyle=B;ctx.fillRect(13,11,6,6);
+      ctx.fillStyle=S;ctx.fillRect(10,12,3,4);ctx.fillRect(19,12,3,4);
+      ctx.fillStyle=K;ctx.fillRect(13,13,6,3);
+      ctx.fillStyle=W;ctx.fillRect(15,12,2,1);
+      ctx.fillStyle=B;ctx.fillRect(9,17,5,3);ctx.fillRect(18,17,5,3);
+      ctx.fillStyle=B;ctx.fillRect(9,20,3,6);ctx.fillRect(20,20,3,6);
+      ctx.fillStyle=K;ctx.fillRect(8,26,4,2);ctx.fillRect(20,26,4,2);
+    }
+  }
+  draw(0);
+  const iv=setInterval(()=>{frame^=1;if(!cv.isConnected){clearInterval(iv);return;}draw(frame);},450);
+}
+
+// ================================================================
+// EXPRESS 20-MIN DAY - the floor for crunch days
+// ================================================================
+const EXPRESS_SETS={
+ home_1:['m2','m3','m6'],travel_1:['m2','m3','m4'],
+ home_2:['t1','t2','t6'],travel_2:['t1','t2','t6'],
+ home_3:['w2','w4','w6'],travel_3:['w2','w4','w6'],
+ home_4:['th1','th2'],travel_4:['th1','th2'],
+ home_5:['f2','f5','f7'],travel_5:['f2','f3','f5'],
+ home_6:['sa1','sa2'],travel_6:['sa1','sa2'],
+};
+function toggleExpress(){
+  const key=dKey(currentDate);const ds=getDS(key);
+  const p=PLAN[ds._mode||mode][currentDate.getDay()];
+  if(p.type==='rest'){showNotif('😴 REST DAY — NO EXPRESS NEEDED','pnk');return;}
+  if(Array.isArray(ds._express)){delete ds._express;showNotif('FULL DAY RESTORED — GO GET IT ALL','grn');}
+  else{const wl=EXPRESS_SETS[(ds._mode||mode)+'_'+currentDate.getDay()];if(!wl)return;ds._express=wl;showNotif('⏱ EXPRESS DAY — PULL + SWING + LEGS, ~20 MIN. THE FLOOR, NOT THE CEILING.','grn');}
+  setDS(key,ds);renderAll();
+}
+const __origRenderAll2=renderAll;
+renderAll=function(){__origRenderAll2();try{const b=document.getElementById('expressBtn');if(b){const ds=getDS(dKey(currentDate));const on=Array.isArray(ds._express);b.style.background=on?'#00a844':'#7a5800';b.textContent=on?'⏱ EXPRESS ON':'⏱ 20-MIN DAY';}}catch(e){}};
 renderAll();
 </script>
 </body>
