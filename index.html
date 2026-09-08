@@ -1320,7 +1320,7 @@ const PLAN={
       supps:[
         {id:'daily_s0',icon:'🧠',name:'SHAKE #1 + CREATINE',detail:'Pick your drink — creatine goes with this one',xp:15,type:'shake1'},
         {id:'daily_s1',icon:'🥤',name:'SHAKE #2',detail:'Pick your drink',xp:15,type:'shake2'},
-        {id:'daily_s2',icon:'🥩',name:'CHOMPS x2',detail:'2 sticks · 20g protein',protein:20,xp:10,type:'chomps'}
+        {id:'daily_s2',icon:'🥩',name:'CHOMPS x1',detail:'1 stick · 10g protein',protein:10,xp:10,type:'chomps'}
       ]},
     1:{label:'KETTLEBELL + CONDITIONING',type:'kb',emoji:'⚡',
       workout:[
@@ -1337,7 +1337,7 @@ const PLAN={
       supps:[
         {id:'daily_s0',icon:'🧠',name:'SHAKE #1 + CREATINE',detail:'Pick your drink — creatine goes with this one',xp:15,type:'shake1'},
         {id:'daily_s1',icon:'🥤',name:'SHAKE #2',detail:'Pick your drink',xp:15,type:'shake2'},
-        {id:'daily_s2',icon:'🥩',name:'CHOMPS x2',detail:'2 sticks · 20g protein',protein:20,xp:10,type:'chomps'}
+        {id:'daily_s2',icon:'🥩',name:'CHOMPS x1',detail:'1 stick · 10g protein',protein:10,xp:10,type:'chomps'}
       ]},
     2:{label:'ABS + CONDITIONING',type:'abs',emoji:'💪',
       workout:[
@@ -1368,7 +1368,7 @@ const PLAN={
       supps:[
         {id:'daily_s0',icon:'🧠',name:'SHAKE #1 + CREATINE',detail:'Pick your drink — creatine goes with this one',xp:15,type:'shake1'},
         {id:'daily_s1',icon:'🥤',name:'SHAKE #2',detail:'Pick your drink',xp:15,type:'shake2'},
-        {id:'daily_s2',icon:'🥩',name:'CHOMPS x2',detail:'2 sticks · 20g protein',protein:20,xp:10,type:'chomps'}
+        {id:'daily_s2',icon:'🥩',name:'CHOMPS x1',detail:'1 stick · 10g protein',protein:10,xp:10,type:'chomps'}
       ]},
     4:{label:'ACTIVE RECOVERY + CARDIO',type:'cardio',emoji:'🌿',
       workout:[
@@ -1396,7 +1396,7 @@ const PLAN={
       supps:[
         {id:'daily_s0',icon:'🧠',name:'SHAKE #1 + CREATINE',detail:'Pick your drink — creatine goes with this one',xp:15,type:'shake1'},
         {id:'daily_s1',icon:'🥤',name:'SHAKE #2',detail:'Pick your drink',xp:15,type:'shake2'},
-        {id:'daily_s2',icon:'🥩',name:'CHOMPS x2',detail:'2 sticks · 20g protein',protein:20,xp:10,type:'chomps'}
+        {id:'daily_s2',icon:'🥩',name:'CHOMPS x1',detail:'1 stick · 10g protein',protein:10,xp:10,type:'chomps'}
       ]},
     6:{label:'CARDIO (OPTIONAL)',type:'cardio',emoji:'🟢',
       workout:[
@@ -1437,7 +1437,7 @@ const PLAN={
       supps:[
         {id:'daily_s0',icon:'🧠',name:'SHAKE #1 + CREATINE',detail:'Pick your drink — creatine goes with this one',xp:15,type:'shake1'},
         {id:'daily_s1',icon:'🥤',name:'SHAKE #2',detail:'Pick your drink',xp:15,type:'shake2'},
-        {id:'daily_s2',icon:'🥩',name:'CHOMPS x2',detail:'2 sticks · 20g protein',protein:20,xp:10,type:'chomps'}
+        {id:'daily_s2',icon:'🥩',name:'CHOMPS x1',detail:'1 stick · 10g protein',protein:10,xp:10,type:'chomps'}
       ]},
     2:{label:'TRAVEL ABS + CORE',type:'abs',emoji:'💪',
       workout:[
@@ -1474,7 +1474,7 @@ const PLAN={
       supps:[
         {id:'daily_s0',icon:'🧠',name:'SHAKE #1 + CREATINE',detail:'Pick your drink — creatine goes with this one',xp:15,type:'shake1'},
         {id:'daily_s1',icon:'🥤',name:'SHAKE #2',detail:'Pick your drink',xp:15,type:'shake2'},
-        {id:'daily_s2',icon:'🥩',name:'CHOMPS x2',detail:'2 sticks · 20g protein',protein:20,xp:10,type:'chomps'}
+        {id:'daily_s2',icon:'🥩',name:'CHOMPS x1',detail:'1 stick · 10g protein',protein:10,xp:10,type:'chomps'}
       ]},
     4:{label:'TRAVEL RECOVERY + CARDIO',type:'cardio',emoji:'🌿',
       workout:[
@@ -1505,7 +1505,7 @@ const PLAN={
       supps:[
         {id:'daily_s0',icon:'🧠',name:'SHAKE #1 + CREATINE',detail:'Pick your drink — creatine goes with this one',xp:15,type:'shake1'},
         {id:'daily_s1',icon:'🥤',name:'SHAKE #2',detail:'Pick your drink',xp:15,type:'shake2'},
-        {id:'daily_s2',icon:'🥩',name:'CHOMPS x2',detail:'2 sticks · 20g protein',protein:20,xp:10,type:'chomps'}
+        {id:'daily_s2',icon:'🥩',name:'CHOMPS x1',detail:'1 stick · 10g protein',protein:10,xp:10,type:'chomps'}
       ]},
     6:{label:'TRAVEL CARDIO',type:'cardio',emoji:'🟢',
       workout:[
@@ -1526,162 +1526,27 @@ const PLAN={
 // ================================================================
 function getBossSVG(week){
   const svgs={
-    1:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
-      <!-- Iggy Koopa pixel v2: palm-stalk green hair, thick black glasses, fang grin, spiked green shell, wand -->
-      <rect x="20" y="1" width="4" height="8" fill="#2a9a1a"/><rect x="16" y="2" width="3" height="7" fill="#2a9a1a"/><rect x="25" y="2" width="3" height="7" fill="#2a9a1a"/>
-      <rect x="12" y="3" width="3" height="6" fill="#1a7a10"/><rect x="29" y="3" width="3" height="6" fill="#1a7a10"/>
-      <rect x="20" y="1" width="4" height="2" fill="#5cd03a"/><rect x="16" y="2" width="3" height="2" fill="#5cd03a"/><rect x="25" y="2" width="3" height="2" fill="#5cd03a"/><rect x="12" y="3" width="3" height="2" fill="#4ab52a"/><rect x="29" y="3" width="3" height="2" fill="#4ab52a"/>
-      <rect x="9" y="8" width="26" height="14" fill="#6ab04c"/><rect x="9" y="8" width="2" height="14" fill="#4a8a30"/><rect x="33" y="8" width="2" height="14" fill="#4a8a30"/>
-      <rect x="11" y="11" width="10" height="8" fill="#111111"/><rect x="23" y="11" width="10" height="8" fill="#111111"/><rect x="21" y="13" width="2" height="2" fill="#111111"/>
-      <rect x="12" y="12" width="8" height="6" fill="#ffffff"/><rect x="24" y="12" width="8" height="6" fill="#ffffff"/>
-      <rect x="15" y="14" width="2" height="3" fill="#111111"/><rect x="27" y="14" width="2" height="3" fill="#111111"/>
-      <rect x="13" y="13" width="2" height="1" fill="#aaddff"/><rect x="25" y="13" width="2" height="1" fill="#aaddff"/>
-      <rect x="13" y="19" width="18" height="5" fill="#a8d878"/>
-      <rect x="19" y="20" width="1" height="1" fill="#4a8a30"/><rect x="24" y="20" width="1" height="1" fill="#4a8a30"/>
-      <rect x="13" y="22" width="18" height="2" fill="#2a0808"/>
-      <rect x="15" y="22" width="2" height="3" fill="#ffffff"/><rect x="27" y="22" width="2" height="3" fill="#ffffff"/><rect x="19" y="22" width="2" height="2" fill="#ffffff"/><rect x="23" y="22" width="2" height="2" fill="#ffffff"/>
-      <rect x="8" y="26" width="28" height="11" fill="#1a6a12"/>
-      <rect x="10" y="27" width="2" height="2" fill="#ffffff"/><rect x="32" y="27" width="2" height="2" fill="#ffffff"/>
-      <rect x="14" y="26" width="16" height="12" fill="#f5e6a0"/>
-      <rect x="14" y="29" width="16" height="1" fill="#d8c080"/><rect x="14" y="32" width="16" height="1" fill="#d8c080"/><rect x="14" y="35" width="16" height="1" fill="#d8c080"/><rect x="21" y="26" width="2" height="12" fill="#d8c080"/>
-      <rect x="5" y="27" width="3" height="7" fill="#6ab04c"/><rect x="36" y="27" width="3" height="7" fill="#6ab04c"/>
-      <rect x="5" y="33" width="3" height="3" fill="#222222"/><rect x="36" y="33" width="3" height="3" fill="#222222"/><rect x="6" y="33" width="1" height="1" fill="#ffffff"/><rect x="37" y="33" width="1" height="1" fill="#ffffff"/>
-      <rect x="40" y="16" width="2" height="18" fill="#8a5a2a"/>
-      <rect x="40" y="12" width="3" height="3" fill="#ffd700"/><rect x="41" y="10" width="1" height="2" fill="#ffd700"/><rect x="41" y="15" width="1" height="2" fill="#ffd700"/><rect x="38" y="13" width="2" height="1" fill="#ffd700"/><rect x="43" y="13" width="1" height="1" fill="#ffd700"/>
-      <rect x="12" y="38" width="7" height="5" fill="#6ab04c"/><rect x="25" y="38" width="7" height="5" fill="#6ab04c"/>
-      <rect x="12" y="42" width="2" height="1" fill="#ffffff"/><rect x="15" y="42" width="2" height="1" fill="#ffffff"/><rect x="25" y="42" width="2" height="1" fill="#ffffff"/><rect x="28" y="42" width="2" height="1" fill="#ffffff"/>
-    </svg>`,
+    1:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="19" y="0" width="6" height="7" fill="#ffd828"/><rect x="7" y="3" width="7" height="6" fill="#ffd828"/><rect x="30" y="3" width="7" height="6" fill="#ffd828"/><rect x="3" y="11" width="6" height="8" fill="#ffd828"/><rect x="35" y="11" width="6" height="8" fill="#ffd828"/><rect x="6" y="21" width="6" height="7" fill="#ffd828"/><rect x="32" y="21" width="6" height="7" fill="#ffd828"/><rect x="20" y="1" width="3" height="3" fill="#fff098"/><rect x="9" y="4" width="3" height="2" fill="#fff098"/><rect x="32" y="4" width="3" height="2" fill="#fff098"/><rect x="14" y="5" width="16" height="3" fill="#e82818"/><rect x="11" y="8" width="22" height="4" fill="#e82818"/><rect x="9" y="12" width="26" height="14" fill="#e82818"/><rect x="11" y="26" width="22" height="3" fill="#e82818"/><rect x="14" y="29" width="16" height="2" fill="#e82818"/><rect x="9" y="12" width="3" height="14" fill="#b01408"/><rect x="32" y="12" width="3" height="14" fill="#b01408"/><rect x="14" y="9" width="3" height="2" fill="#ffffff"/><rect x="27" y="8" width="3" height="2" fill="#ffffff"/><rect x="12" y="21" width="2" height="2" fill="#ffffff"/><rect x="30" y="20" width="2" height="2" fill="#ffffff"/><rect x="20" y="6" width="2" height="2" fill="#ffffff"/><rect x="14" y="12" width="16" height="4" fill="#38a838"/><rect x="13" y="14" width="3" height="7" fill="#38a838"/><rect x="28" y="14" width="3" height="7" fill="#38a838"/><rect x="14" y="20" width="16" height="3" fill="#38a838"/><rect x="16" y="15" width="12" height="6" fill="#380808"/><rect x="17" y="15" width="2" height="2" fill="#ffffff"/><rect x="21" y="15" width="2" height="2" fill="#ffffff"/><rect x="25" y="15" width="2" height="2" fill="#ffffff"/><rect x="18" y="19" width="2" height="1" fill="#ffffff"/><rect x="24" y="19" width="2" height="1" fill="#ffffff"/><rect x="20" y="31" width="4" height="5" fill="#2a8a20"/><rect x="6" y="32" width="13" height="4" fill="#38a838"/><rect x="4" y="34" width="6" height="3" fill="#38a838"/><rect x="7" y="33" width="3" height="1" fill="#5cc040"/><rect x="25" y="32" width="13" height="4" fill="#38a838"/><rect x="34" y="34" width="6" height="3" fill="#38a838"/><rect x="34" y="33" width="3" height="1" fill="#5cc040"/></svg>`,
 
-    2:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
-      <!-- Morton pixel: hulking dark grey, star face mark, 4 fangs, 3 hair strands -->
-      <rect x="19" y="1" width="2" height="4" fill="#111111"/><rect x="22" y="0" width="2" height="5" fill="#111111"/><rect x="25" y="1" width="2" height="4" fill="#111111"/>
-      <rect x="7" y="7" width="30" height="15" fill="#7a6a5a"/><rect x="7" y="7" width="3" height="15" fill="#5a4a3e"/><rect x="34" y="7" width="3" height="15" fill="#5a4a3e"/>
-      <rect x="10" y="8" width="5" height="5" fill="#c8c8d0"/><rect x="11" y="9" width="3" height="3" fill="#b0b0b8"/>
-      <rect x="17" y="10" width="5" height="4" fill="#ffffff"/><rect x="26" y="10" width="5" height="4" fill="#ffffff"/><rect x="18" y="11" width="2" height="2" fill="#111111"/><rect x="27" y="11" width="2" height="2" fill="#111111"/>
-      <rect x="12" y="19" width="22" height="2" fill="#2a1a1a"/>
-      <rect x="14" y="19" width="3" height="5" fill="#ffffff"/><rect x="20" y="19" width="3" height="5" fill="#ffffff"/><rect x="25" y="19" width="3" height="5" fill="#ffffff"/><rect x="31" y="19" width="3" height="5" fill="#ffffff"/>
-      <rect x="11" y="24" width="24" height="2" fill="#a89880"/>
-      <rect x="8" y="27" width="28" height="10" fill="#4a4a52"/>
-      <rect x="14" y="27" width="16" height="10" fill="#e8d8b0"/><rect x="14" y="30" width="16" height="1" fill="#c8b890"/><rect x="14" y="33" width="16" height="1" fill="#c8b890"/>
-      <rect x="4" y="27" width="4" height="8" fill="#7a6a5a"/><rect x="36" y="27" width="4" height="8" fill="#7a6a5a"/><rect x="4" y="34" width="4" height="3" fill="#222222"/><rect x="36" y="34" width="4" height="3" fill="#222222"/><rect x="5" y="34" width="2" height="1" fill="#ffffff"/><rect x="37" y="34" width="2" height="1" fill="#ffffff"/>
-      <rect x="13" y="38" width="8" height="5" fill="#7a6a5a"/><rect x="24" y="38" width="8" height="5" fill="#7a6a5a"/><rect x="13" y="42" width="2" height="1" fill="#ffffff"/><rect x="16" y="42" width="2" height="1" fill="#ffffff"/><rect x="24" y="42" width="2" height="1" fill="#ffffff"/><rect x="27" y="42" width="2" height="1" fill="#ffffff"/>
-    </svg>`,
+    2:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="13" y="15" width="18" height="4" fill="#28a028"/><rect x="10" y="18" width="24" height="2" fill="#1a7818"/><rect x="15" y="11" width="14" height="4" fill="#28a028"/><rect x="12" y="14" width="20" height="2" fill="#1a7818"/><rect x="17" y="7" width="10" height="4" fill="#28a028"/><rect x="14" y="10" width="16" height="2" fill="#1a7818"/><rect x="19" y="3" width="6" height="4" fill="#28a028"/><rect x="16" y="6" width="12" height="2" fill="#1a7818"/><rect x="16" y="16" width="4" height="1" fill="#5cc858"/><rect x="18" y="12" width="3" height="1" fill="#5cc858"/><rect x="10" y="20" width="4" height="7" fill="#d8c8b8"/><rect x="30" y="20" width="4" height="7" fill="#d8c8b8"/><rect x="11" y="21" width="2" height="5" fill="#c0a898"/><rect x="31" y="21" width="2" height="5" fill="#c0a898"/><rect x="14" y="19" width="16" height="11" fill="#e8d8c8"/><rect x="16" y="21" width="5" height="4" fill="#ffffff"/><rect x="23" y="21" width="5" height="4" fill="#ffffff"/><rect x="17" y="22" width="2" height="2" fill="#181018"/><rect x="24" y="22" width="2" height="2" fill="#181018"/><rect x="16" y="21" width="5" height="1" fill="#1a7818"/><rect x="23" y="21" width="5" height="1" fill="#1a7818"/><rect x="21" y="25" width="2" height="2" fill="#e08090"/><rect x="20" y="27" width="4" height="3" fill="#ffffff"/><rect x="21" y="27" width="2" height="1" fill="#c8c0b8"/><rect x="11" y="30" width="22" height="12" fill="#1a6a14"/><rect x="18" y="30" width="8" height="7" fill="#f0f0e8"/><rect x="19" y="30" width="6" height="2" fill="#d82020"/><rect x="20" y="33" width="1" height="1" fill="#181818"/><rect x="23" y="33" width="1" height="1" fill="#181818"/><rect x="20" y="35" width="1" height="1" fill="#181818"/><rect x="23" y="35" width="1" height="1" fill="#181818"/><rect x="8" y="31" width="3" height="7" fill="#1a6a14"/><rect x="33" y="31" width="3" height="7" fill="#1a6a14"/><rect x="13" y="41" width="7" height="2" fill="#1a6a14"/><rect x="24" y="41" width="7" height="2" fill="#1a6a14"/></svg>`,
 
-    3:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
-      <!-- Lemmy pixel: rainbow mohawk, lazy eye, circus ball with star -->
-      <rect x="14" y="2" width="3" height="8" fill="#e03030"/><rect x="18" y="1" width="3" height="9" fill="#f0d020"/><rect x="22" y="1" width="3" height="9" fill="#30b040"/><rect x="26" y="2" width="3" height="8" fill="#3050d0"/>
-      <rect x="11" y="9" width="22" height="12" fill="#f0a040"/><rect x="11" y="9" width="2" height="12" fill="#d08028"/><rect x="31" y="9" width="2" height="12" fill="#d08028"/>
-      <rect x="13" y="11" width="7" height="7" fill="#ffffff"/><rect x="15" y="13" width="3" height="3" fill="#111111"/>
-      <rect x="23" y="12" width="5" height="5" fill="#ffffff"/><rect x="24" y="13" width="2" height="2" fill="#111111"/>
-      <rect x="14" y="19" width="16" height="2" fill="#5a2a10"/><rect x="17" y="19" width="2" height="2" fill="#ffffff"/><rect x="25" y="19" width="2" height="2" fill="#ffffff"/>
-      <rect x="15" y="24" width="14" height="8" fill="#f0a040"/>
-      <rect x="10" y="25" width="3" height="6" fill="#f0a040"/><rect x="31" y="25" width="3" height="6" fill="#f0a040"/>
-      <rect x="10" y="33" width="24" height="3" fill="#f0d020"/><rect x="8" y="35" width="28" height="4" fill="#f0d020"/><rect x="10" y="39" width="24" height="4" fill="#f0d020"/><rect x="12" y="41" width="20" height="2" fill="#d8b018"/>
-      <rect x="20" y="35" width="4" height="4" fill="#e08018"/><rect x="21" y="34" width="2" height="6" fill="#e08018"/><rect x="19" y="36" width="6" height="2" fill="#e08018"/>
-    </svg>`,
+    3:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="21" y="0" width="2" height="4" fill="#d8d8e8"/><rect x="18" y="4" width="8" height="2" fill="#d8a820"/><rect x="20" y="6" width="4" height="2" fill="#8a5a20"/><rect x="5" y="5" width="5" height="4" fill="#c8c8d0"/><rect x="3" y="8" width="6" height="3" fill="#c8c8d0"/><rect x="34" y="5" width="5" height="4" fill="#c8c8d0"/><rect x="35" y="8" width="6" height="3" fill="#c8c8d0"/><rect x="8" y="8" width="28" height="8" fill="#5a5a6a"/><rect x="6" y="14" width="32" height="9" fill="#5a5a6a"/><rect x="8" y="8" width="4" height="15" fill="#464654"/><rect x="32" y="8" width="4" height="15" fill="#464654"/><rect x="11" y="14" width="8" height="4" fill="#2a0a2a"/><rect x="25" y="14" width="8" height="4" fill="#2a0a2a"/><rect x="13" y="15" width="5" height="2" fill="#ff40d8"/><rect x="26" y="15" width="5" height="2" fill="#ff40d8"/><rect x="10" y="13" width="10" height="1" fill="#3a3a48"/><rect x="24" y="13" width="10" height="1" fill="#3a3a48"/><rect x="12" y="21" width="20" height="5" fill="#7a7a8a"/><rect x="15" y="21" width="3" height="2" fill="#3a3a48"/><rect x="26" y="21" width="3" height="2" fill="#3a3a48"/><rect x="10" y="26" width="24" height="4" fill="#280808"/><rect x="12" y="26" width="2" height="3" fill="#e8e8f0"/><rect x="17" y="26" width="2" height="3" fill="#e8e8f0"/><rect x="22" y="26" width="2" height="3" fill="#e8e8f0"/><rect x="27" y="26" width="2" height="3" fill="#e8e8f0"/><rect x="31" y="26" width="2" height="3" fill="#e8e8f0"/><rect x="16" y="9" width="1" height="4" fill="#ff40d8"/><rect x="28" y="10" width="1" height="3" fill="#ff40d8"/><rect x="23" y="8" width="1" height="3" fill="#ff40d8"/><rect x="14" y="30" width="16" height="9" fill="#4a4a58"/><rect x="14" y="30" width="3" height="9" fill="#3a3a46"/><rect x="16" y="28" width="3" height="3" fill="#c8c8d0"/><rect x="21" y="28" width="3" height="3" fill="#c8c8d0"/><rect x="26" y="28" width="3" height="3" fill="#c8c8d0"/><rect x="10" y="32" width="4" height="8" fill="#5a5a6a"/><rect x="30" y="32" width="4" height="8" fill="#5a5a6a"/><rect x="15" y="40" width="6" height="3" fill="#4a4a58"/><rect x="23" y="40" width="6" height="3" fill="#4a4a58"/></svg>`,
 
-    4:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
-      <!-- Ludwig pixel: wild blue hair mane, furrowed brow, single buck tooth -->
-      <rect x="8" y="2" width="28" height="8" fill="#2a4ad0"/><rect x="6" y="3" width="4" height="5" fill="#2a4ad0"/><rect x="14" y="0" width="4" height="3" fill="#2a4ad0"/><rect x="24" y="0" width="4" height="3" fill="#2a4ad0"/><rect x="34" y="3" width="4" height="5" fill="#2a4ad0"/><rect x="12" y="3" width="3" height="2" fill="#4a6af0"/><rect x="26" y="3" width="3" height="2" fill="#4a6af0"/>
-      <rect x="11" y="10" width="22" height="12" fill="#f0d080"/>
-      <rect x="13" y="12" width="8" height="2" fill="#1a2a80"/><rect x="23" y="12" width="8" height="2" fill="#1a2a80"/>
-      <rect x="14" y="14" width="6" height="4" fill="#ffffff"/><rect x="24" y="14" width="6" height="4" fill="#ffffff"/><rect x="16" y="15" width="2" height="2" fill="#111111"/><rect x="26" y="15" width="2" height="2" fill="#111111"/>
-      <rect x="15" y="18" width="14" height="5" fill="#f8e0a0"/><rect x="15" y="21" width="14" height="2" fill="#5a3a10"/><rect x="21" y="21" width="3" height="3" fill="#ffffff"/>
-      <rect x="10" y="25" width="24" height="12" fill="#2a4ad0"/><rect x="10" y="25" width="3" height="12" fill="#1a2a90"/><rect x="31" y="25" width="3" height="12" fill="#1a2a90"/>
-      <rect x="16" y="25" width="12" height="12" fill="#f5e6a0"/><rect x="16" y="29" width="12" height="1" fill="#d8c080"/><rect x="16" y="33" width="12" height="1" fill="#d8c080"/>
-      <rect x="6" y="26" width="4" height="8" fill="#f0d080"/><rect x="34" y="26" width="4" height="8" fill="#f0d080"/><rect x="6" y="33" width="4" height="3" fill="#222222"/><rect x="34" y="33" width="4" height="3" fill="#222222"/>
-      <rect x="13" y="38" width="7" height="5" fill="#f0d080"/><rect x="24" y="38" width="7" height="5" fill="#f0d080"/>
-    </svg>`,
+    4:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="14" y="3" width="16" height="7" fill="#7030a8"/><rect x="10" y="10" width="24" height="3" fill="#502078"/><rect x="16" y="4" width="5" height="2" fill="#9860d0"/><rect x="8" y="13" width="4" height="9" fill="#c8b8d8"/><rect x="32" y="13" width="4" height="9" fill="#c8b8d8"/><rect x="9" y="14" width="2" height="6" fill="#a898c0"/><rect x="33" y="14" width="2" height="6" fill="#a898c0"/><rect x="13" y="13" width="18" height="11" fill="#d8c8e0"/><rect x="15" y="15" width="6" height="5" fill="#ffffff"/><rect x="23" y="15" width="6" height="5" fill="#ffffff"/><rect x="15" y="15" width="6" height="2" fill="#b0a0c0"/><rect x="23" y="15" width="6" height="2" fill="#b0a0c0"/><rect x="16" y="18" width="2" height="2" fill="#181018"/><rect x="24" y="18" width="2" height="2" fill="#181018"/><rect x="20" y="20" width="4" height="3" fill="#9860d0"/><rect x="17" y="23" width="10" height="2" fill="#401840"/><rect x="18" y="23" width="2" height="2" fill="#ffffff"/><rect x="25" y="23" width="2" height="2" fill="#ffffff"/><rect x="26" y="25" width="3" height="4" fill="#e06080"/><rect x="26" y="29" width="2" height="2" fill="#60c040"/><rect x="11" y="24" width="22" height="15" fill="#502078"/><rect x="17" y="24" width="10" height="7" fill="#f0f0e8"/><rect x="18" y="24" width="8" height="2" fill="#181818"/><rect x="20" y="27" width="1" height="1" fill="#181818"/><rect x="23" y="27" width="1" height="1" fill="#181818"/><rect x="20" y="29" width="1" height="1" fill="#181818"/><rect x="23" y="29" width="1" height="1" fill="#181818"/><rect x="8" y="25" width="3" height="8" fill="#502078"/><rect x="33" y="25" width="3" height="8" fill="#502078"/><rect x="13" y="39" width="7" height="3" fill="#502078"/><rect x="24" y="39" width="7" height="3" fill="#502078"/></svg>`,
 
-    5:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
-      <!-- Roy pixel: pink, black sunglasses, beefy, spiked shell -->
-      <rect x="20" y="5" width="4" height="3" fill="#c04888"/>
-      <rect x="10" y="7" width="24" height="15" fill="#e060a8"/><rect x="10" y="7" width="2" height="15" fill="#c04888"/><rect x="32" y="7" width="2" height="15" fill="#c04888"/>
-      <rect x="10" y="12" width="24" height="7" fill="#111111"/><rect x="13" y="13" width="3" height="2" fill="#66aaff"/><rect x="28" y="13" width="3" height="2" fill="#66aaff"/>
-      <rect x="14" y="20" width="16" height="2" fill="#4a1030"/><rect x="17" y="19" width="3" height="3" fill="#ffffff"/><rect x="25" y="19" width="3" height="3" fill="#ffffff"/>
-      <rect x="8" y="26" width="28" height="11" fill="#c04088"/><rect x="9" y="26" width="3" height="3" fill="#ffffff"/><rect x="32" y="26" width="3" height="3" fill="#ffffff"/>
-      <rect x="14" y="26" width="16" height="11" fill="#f5e6a0"/><rect x="14" y="30" width="16" height="1" fill="#d8c080"/><rect x="14" y="33" width="16" height="1" fill="#d8c080"/>
-      <rect x="4" y="25" width="5" height="10" fill="#e060a8"/><rect x="35" y="25" width="5" height="10" fill="#e060a8"/><rect x="4" y="33" width="5" height="3" fill="#222222"/><rect x="35" y="33" width="5" height="3" fill="#222222"/><rect x="5" y="33" width="2" height="2" fill="#ffffff"/><rect x="37" y="33" width="2" height="2" fill="#ffffff"/>
-      <rect x="13" y="38" width="8" height="5" fill="#e060a8"/><rect x="24" y="38" width="8" height="5" fill="#e060a8"/>
-    </svg>`,
+    5:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="15" y="2" width="14" height="5" fill="#ffd828"/><rect x="15" y="0" width="3" height="3" fill="#ffd828"/><rect x="21" y="0" width="2" height="3" fill="#ffd828"/><rect x="26" y="0" width="3" height="3" fill="#ffd828"/><rect x="18" y="4" width="2" height="2" fill="#e02840"/><rect x="24" y="4" width="2" height="2" fill="#e02840"/><rect x="13" y="7" width="18" height="4" fill="#f4f4ff"/><rect x="9" y="11" width="26" height="16" fill="#f4f4ff"/><rect x="11" y="27" width="22" height="4" fill="#f4f4ff"/><rect x="9" y="11" width="3" height="16" fill="#c8c8e8"/><rect x="32" y="11" width="3" height="16" fill="#c8c8e8"/><rect x="11" y="31" width="5" height="4" fill="#f4f4ff"/><rect x="20" y="31" width="4" height="5" fill="#f4f4ff"/><rect x="28" y="31" width="5" height="4" fill="#f4f4ff"/><rect x="13" y="13" width="6" height="8" fill="#181028"/><rect x="25" y="13" width="6" height="8" fill="#181028"/><rect x="14" y="16" width="3" height="4" fill="#ff3040"/><rect x="26" y="16" width="3" height="4" fill="#ff3040"/><rect x="15" y="16" width="1" height="1" fill="#ffffff"/><rect x="27" y="16" width="1" height="1" fill="#ffffff"/><rect x="14" y="23" width="16" height="8" fill="#300818"/><rect x="15" y="23" width="3" height="3" fill="#ffffff"/><rect x="20" y="23" width="3" height="3" fill="#ffffff"/><rect x="25" y="23" width="3" height="3" fill="#ffffff"/><rect x="18" y="27" width="9" height="5" fill="#d05070"/><rect x="19" y="27" width="3" height="1" fill="#f08098"/></svg>`,
 
-    6:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
-      <!-- Wendy pixel: polka-dot bow, eyelashes, pink lips, gold bracelets -->
-      <rect x="8" y="1" width="10" height="8" fill="#ff70b8"/><rect x="26" y="1" width="10" height="8" fill="#ff70b8"/><rect x="19" y="3" width="6" height="5" fill="#ff70b8"/>
-      <rect x="11" y="3" width="2" height="2" fill="#ffffff"/><rect x="14" y="6" width="2" height="2" fill="#ffffff"/><rect x="28" y="3" width="2" height="2" fill="#ffffff"/><rect x="31" y="6" width="2" height="2" fill="#ffffff"/><rect x="21" y="4" width="2" height="2" fill="#ffffff"/>
-      <rect x="12" y="8" width="20" height="13" fill="#f0d080"/>
-      <rect x="14" y="11" width="6" height="6" fill="#ffffff"/><rect x="24" y="11" width="6" height="6" fill="#ffffff"/><rect x="16" y="13" width="3" height="3" fill="#3050c0"/><rect x="26" y="13" width="3" height="3" fill="#3050c0"/>
-      <rect x="13" y="10" width="1" height="2" fill="#111111"/><rect x="19" y="10" width="1" height="2" fill="#111111"/><rect x="23" y="10" width="1" height="2" fill="#111111"/><rect x="29" y="10" width="1" height="2" fill="#111111"/>
-      <rect x="19" y="18" width="6" height="3" fill="#ff5080"/>
-      <rect x="12" y="24" width="20" height="13" fill="#e060a8"/>
-      <rect x="16" y="24" width="12" height="13" fill="#f5e6a0"/><rect x="16" y="28" width="12" height="1" fill="#d8c080"/><rect x="16" y="32" width="12" height="1" fill="#d8c080"/>
-      <rect x="8" y="25" width="3" height="8" fill="#f0d080"/><rect x="33" y="25" width="3" height="8" fill="#f0d080"/><rect x="8" y="31" width="3" height="2" fill="#ffd700"/><rect x="33" y="31" width="3" height="2" fill="#ffd700"/>
-      <rect x="14" y="38" width="6" height="5" fill="#e060a8"/><rect x="24" y="38" width="6" height="5" fill="#e060a8"/>
-    </svg>`,
+    6:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="18" y="0" width="8" height="4" fill="#a06a30"/><rect x="17" y="3" width="10" height="2" fill="#7a4a20"/><rect x="20" y="0" width="4" height="1" fill="#c89050"/><rect x="14" y="5" width="16" height="3" fill="#8040c8"/><rect x="10" y="8" width="24" height="12" fill="#8040c8"/><rect x="8" y="12" width="28" height="8" fill="#8040c8"/><rect x="8" y="12" width="3" height="8" fill="#6028a0"/><rect x="33" y="12" width="3" height="8" fill="#6028a0"/><rect x="13" y="8" width="2" height="2" fill="#a868e8"/><rect x="28" y="7" width="3" height="2" fill="#a868e8"/><rect x="10" y="10" width="2" height="2" fill="#a868e8"/><rect x="31" y="11" width="2" height="2" fill="#a868e8"/><rect x="22" y="6" width="2" height="2" fill="#a868e8"/><rect x="12" y="13" width="8" height="6" fill="#ffffff"/><rect x="24" y="13" width="8" height="6" fill="#ffffff"/><rect x="13" y="15" width="3" height="3" fill="#181028"/><rect x="25" y="15" width="3" height="3" fill="#181028"/><rect x="11" y="12" width="9" height="1" fill="#402060"/><rect x="24" y="12" width="9" height="1" fill="#402060"/><rect x="20" y="19" width="4" height="3" fill="#381048"/><rect x="9" y="22" width="5" height="7" fill="#8040c8"/><rect x="8" y="29" width="4" height="4" fill="#8040c8"/><rect x="16" y="22" width="5" height="9" fill="#8040c8"/><rect x="17" y="31" width="4" height="4" fill="#8040c8"/><rect x="23" y="22" width="4" height="10" fill="#8040c8"/><rect x="22" y="32" width="4" height="4" fill="#8040c8"/><rect x="30" y="22" width="5" height="7" fill="#8040c8"/><rect x="32" y="29" width="4" height="4" fill="#8040c8"/><rect x="10" y="23" width="2" height="3" fill="#6028a0"/><rect x="17" y="24" width="2" height="3" fill="#6028a0"/><rect x="24" y="24" width="2" height="3" fill="#6028a0"/><rect x="31" y="23" width="2" height="3" fill="#6028a0"/></svg>`,
 
-    7:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
-      <!-- Larry pixel: blue mohawk, light blue skin, blue star cheek mark -->
-      <rect x="12" y="2" width="20" height="6" fill="#2070e0"/><rect x="12" y="1" width="4" height="3" fill="#2070e0"/><rect x="20" y="0" width="4" height="3" fill="#2070e0"/><rect x="28" y="1" width="4" height="3" fill="#2070e0"/>
-      <rect x="10" y="7" width="24" height="14" fill="#78b0f0"/><rect x="10" y="7" width="2" height="14" fill="#5890d0"/><rect x="32" y="7" width="2" height="14" fill="#5890d0"/>
-      <rect x="11" y="14" width="3" height="3" fill="#1040a0"/><rect x="12" y="13" width="1" height="5" fill="#1040a0"/><rect x="10" y="15" width="5" height="1" fill="#1040a0"/>
-      <rect x="15" y="10" width="6" height="4" fill="#ffffff"/><rect x="24" y="10" width="6" height="4" fill="#ffffff"/><rect x="16" y="11" width="2" height="2" fill="#111111"/><rect x="25" y="11" width="2" height="2" fill="#111111"/>
-      <rect x="16" y="17" width="12" height="2" fill="#1a3a60"/><rect x="18" y="17" width="2" height="2" fill="#ffffff"/>
-      <rect x="10" y="25" width="24" height="12" fill="#1a8a70"/>
-      <rect x="16" y="25" width="12" height="12" fill="#f5e6a0"/><rect x="16" y="29" width="12" height="1" fill="#d8c080"/><rect x="16" y="33" width="12" height="1" fill="#d8c080"/>
-      <rect x="6" y="26" width="4" height="8" fill="#78b0f0"/><rect x="34" y="26" width="4" height="8" fill="#78b0f0"/><rect x="6" y="33" width="4" height="3" fill="#222222"/><rect x="34" y="33" width="4" height="3" fill="#222222"/>
-      <rect x="13" y="38" width="7" height="5" fill="#78b0f0"/><rect x="24" y="38" width="7" height="5" fill="#78b0f0"/>
-    </svg>`,
+    7:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="15" y="2" width="14" height="6" fill="#8030b0"/><rect x="11" y="8" width="22" height="3" fill="#582080"/><rect x="17" y="3" width="4" height="2" fill="#a858d8"/><rect x="28" y="4" width="4" height="4" fill="#ff70c0"/><rect x="29" y="3" width="2" height="6" fill="#ff70c0"/><rect x="27" y="5" width="6" height="2" fill="#ff70c0"/><rect x="8" y="10" width="4" height="15" fill="#f0d060"/><rect x="9" y="13" width="2" height="2" fill="#c8a038"/><rect x="9" y="18" width="2" height="2" fill="#c8a038"/><rect x="8" y="25" width="4" height="3" fill="#e02870"/><rect x="32" y="10" width="4" height="15" fill="#f0d060"/><rect x="33" y="13" width="2" height="2" fill="#c8a038"/><rect x="33" y="18" width="2" height="2" fill="#c8a038"/><rect x="32" y="25" width="4" height="3" fill="#e02870"/><rect x="13" y="11" width="18" height="12" fill="#f0d8d0"/><rect x="15" y="14" width="6" height="5" fill="#ffffff"/><rect x="23" y="14" width="6" height="5" fill="#ffffff"/><rect x="16" y="15" width="2" height="3" fill="#181018"/><rect x="24" y="15" width="2" height="3" fill="#181018"/><rect x="14" y="13" width="1" height="2" fill="#181018"/><rect x="20" y="13" width="1" height="2" fill="#181018"/><rect x="22" y="13" width="1" height="2" fill="#181018"/><rect x="28" y="13" width="1" height="2" fill="#181018"/><rect x="18" y="20" width="8" height="3" fill="#e02850"/><rect x="12" y="23" width="20" height="15" fill="#c040a0"/><rect x="12" y="23" width="20" height="3" fill="#f0f0e8"/><rect x="12" y="35" width="20" height="2" fill="#98287a"/><rect x="9" y="25" width="3" height="7" fill="#c040a0"/><rect x="32" y="25" width="3" height="7" fill="#c040a0"/><rect x="2" y="34" width="8" height="8" fill="#282828"/><rect x="3" y="35" width="2" height="2" fill="#585858"/><rect x="5" y="32" width="2" height="3" fill="#8a5a2a"/><rect x="4" y="30" width="3" height="2" fill="#ffe040"/><rect x="14" y="40" width="6" height="3" fill="#c040a0"/><rect x="24" y="40" width="6" height="3" fill="#c040a0"/></svg>`,
 
-    8:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
-      <!-- Boom Boom pixel: red spiked shell, huge fists, angry -->
-      <rect x="12" y="6" width="20" height="12" fill="#d0a060"/>
-      <rect x="13" y="8" width="7" height="2" fill="#6a4020"/><rect x="24" y="8" width="7" height="2" fill="#6a4020"/>
-      <rect x="14" y="10" width="5" height="4" fill="#ffffff"/><rect x="25" y="10" width="5" height="4" fill="#ffffff"/><rect x="15" y="11" width="2" height="2" fill="#111111"/><rect x="26" y="11" width="2" height="2" fill="#111111"/>
-      <rect x="14" y="14" width="16" height="5" fill="#e0b878"/><rect x="15" y="17" width="14" height="2" fill="#4a2808"/><rect x="17" y="15" width="2" height="3" fill="#ffffff"/><rect x="25" y="15" width="2" height="3" fill="#ffffff"/>
-      <rect x="13" y="19" width="18" height="4" fill="#b8884a"/>
-      <rect x="8" y="24" width="28" height="13" fill="#b83020"/><rect x="10" y="25" width="3" height="3" fill="#ffffff"/><rect x="31" y="25" width="3" height="3" fill="#ffffff"/><rect x="20" y="24" width="3" height="3" fill="#ffffff"/><rect x="8" y="35" width="28" height="2" fill="#8a2010"/>
-      <rect x="2" y="22" width="7" height="7" fill="#d0a060"/><rect x="35" y="22" width="7" height="7" fill="#d0a060"/><rect x="3" y="23" width="2" height="2" fill="#b8884a"/><rect x="6" y="23" width="2" height="2" fill="#b8884a"/><rect x="36" y="23" width="2" height="2" fill="#b8884a"/><rect x="39" y="23" width="2" height="2" fill="#b8884a"/>
-      <rect x="13" y="38" width="8" height="5" fill="#d0a060"/><rect x="24" y="38" width="8" height="5" fill="#d0a060"/>
-    </svg>`,
+    8:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="11" y="0" width="5" height="13" fill="#f8f0e8"/><rect x="12" y="2" width="3" height="9" fill="#f0a0b8"/><rect x="28" y="0" width="5" height="13" fill="#f8f0e8"/><rect x="30" y="2" width="3" height="9" fill="#f0a0b8"/><rect x="18" y="4" width="8" height="4" fill="#ffd828"/><rect x="18" y="2" width="2" height="2" fill="#ffd828"/><rect x="21" y="2" width="2" height="2" fill="#ffd828"/><rect x="24" y="2" width="2" height="2" fill="#ffd828"/><rect x="21" y="5" width="2" height="2" fill="#e02840"/><rect x="11" y="9" width="22" height="14" fill="#f8f0e8"/><rect x="14" y="12" width="7" height="6" fill="#6080d0"/><rect x="24" y="12" width="7" height="6" fill="#6080d0"/><rect x="15" y="14" width="5" height="4" fill="#ffffff"/><rect x="25" y="14" width="5" height="4" fill="#ffffff"/><rect x="16" y="15" width="2" height="2" fill="#181018"/><rect x="26" y="15" width="2" height="2" fill="#181018"/><rect x="13" y="11" width="2" height="2" fill="#181018"/><rect x="20" y="11" width="2" height="2" fill="#181018"/><rect x="23" y="11" width="2" height="2" fill="#181018"/><rect x="30" y="11" width="2" height="2" fill="#181018"/><rect x="12" y="18" width="3" height="2" fill="#f0a0b8"/><rect x="30" y="18" width="3" height="2" fill="#f0a0b8"/><rect x="18" y="19" width="9" height="3" fill="#d81838"/><rect x="19" y="19" width="7" height="1" fill="#f05870"/><rect x="8" y="23" width="28" height="17" fill="#c01828"/><rect x="8" y="37" width="28" height="2" fill="#8a0e1a"/><rect x="13" y="23" width="18" height="3" fill="#f8f0e8"/><rect x="16" y="25" width="12" height="2" fill="#ffd828"/><rect x="21" y="26" width="2" height="2" fill="#e02840"/><rect x="5" y="25" width="4" height="9" fill="#c01828"/><rect x="35" y="25" width="4" height="9" fill="#c01828"/><rect x="34" y="36" width="9" height="8" fill="#ffd828"/><rect x="35" y="37" width="3" height="2" fill="#181018"/><rect x="40" y="37" width="3" height="2" fill="#181018"/><rect x="36" y="41" width="7" height="2" fill="#ffffff"/></svg>`,
 
-    9:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
-      <!-- Reznor pixel: grey triceratops on wheel platform, fire breath -->
-      <rect x="10" y="3" width="24" height="7" fill="#7a8088"/>
-      <rect x="21" y="5" width="2" height="6" fill="#f0f0e0"/>
-      <rect x="11" y="9" width="22" height="11" fill="#9aa0a8"/>
-      <rect x="13" y="11" width="6" height="4" fill="#d03030"/><rect x="25" y="11" width="6" height="4" fill="#d03030"/><rect x="15" y="12" width="2" height="2" fill="#111111"/><rect x="27" y="12" width="2" height="2" fill="#111111"/>
-      <rect x="13" y="16" width="18" height="6" fill="#7a8088"/><rect x="14" y="18" width="16" height="4" fill="#3a0808"/><rect x="16" y="18" width="2" height="2" fill="#ffffff"/><rect x="21" y="18" width="2" height="2" fill="#ffffff"/><rect x="26" y="18" width="2" height="2" fill="#ffffff"/>
-      <rect x="17" y="22" width="10" height="3" fill="#ff7020"/><rect x="19" y="25" width="6" height="3" fill="#ffb020"/><rect x="21" y="28" width="2" height="2" fill="#ffe080"/>
-      <rect x="6" y="30" width="32" height="4" fill="#6a4a2a"/>
-      <rect x="12" y="34" width="6" height="6" fill="#8a6a3a"/><rect x="26" y="34" width="6" height="6" fill="#8a6a3a"/><rect x="14" y="36" width="2" height="2" fill="#4a3a2a"/><rect x="28" y="36" width="2" height="2" fill="#4a3a2a"/>
-      <rect x="4" y="40" width="36" height="2" fill="#4a3a2a"/>
-    </svg>`,
+    9:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="18" y="1" width="3" height="6" fill="#e02870"/><rect x="22" y="0" width="3" height="7" fill="#e02870"/><rect x="26" y="1" width="3" height="6" fill="#e02870"/><rect x="19" y="2" width="1" height="3" fill="#ff70a8"/><rect x="23" y="1" width="1" height="3" fill="#ff70a8"/><rect x="13" y="7" width="18" height="4" fill="#f078a8"/><rect x="9" y="11" width="26" height="16" fill="#f078a8"/><rect x="11" y="27" width="22" height="5" fill="#f078a8"/><rect x="9" y="11" width="4" height="16" fill="#d05088"/><rect x="31" y="11" width="4" height="16" fill="#d05088"/><rect x="14" y="9" width="16" height="10" fill="#ffe8f0"/><rect x="15" y="11" width="5" height="4" fill="#ffffff"/><rect x="24" y="11" width="5" height="4" fill="#ffffff"/><rect x="16" y="12" width="2" height="2" fill="#181018"/><rect x="25" y="12" width="2" height="2" fill="#181018"/><rect x="14" y="10" width="7" height="1" fill="#c04070"/><rect x="23" y="10" width="7" height="1" fill="#c04070"/><rect x="19" y="15" width="6" height="3" fill="#f09020"/><rect x="20" y="18" width="4" height="2" fill="#d06810"/><rect x="15" y="22" width="14" height="8" fill="#ffd0e0"/><rect x="11" y="31" width="4" height="8" fill="#f078a8"/><rect x="11" y="37" width="4" height="3" fill="#e02870"/><rect x="20" y="32" width="4" height="9" fill="#f078a8"/><rect x="20" y="39" width="4" height="3" fill="#e02870"/><rect x="29" y="31" width="4" height="8" fill="#f078a8"/><rect x="29" y="37" width="4" height="3" fill="#e02870"/><rect x="13" y="41" width="5" height="3" fill="#f09020"/><rect x="26" y="41" width="5" height="3" fill="#f09020"/></svg>`,
 
-    10:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
-      <!-- Bowser Jr pixel: green head, orange ponytail, scary-grin bib -->
-      <rect x="19" y="1" width="6" height="5" fill="#f08018"/><rect x="19" y="5" width="6" height="2" fill="#d03030"/>
-      <rect x="11" y="8" width="22" height="13" fill="#4aa030"/><rect x="11" y="8" width="2" height="13" fill="#388020"/><rect x="31" y="8" width="2" height="13" fill="#388020"/>
-      <rect x="13" y="10" width="7" height="2" fill="#1a5a10"/><rect x="24" y="10" width="7" height="2" fill="#1a5a10"/>
-      <rect x="14" y="12" width="6" height="4" fill="#ffffff"/><rect x="24" y="12" width="6" height="4" fill="#ffffff"/><rect x="15" y="13" width="2" height="2" fill="#111111"/><rect x="25" y="13" width="2" height="2" fill="#111111"/>
-      <rect x="15" y="16" width="14" height="5" fill="#a8d878"/><rect x="16" y="19" width="12" height="2" fill="#1a4a08"/><rect x="18" y="19" width="2" height="2" fill="#ffffff"/><rect x="24" y="19" width="2" height="2" fill="#ffffff"/>
-      <rect x="10" y="23" width="24" height="12" fill="#f8f8f0"/>
-      <rect x="13" y="27" width="18" height="4" fill="#111111"/><rect x="15" y="27" width="3" height="3" fill="#f8f8f0"/><rect x="20" y="28" width="3" height="3" fill="#f8f8f0"/><rect x="25" y="27" width="3" height="3" fill="#f8f8f0"/>
-      <rect x="6" y="24" width="4" height="7" fill="#4aa030"/><rect x="34" y="24" width="4" height="7" fill="#4aa030"/><rect x="6" y="30" width="4" height="3" fill="#222222"/><rect x="34" y="30" width="4" height="3" fill="#222222"/><rect x="7" y="30" width="2" height="2" fill="#ffffff"/><rect x="35" y="30" width="2" height="2" fill="#ffffff"/>
-      <rect x="14" y="36" width="6" height="5" fill="#4aa030"/><rect x="24" y="36" width="6" height="5" fill="#4aa030"/>
-    </svg>`,
+    10:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="8" y="6" width="16" height="3" fill="#f09020"/><rect x="5" y="9" width="22" height="13" fill="#f09020"/><rect x="8" y="22" width="16" height="3" fill="#f09020"/><rect x="5" y="9" width="3" height="13" fill="#c06010"/><rect x="24" y="9" width="3" height="13" fill="#c06010"/><rect x="14" y="1" width="2" height="5" fill="#c06010"/><rect x="13" y="0" width="4" height="2" fill="#ff60c0"/><rect x="8" y="11" width="6" height="5" fill="#ffffff"/><rect x="18" y="11" width="6" height="5" fill="#ffffff"/><rect x="9" y="12" width="3" height="3" fill="#181828"/><rect x="19" y="12" width="3" height="3" fill="#181828"/><rect x="10" y="12" width="1" height="1" fill="#ffffff"/><rect x="20" y="12" width="1" height="1" fill="#ffffff"/><rect x="7" y="10" width="8" height="1" fill="#804010"/><rect x="17" y="10" width="8" height="1" fill="#804010"/><rect x="12" y="17" width="8" height="4" fill="#804010"/><rect x="13" y="17" width="2" height="2" fill="#381808"/><rect x="17" y="17" width="2" height="2" fill="#381808"/><rect x="11" y="24" width="10" height="2" fill="#ff60c0"/><rect x="27" y="19" width="11" height="11" fill="#f09020"/><rect x="27" y="19" width="11" height="3" fill="#c06010"/><rect x="30" y="23" width="5" height="4" fill="#ff60c0"/><rect x="30" y="31" width="10" height="10" fill="#e08018"/><rect x="30" y="31" width="10" height="3" fill="#a85008"/><rect x="33" y="34" width="4" height="4" fill="#ff60c0"/><rect x="22" y="36" width="9" height="8" fill="#c06810"/><rect x="24" y="39" width="4" height="3" fill="#ff60c0"/></svg>`,
 
-    11:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
-      <!-- Kamek pixel: blue wizard hat + robe, round glasses, wand -->
-      <rect x="13" y="1" width="18" height="4" fill="#2a50c0"/><rect x="29" y="0" width="8" height="3" fill="#2a50c0"/><rect x="35" y="2" width="3" height="3" fill="#2a50c0"/><rect x="15" y="2" width="3" height="2" fill="#4a70e0"/>
-      <rect x="9" y="6" width="26" height="4" fill="#2a50c0"/>
-      <rect x="13" y="10" width="18" height="9" fill="#f0d080"/>
-      <rect x="13" y="11" width="8" height="7" fill="#111111"/><rect x="23" y="11" width="8" height="7" fill="#111111"/><rect x="14" y="12" width="6" height="5" fill="#ffffff"/><rect x="24" y="12" width="6" height="5" fill="#ffffff"/><rect x="16" y="13" width="2" height="2" fill="#111111"/><rect x="26" y="13" width="2" height="2" fill="#111111"/>
-      <rect x="18" y="17" width="8" height="4" fill="#e8c070"/><rect x="19" y="19" width="6" height="2" fill="#6a4a10"/>
-      <rect x="10" y="22" width="24" height="15" fill="#2a50c0"/><rect x="14" y="22" width="16" height="2" fill="#ffffff"/><rect x="21" y="24" width="2" height="13" fill="#ffffff"/><rect x="10" y="35" width="24" height="2" fill="#1a3a90"/>
-      <rect x="6" y="24" width="5" height="6" fill="#2a50c0"/><rect x="33" y="24" width="4" height="6" fill="#2a50c0"/><rect x="6" y="30" width="4" height="3" fill="#f0d080"/><rect x="33" y="30" width="4" height="3" fill="#f0d080"/>
-      <rect x="38" y="14" width="2" height="17" fill="#8a5a2a"/><rect x="37" y="11" width="4" height="4" fill="#40c0ff"/><rect x="38" y="12" width="1" height="1" fill="#ffffff"/>
-      <rect x="14" y="38" width="6" height="4" fill="#1a3a90"/><rect x="24" y="38" width="6" height="4" fill="#1a3a90"/>
-    </svg>`,
+    11:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="10" y="3" width="24" height="6" fill="#d8a820"/><rect x="10" y="7" width="24" height="2" fill="#a87810"/><rect x="20" y="3" width="4" height="5" fill="#e02840"/><rect x="21" y="4" width="2" height="2" fill="#ff8090"/><rect x="0" y="15" width="8" height="8" fill="#8a8a98"/><rect x="0" y="15" width="8" height="2" fill="#6a6a78"/><rect x="1" y="17" width="2" height="2" fill="#6a6a78"/><rect x="4" y="17" width="2" height="2" fill="#6a6a78"/><rect x="1" y="21" width="5" height="2" fill="#6a6a78"/><rect x="36" y="15" width="8" height="8" fill="#8a8a98"/><rect x="36" y="15" width="8" height="2" fill="#6a6a78"/><rect x="38" y="17" width="2" height="2" fill="#6a6a78"/><rect x="41" y="17" width="2" height="2" fill="#6a6a78"/><rect x="38" y="21" width="5" height="2" fill="#6a6a78"/><rect x="10" y="9" width="24" height="18" fill="#8a8a98"/><rect x="10" y="9" width="4" height="18" fill="#6a6a78"/><rect x="30" y="9" width="4" height="18" fill="#6a6a78"/><rect x="12" y="12" width="20" height="3" fill="#6a6a78"/><rect x="13" y="15" width="7" height="4" fill="#282828"/><rect x="24" y="15" width="7" height="4" fill="#282828"/><rect x="15" y="16" width="4" height="2" fill="#ffb000"/><rect x="25" y="16" width="4" height="2" fill="#ffb000"/><rect x="20" y="17" width="4" height="5" fill="#6a6a78"/><rect x="13" y="22" width="18" height="4" fill="#282828"/><rect x="14" y="22" width="3" height="3" fill="#e8e8e0"/><rect x="18" y="22" width="3" height="3" fill="#e8e8e0"/><rect x="23" y="22" width="3" height="3" fill="#e8e8e0"/><rect x="27" y="22" width="3" height="3" fill="#e8e8e0"/><rect x="16" y="10" width="1" height="3" fill="#4a4a58"/><rect x="27" y="11" width="1" height="3" fill="#4a4a58"/><rect x="22" y="9" width="1" height="2" fill="#4a4a58"/><rect x="13" y="27" width="18" height="4" fill="#6a6a78"/><rect x="15" y="31" width="14" height="3" fill="#585868"/></svg>`,
 
     12:`<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
       <!-- Bowser pixel: horns, orange hair, red brows, spiked shell, big fangs -->
@@ -1697,24 +1562,25 @@ function getBossSVG(week){
       <rect x="2" y="26" width="5" height="9" fill="#3a8a20"/><rect x="37" y="26" width="5" height="9" fill="#3a8a20"/><rect x="2" y="32" width="5" height="4" fill="#222222"/><rect x="37" y="32" width="5" height="4" fill="#222222"/><rect x="3" y="32" width="2" height="2" fill="#ffffff"/><rect x="38" y="32" width="2" height="2" fill="#ffffff"/>
       <rect x="11" y="38" width="9" height="5" fill="#3a8a20"/><rect x="24" y="38" width="9" height="5" fill="#3a8a20"/><rect x="11" y="42" width="2" height="1" fill="#ffffff"/><rect x="14" y="42" width="2" height="1" fill="#ffffff"/><rect x="17" y="42" width="2" height="1" fill="#ffffff"/><rect x="24" y="42" width="2" height="1" fill="#ffffff"/><rect x="27" y="42" width="2" height="1" fill="#ffffff"/><rect x="30" y="42" width="2" height="1" fill="#ffffff"/>
     </svg>`,
+
   };
   return svgs[week]||`<svg width="44" height="44" viewBox="0 0 44 44"><circle cx="22" cy="22" r="18" fill="#444"/><text x="22" y="28" font-size="18" text-anchor="middle" fill="#fff">?</text></svg>`;
 }
 
 // BOSS DATA + WEEK CASTLE ICONS
 const BOSSES=[
-  {week:1,name:'IGGY KOOPA',castle:'🏰',world:'WORLD 1 — IGGY\'S TOWER',story:'Iggy was laughing at your starting point. Now he\'s not laughing. Week 1 complete. You showed up every day. That\'s already more than most.',defeated:'IGGY KOOPA DEFEATED!'},
-  {week:2,name:'MORTON KOOPA',castle:'🌊',world:'WORLD 2 — MORTON\'S CASTLE',story:'Morton thought two weeks was nothing. But your body is already changing. Soreness dropping. Pull-ups getting easier. Morton is speechless.',defeated:'MORTON KOOPA DEFEATED!'},
-  {week:3,name:'LEMMY KOOPA',castle:'🌋',world:'WORLD 3 — LEMMY\'S VOLCANO',story:'Lemmy tried to circus-trick you into skipping. But you\'re building a real habit. Arms and shoulders visibly different. Week 3 belongs to you.',defeated:'LEMMY KOOPA DEFEATED!'},
-  {week:4,name:'LUDWIG VON KOOPA',castle:'⭐',world:'WORLD 4 ★ STAR ROAD',story:'The composer thought complexity would break you. Instead you\'re composing your own physique. Upper abs faintly showing. Ludwig falls silent.',defeated:'LUDWIG DEFEATED — ★ STAR POWER UNLOCKED ★'},
-  {week:5,name:'ROY KOOPA',castle:'👻',world:'WORLD 5 — ROY\'S GHOST FORT',story:'Roy is the strongest Koopa. He bet you\'d quit. He lost. Your strength is real now. The kettlebell feels lighter. Roy is shook.',defeated:'ROY KOOPA DEFEATED!'},
-  {week:6,name:'WENDY O. KOOPA',castle:'🪸',world:'WORLD 6 — WENDY\'S CORAL',story:'Wendy thought you were training for nothing. Look at you — visible recomposition, upper abs showing, back and arms popping. Wendy is shook.',defeated:'WENDY DEFEATED — HALFWAY TO THE PRINCESS!'},
-  {week:7,name:'LARRY KOOPA',castle:'⭐',world:'WORLD 7 ★ SKY FORTRESS',story:'Larry tried to sneak a rest day past you. 7 weeks in — abs without flexing. Athletic look locked. Larry runs.',defeated:'LARRY DEFEATED — ★ UNSTOPPABLE ★'},
-  {week:8,name:'BOOM BOOM',castle:'🌙',world:'WORLD 8 — BOOM BOOM\'S DUNGEON',story:'The castle dungeon guardian. Hits hard. So do you now. Boom Boom has never met someone who trained through hotel rooms and tour buses.',defeated:'BOOM BOOM DEFEATED!'},
-  {week:9,name:'REZNOR',castle:'⛰️',world:'WORLD 9 — REZNOR\'S TOWER',story:'Four dinosaurs on a moving platform. Just like your life — always moving. You learned to train anywhere. Clear abs. Back pops.',defeated:'REZNOR DEFEATED — 3 WEEKS LEFT!'},
-  {week:10,name:'BOWSER JR.',castle:'⭐',world:'WORLD 10 ★ AIRSHIP ARMADA',story:'The prince thinks he can stop you 2 weeks from the castle. Ten weeks of discipline. Ten weeks of proof. Junior cries back to daddy.',defeated:'BOWSER JR. DEFEATED — ★ FINAL STAR ★'},
-  {week:11,name:'KAMEK',castle:'❄️',world:'WORLD 11 — KAMEK\'S ICE TOWER',story:'The wizard tried to curse your last week with doubt. Eleven weeks built something doubt can\'t touch. The princess is one week away.',defeated:'KAMEK DEFEATED — FINAL WEEK UNLOCKED!'},
-  {week:12,name:'BOWSER',castle:'🏰',world:'WORLD 12 — BOWSER\'S FINAL CASTLE',story:'The final boss. He held her for 12 weeks believing you\'d never make it. 12 weeks ago you had never worked out seriously. Today you defeat Bowser. Go get her.',defeated:'BOWSER DEFEATED — PRINCESS SAVED! 💖'},
+  {week:1,name:'PETEY PIRANHA',castle:'\u{1F337}',world:'WORLD 1 — PETEY\'S GARDEN',story:'Petey rooted himself in your path. You walked right through him. Week 1 complete. You showed up every day. That\'s already more than most.',defeated:'PETEY PIRANHA DEFEATED!'},
+  {week:2,name:'TOPPER',castle:'\u{1F3A9}',world:'WORLD 2 — TOPPER\'S MEADOW',story:'Topper stacked the odds against you. Two weeks in, your body is already changing. Soreness dropping. Pull-ups getting easier. The hat man tips his hats.',defeated:'TOPPER DEFEATED!'},
+  {week:3,name:'RUINED DRAGON',castle:'\u{1F432}',world:'WORLD 3 — THE RUINED CAVE',story:'The dragon thought its storm would scare you off. But you\'re building a real habit. Arms and shoulders visibly different. Week 3 belongs to you.',defeated:'RUINED DRAGON DEFEATED!'},
+  {week:4,name:'SPEWART',castle:'\u2B50',world:'WORLD 4 \u2605 STAR ROAD',story:'Spewart tried to poison the bridge. Instead you cross it stronger than ever. Upper abs faintly showing. The Broodals are watching now.',defeated:'SPEWART DEFEATED — \u2605 STAR POWER UNLOCKED \u2605'},
+  {week:5,name:'KING BOO',castle:'\u{1F47B}',world:'WORLD 5 — THE HAUNTED WOODS',story:'The King of Boos bet you\'d vanish when things got dark. He lost. Your strength is real now. The kettlebell feels lighter. King Boo is shook.',defeated:'KING BOO DEFEATED!'},
+  {week:6,name:'MOLLUSQUE-LANCEUR',castle:'\u{1F30A}',world:'WORLD 6 — THE SEASIDE ISLE',story:'The sea boss thought you were training for nothing. Look at you — visible recomposition, upper abs showing, back and arms popping. The tide turns.',defeated:'MOLLUSQUE-LANCEUR DEFEATED — HALFWAY TO THE PRINCESS!'},
+  {week:7,name:'HARRIET',castle:'\u2B50',world:'WORLD 7 \u2605 SKY VALLEY',story:'Harriet bombed your valley from above. 7 weeks in — abs without flexing. Athletic look locked. She drops her bombs and runs.',defeated:'HARRIET DEFEATED — \u2605 UNSTOPPABLE \u2605'},
+  {week:8,name:'MADAME BROODE',castle:'\u{1F319}',world:'WORLD 8 — MADAME BROODE\'S MOON',story:'Madame Broode sicced Chain Chompikins on you in the dark. Hits hard. So do you now. She never met someone who trained through hotel rooms and tour buses.',defeated:'MADAME BROODE DEFEATED!'},
+  {week:9,name:'COOKATIEL',castle:'\u{1F30B}',world:'WORLD 9 — COOKATIEL\'S NEST',story:'The giant hen guarded her volcano nest like your life guards its chaos — always moving. You learned to train anywhere. Clear abs. Back pops.',defeated:'COOKATIEL DEFEATED — 3 WEEKS LEFT!'},
+  {week:10,name:'MECHAWIGGLER',castle:'\u2B50',world:'WORLD 10 \u2605 AIRSHIP ARMADA',story:'The machine thought raw power beats ten weeks of discipline. Wrong. Ten weeks of proof. Mechawiggler powers down.',defeated:'MECHAWIGGLER DEFEATED — \u2605 FINAL STAR \u2605'},
+  {week:11,name:'KNUCKLOTEC',castle:'\u2744\uFE0F',world:'WORLD 11 — THE FROZEN RUINS',story:'The stone colossus tried to bury your final stretch in ice and doubt. Eleven weeks built something doubt can\'t touch. The princess is one week away.',defeated:'KNUCKLOTEC DEFEATED — FINAL WEEK UNLOCKED!'},
+  {week:12,name:'BOWSER',castle:'\u{1F3F0}',world:'WORLD 12 — BOWSER\'S FINAL CASTLE',story:'The final boss. He held her for 12 weeks believing you\'d never make it. 12 weeks ago you had never worked out seriously. Today you defeat Bowser. Go get her.',defeated:'BOWSER DEFEATED — PRINCESS SAVED! \u{1F496}'},
 ];
 
 // ================================================================
@@ -1929,17 +1795,17 @@ function getTerrainIcon(w, cleared, current, unlocked){
 // FULL SMW WORLD MAP
 // ================================================================
 const MAP_NODES=[
-  {w:1,  x:58,  y:460, zone:'grassland', name:"IGGY'S TOWER"},
-  {w:2,  x:125, y:440, zone:'grassland', name:"MORTON'S CASTLE"},
-  {w:3,  x:195, y:420, zone:'cave',      name:"LEMMY'S CAVE"},
-  {w:4,  x:265, y:410, zone:'bridge',    name:"LUDWIG'S BRIDGE"},
-  {w:5,  x:330, y:380, zone:'forest',    name:"ROY'S FOREST"},
-  {w:6,  x:345, y:305, zone:'choco',     name:"WENDY'S ISLAND"},
-  {w:7,  x:305, y:235, zone:'valley',    name:"LARRY'S VALLEY"},
-  {w:8,  x:230, y:200, zone:'star',      name:"BOOM BOOM'S STAR"},
-  {w:9,  x:155, y:215, zone:'lava',      name:"REZNOR'S TOWER"},
-  {w:10, x:120, y:150, zone:'airship',   name:"BOWSER JR. AIRSHIP"},
-  {w:11, x:195, y:105, zone:'ice',       name:"KAMEK'S ICE TOWER"},
+  {w:1,  x:58,  y:460, zone:'grassland', name:"PETEY'S GARDEN"},
+  {w:2,  x:125, y:440, zone:'grassland', name:"TOPPER'S MEADOW"},
+  {w:3,  x:195, y:420, zone:'cave',      name:"DRAGON'S CAVE"},
+  {w:4,  x:265, y:410, zone:'bridge',    name:"SPEWART'S BRIDGE"},
+  {w:5,  x:330, y:380, zone:'forest',    name:"KING BOO'S WOODS"},
+  {w:6,  x:345, y:305, zone:'choco',     name:"SEASIDE ISLE"},
+  {w:7,  x:305, y:235, zone:'valley',    name:"HARRIET'S VALLEY"},
+  {w:8,  x:230, y:200, zone:'star',      name:"BROODE'S MOON"},
+  {w:9,  x:155, y:215, zone:'lava',      name:"COOKATIEL'S NEST"},
+  {w:10, x:120, y:150, zone:'airship',   name:"MECHAWIGGLER AIRSHIP"},
+  {w:11, x:195, y:105, zone:'ice',       name:"KNUCKLOTEC'S RUINS"},
   {w:12, x:290, y:68,  zone:'castle',    name:"BOWSER'S CASTLE"},
 ];
 
@@ -3157,7 +3023,7 @@ function openStats(){
   if(st.totalXP>=1000) awards.push({icon:'🏅',name:'FOUR DIGITS',desc:'1,000 XP earned'});
   if(st.totalXP>=5000) awards.push({icon:'🌟',name:'SUPERSTAR',desc:'5,000 XP earned'});
   if(st.totalCoins>=50) awards.push({icon:'🪙',name:'COIN HOARDER',desc:'50 coins collected'});
-  if(loadS()['_boss_1']) awards.push({icon:'⚔️',name:'WEEK 1 CLEARED',desc:'Defeated Iggy Koopa'});
+  if(loadS()['_boss_1']) awards.push({icon:'⚔️',name:'WEEK 1 CLEARED',desc:'Defeated Petey Piranha'});
   if(st.totalProtein>=1000) awards.push({icon:'🥩',name:'PROTEIN MACHINE',desc:'1,000g protein logged'});
 
   const locked=[
@@ -4218,7 +4084,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=20;
+const APP_VERSION=21;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
