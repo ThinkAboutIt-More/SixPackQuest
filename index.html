@@ -1331,7 +1331,7 @@ function setupHiddenBlocks(){
 // ================================================================
 const PLAN={
   home:{
-    0:{label:'REST DAY',type:'rest',emoji:'💤',workout:[],bonuses:[{id:'r_b1',name:'⭐ SAUNA SESSION',detail:'30-60 min — boosts GH, cuts cortisol, accelerates recovery',xp:40}],
+    0:{label:'REST DAY',type:'rest',emoji:'💤',workout:[],bonuses:[{id:'r_b1',name:'⭐ SAUNA SESSION',detail:'30-60 min — boosts GH, cuts cortisol, accelerates recovery',xp:40},{id:'r_b2',name:'😴 SLEEP 8+ HOURS',detail:'Muscle is built tonight, not in the workout — 8 hours minimum, screens off early',xp:20}],
       supps:[
         {id:'daily_s0',icon:'🧠',name:'SHAKE #1 + CREATINE',detail:'Pick your drink — creatine goes with this one',xp:15,type:'shake1'},
         {id:'daily_s1',icon:'🥤',name:'SHAKE #2',detail:'Pick your drink',xp:15,type:'shake2'},
@@ -1341,8 +1341,8 @@ const PLAN={
       workout:[
         {id:'m0',name:'JUMP ROPE WARMUP',detail:'150 skips — easy pace, get blood moving',sets:1,rn:'150 skips',xp:15},
         {id:'m1',name:'JUMP ROPE INTERVALS',detail:'5 × 100 skips / 30s rest',sets:5,rn:'100 skips',xp:40},
-        {id:'m2',name:'GOBLET SQUAT',detail:'4 × 15 reps (40lb kettlebell)',sets:4,rn:'15 reps',xp:50},
-        {id:'m3',name:'KETTLEBELL SWINGS',detail:'5 × 20 reps (40lb kettlebell)',sets:5,rn:'20 reps',xp:60},
+        {id:'m2',name:'GOBLET SQUAT',detail:'4 × 15 reps (35lb kettlebell)',sets:4,rn:'15 reps',xp:50},
+        {id:'m3',name:'KETTLEBELL SWINGS',detail:'5 × 20 reps (35lb kettlebell)',sets:5,rn:'20 reps',xp:60},
         {id:'m4',name:'ONE-ARM KETTLEBELL ROW',detail:'3 × 12 per arm (35lb kettlebell)',sets:3,rn:'12/arm',xp:50},
         {id:'m9',name:'KETTLEBELL FACE PULL (BENT ROW HIGH)',detail:'3 × 12 — pull KB to chin, elbows flared high (rear delt + upper back)',sets:3,rn:'12 reps',xp:40},
         {id:'m5',name:'OVERHEAD KETTLEBELL PRESS',detail:'3 × 10 per arm (35lb kettlebell)',sets:3,rn:'10/arm',xp:50},
@@ -1400,7 +1400,7 @@ const PLAN={
       workout:[
         {id:'f0',name:'JUMP ROPE WARMUP',detail:'150 skips — prime shoulders + hips for KB',sets:1,rn:'150 skips',xp:15},
         {id:'f1',name:'BURPEE TO SQUAT JUMP',detail:'3 × 8 reps',sets:3,rn:'8 reps',xp:45},
-        {id:'f2',name:'GOBLET SQUATS',detail:'4 × 12 (40lb kettlebell)',sets:4,rn:'12 reps',xp:45},
+        {id:'f2',name:'GOBLET SQUATS',detail:'4 × 12 (35lb kettlebell)',sets:4,rn:'12 reps',xp:45},
         {id:'f3',name:'ONE-ARM KETTLEBELL ROW',detail:'3 × 12 per arm',sets:3,rn:'12/arm',xp:50},
         {id:'f9',name:'KETTLEBELL FACE PULL (BENT ROW HIGH)',detail:'3 × 12 — pull to chin, elbows flared (rear delt finisher)',sets:3,rn:'12 reps',xp:40},
         {id:'f4',name:'OVERHEAD KETTLEBELL PRESS',detail:'3 × 10 per arm',sets:3,rn:'10/arm',xp:50},
@@ -1428,7 +1428,7 @@ const PLAN={
   travel:{
     // TRAVEL USES SAME TASK IDs AS HOME — checking off in either mode syncs both
     // Jump rope kept (you have it). KB and pull-up bar exercises get bodyweight subs.
-    0:{label:'REST DAY',type:'rest',emoji:'💤',workout:[],bonuses:[{id:'r_b1',name:'⭐ SAUNA SESSION',detail:'30-60 min — boosts GH, cuts cortisol, accelerates recovery',xp:40}],
+    0:{label:'REST DAY',type:'rest',emoji:'💤',workout:[],bonuses:[{id:'r_b1',name:'⭐ SAUNA SESSION',detail:'30-60 min — boosts GH, cuts cortisol, accelerates recovery',xp:40},{id:'r_b2',name:'😴 SLEEP 8+ HOURS',detail:'Muscle is built tonight, not in the workout — 8 hours minimum, screens off early',xp:20}],
       supps:[
         {id:'daily_s0',icon:'🧠',name:'SHAKE #1 + CREATINE',detail:'Pick your drink — creatine goes with this one',xp:15,type:'shake1'},
         {id:'daily_s1',icon:'🥤',name:'SHAKE #2',detail:'Pick your drink',xp:15,type:'shake2'},
@@ -1922,6 +1922,8 @@ const PROG={
   },
   // goblet squat reps
   goblet:{1:15,4:17,7:20,10:22},
+  // rope intervals: rounds
+  rope:{1:5,4:6,7:7,10:8},
   // push-up reps
   pushups:{1:'12-15',4:'15-18',7:'18-20',10:'20-25'},
   // burpee rounds
@@ -1945,15 +1947,19 @@ function applyProg(t,week){
   }else if(t.id==='m3'||t.id==='w4'||t.id==='f5'){
     // KB swings
     const v=p('kbswings',week);
-    detail=`${v.sets} × ${v.reps} reps (40lb kettlebell)`;sets=v.sets;rn=`${v.reps} reps`;
+    detail=`${v.sets} × ${v.reps} reps (${week>=4?40:35}lb kettlebell)`;sets=v.sets;rn=`${v.reps} reps`;
   }else if(t.id==='m2'||t.id==='f2'){
     // goblet squats
     const v=p('goblet',week);
-    detail=`4 × ${v} reps (40lb kettlebell)`;rn=`${v} reps`;
+    detail=`4 × ${v} reps (${week>=4?40:35}lb kettlebell)`;rn=`${v} reps`;
   }else if(t.id==='m5'||t.id==='f4'){
     // OH KB press — add reps
     const reps=week>=10?12:week>=7?11:week>=4?10:10;
     detail=`3 × ${reps} per arm (35lb kettlebell)`;rn=`${reps}/arm`;
+  }else if(t.id==='m1'){
+    // rope intervals
+    const v=p('rope',week);
+    detail=`${v} × 100 skips / 30s rest`;sets=v;rn='100 skips';
   }else if(t.id==='t1'){
     // Tuesday burpees
     const v=p('burpees',week);
@@ -1971,6 +1977,7 @@ function applyProg(t,week){
   if(t.id==='tm2'){const v=p('burpees',week);detail=v.replace('×','rounds ×');}
   if(t.id==='tm3'){const v=p('pushups',week);detail=`4 × ${v}`;}
   if(t.id==='tf1'){const r=week>=10?12:week>=7?10:10;detail=`6 × ${r} reps`;rn=`${r} reps`;}
+  if(week>=12&&sets){sets=Math.max(2,Math.round(sets*0.6));if(!/TAPER/.test(detail))detail+=' · TAPER WK — 60% volume, stay sharp';}
   return{...t,name,detail,sets,rn};
 }
 
@@ -4308,7 +4315,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=6;
+const APP_VERSION=7;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
