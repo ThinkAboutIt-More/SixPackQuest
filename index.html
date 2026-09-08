@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#000000">
 <title>PAKALU'S SIX PACK QUEST 🍄</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
@@ -611,7 +614,7 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
         <button class="mode-btn" id="homeBtn" onclick="setMode('home')">🏠</button>
         <button class="mode-btn" id="travelBtn" onclick="setMode('travel')">✈️</button>
       </div>
-      <button class="mode-btn" onclick="openSyncPanel()" title="Backup / Restore data" style="background:#1a1a00;border-color:#7a5800;color:var(--coin);">💾</button>
+      <span id="syncBadge" style="font-family:'Press Start 2P',monospace;font-size:0.2rem;color:#7fff9e;align-self:center;">SYNCED</span><button class="mode-btn" onclick="openSyncPanel()" title="Backup / Restore data" style="background:#1a1a00;border-color:#7a5800;color:var(--coin);">💾</button>
       <button class="mode-btn" onclick="openStats()" title="Hall of Stats" style="background:#001a1a;border-color:#007755;color:#00ffaa;">🏆</button>
       <button class="mode-btn" onclick="openPR()" title="Personal Records" style="background:#1a1000;border-color:#776600;color:#ffcc00;">🏅</button>
       <button class="mode-btn" onclick="openPhotoLog()" title="Photo Log Meal" style="background:#001a00;border-color:#006622;color:#00ff88;">📸</button>
@@ -1157,26 +1160,26 @@ function drawCastle(){
 const DAILY_QUOTES=[
   {speaker:"PAKALU",quote:"Part of the journey is the end. But YOUR journey is just beginning. Every rep counts. — Tony Stark"},
   {speaker:"PAKALU",quote:"If you only do what you can do, you'll never be more than you are now. Do MORE than you can. — Master Shifu"},
-  {speaker:"PAKALU",quote:"She made her choice. You make yours — every single day. Show up anyway."},
+  {speaker:"PAKALU",quote:"The princess is counting on you, Pakalu. Show up today. She'd expect nothing less."},
   {speaker:"PAKALU",quote:"Your future self is watching you through your memories right now. Make him proud."},
   {speaker:"PAKALU",quote:"Pain is temporary. What you're building right now is permanent."},
   {speaker:"PAKALU",quote:"Do or do not. There is no try. — Yoda. Today you DO."},
   {speaker:"PAKALU",quote:"You started this with zero gym experience. That's the most impressive part."},
   {speaker:"PAKALU",quote:"The body achieves what the mind believes. Your mind said yes. Now your body follows."},
   {speaker:"PAKALU",quote:"Every day you don't train, Bowser gets stronger. Every day you do, so do you."},
-  {speaker:"PAKALU",quote:"The princess left the castle. That means the quest is yours now — not for her. For you."},
+  {speaker:"PAKALU",quote:"The princess waits at the top of the last castle. Every workout is one more step up the stairs."},
   {speaker:"PAKALU",quote:"It always seems impossible until it's done. — Mandela. Week 12 will feel impossible. Then it won't."},
-  {speaker:"PAKALU",quote:"4 weeks in love. 12 weeks to become someone different. You do the math."},
+  {speaker:"PAKALU",quote:"12 weeks. 84 days. One princess. You do the math - then do the workout."},
   {speaker:"PAKALU",quote:"I am Iron Man. And Iron Man does not skip protein shakes. — Tony Stark probably"},
   {speaker:"PAKALU",quote:"Wax on, wax off. Goblet squat, kettlebell swing. It all builds toward something real."},
-  {speaker:"PAKALU",quote:"You're not training for anyone anymore. That's actually the most powerful version of this."},
+  {speaker:"PAKALU",quote:"You're training for the moment those castle doors open. That's the most powerful version of this."},
   {speaker:"PAKALU",quote:"One day or day one. You already chose. Today is day one again."},
-  {speaker:"PAKALU",quote:"Long distance couldn't hold. That's on the situation, not you. Build anyway."},
+  {speaker:"PAKALU",quote:"World by world, week by week - she gets closer every day you don't skip. Build anyway."},
   {speaker:"PAKALU",quote:"Hotel room, tour bus, home gym. Doesn't matter. Pakalu trains everywhere now."},
-  {speaker:"PAKALU",quote:"The castle is empty right now. That's fine. Build yourself first. The rest follows."},
-  {speaker:"PAKALU",quote:"Heartbreak is just motivation with nowhere to go yet. Now it has somewhere to go. Every rep."},
-  {speaker:"PAKALU",quote:"She was the reason you started. Let that be enough. Now finish it for yourself."},
-  {speaker:"PAKALU",quote:"Some people leave before they can see what you become. That's their loss — literally."},
+  {speaker:"PAKALU",quote:"World 1 already has your footprints on it. Eleven more and the castle doors open. Keep going."},
+  {speaker:"PAKALU",quote:"Every rep is a brick on the road to her castle. Lay today's bricks, Pakalu."},
+  {speaker:"PAKALU",quote:"She's the reason you started. She's the reason you finish. Save the princess, Pakalu."},
+  {speaker:"PAKALU",quote:"Week 12, she sees everything you built. Every skipped day hides it. Don't skip."},
 ];
 
 function getTodayQuote(){
@@ -1843,7 +1846,7 @@ let mode=localStorage.getItem('spq_mode')||'home';
 let currentDate=new Date();currentDate.setHours(0,0,0,0);
 const dKey=d=>{const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');return`${y}-${m}-${dd}`;};
 const loadS=()=>{try{return JSON.parse(localStorage.getItem('spq_v5')||'{}')}catch(e){return{}}};
-const saveS=s=>localStorage.setItem('spq_v5',JSON.stringify(s));
+const saveS=s=>{localStorage.setItem('spq_v5',JSON.stringify(s));try{cloudPush();}catch(e){}};
 const getDS=k=>{const s=loadS();return s[k]||{done:[],sets:{},foods:[]}};
 const setDS=(k,ds)=>{const s=loadS();s[k]=ds;saveS(s)};
 
@@ -4284,6 +4287,59 @@ setInterval(renderAll,60000);
   }
 })();
 
+</script>
+
+<script>
+// ================================================================
+// CLOUD SYNC (Supabase) - phone <-> web shared quest state
+// ================================================================
+const APP_VERSION=5;
+const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
+const SB_DOC='sixpack:v5state';
+const sbH=()=>({'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'});
+let __cloudM=parseInt(localStorage.getItem('spq_v5_m')||'0'),__pushT=null,__pullLock=false;
+function syncBadgeSet(t){const b=document.getElementById('syncBadge');if(b)b.textContent=t;}
+async function cloudPush(){
+  const m=Date.now();__cloudM=m;localStorage.setItem('spq_v5_m',''+m);
+  clearTimeout(__pushT);
+  __pushT=setTimeout(async()=>{
+    try{
+      syncBadgeSet('SYNCING');
+      const body={id:SB_DOC,value:{_m:m,v5:loadS(),prs:JSON.parse(localStorage.getItem('spq_prs')||'{}'),mode:localStorage.getItem('spq_mode')||'home'},updated_at:new Date().toISOString()};
+      const r=await fetch(SB_URL+'/rest/v1/app_state?on_conflict=id',{method:'POST',headers:Object.assign(sbH(),{'Prefer':'resolution=merge-duplicates,return=minimal'}),body:JSON.stringify(body)});
+      syncBadgeSet(r.ok?'SYNCED':'OFFLINE');
+    }catch(e){syncBadgeSet('OFFLINE');}
+  },800);
+}
+async function cloudPull(doRender){
+  if(__pullLock)return;__pullLock=true;
+  try{
+    const r=await fetch(SB_URL+'/rest/v1/app_state?id=eq.'+encodeURIComponent(SB_DOC)+'&select=value',{headers:sbH()});
+    const rows=await r.json();
+    const d=rows&&rows[0]&&rows[0].value;
+    if(d&&d._m&&d._m>__cloudM){
+      __cloudM=d._m;localStorage.setItem('spq_v5_m',''+d._m);
+      if(d.v5)localStorage.setItem('spq_v5',JSON.stringify(d.v5));
+      if(d.prs)localStorage.setItem('spq_prs',JSON.stringify(d.prs));
+      if(d.mode)localStorage.setItem('spq_mode',d.mode);
+      if(doRender!==false)renderAll();
+    }
+    syncBadgeSet('SYNCED');
+  }catch(e){syncBadgeSet('OFFLINE');}
+  __pullLock=false;
+}
+setInterval(()=>{cloudPull();},25000);
+setTimeout(()=>{cloudPull(true);},1500);
+setInterval(async()=>{try{
+  const t=await (await fetch(location.pathname+'?vw='+Date.now(),{cache:'no-store'})).text();
+  const m=t.match(/APP_VERSION=(\d+)/);
+  if(m&&+m[1]>APP_VERSION){
+    if(document.getElementById('__vwToast'))return;
+    const d=document.createElement('div');d.id='__vwToast';
+    d.style.cssText='position:fixed;bottom:8px;left:8px;z-index:9999;background:#ffd700;color:#000;font-family:"Press Start 2P",monospace;font-size:0.25rem;padding:8px 10px;border:3px solid #000;cursor:pointer';
+    d.textContent='★ NEW VERSION - TAP TO REFRESH';d.onclick=()=>location.reload();document.body.appendChild(d);
+  }}catch(e){}},300000);
 </script>
 </body>
 </html>
