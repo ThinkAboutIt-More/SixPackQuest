@@ -2500,7 +2500,7 @@ function makeSection(title,hdrCls,tasks,done,sets,isBonus){
     let setHtml='';
     if(st>1&&!isDone){setHtml=`<div class="set-tracker" onclick="event.stopPropagation()">${Array.from({length:st},(_,i)=>`<div class="set-dot${i<sd?' done-set':''}" onclick="addSet('${t.id}',${st},${i})">${i<sd?'✓':i+1}</div>`).join('')}<span class="set-label${sd>0?' ok':''}">${sd}/${st} sets${t.rn?' ('+t.rn+')':''}</span></div>`;}
     else if(st>1&&isDone){setHtml=`<div class="set-tracker"><span class="set-label ok">ALL ${st} SETS ✓</span></div>`;}
-    return`<div class="task-row${isBonus?' bonus-row':''}${isDone?' done':''}" id="tr_${t.id}" onclick="toggleTask('${t.id}')"><div class="chk">${isDone?'✓':''}</div><div class="ti"><div class="tn" onclick="event.stopPropagation();toggleCue(this)" data-tn="${t.name}" style="cursor:pointer;">${displayName}${subTag}${FORM_CUES[cueKey(t.name)]?'<span class="cue-dot">?</span>':''}</div><div class="td">${displayDetail}</div>${setHtml}</div><div class="txp">+${t.xp}XP</div></div>`;
+    return`<div class="task-row${isBonus?' bonus-row':''}${isDone?' done':''}" id="tr_${t.id}" onclick="toggleTask('${t.id}')"><div class="chk">${isDone?'✓':''}</div><div class="ti"><div class="tn" onclick="event.stopPropagation();toggleCue(this)" data-tn="${t.name}" style="cursor:pointer;">${displayName}${subTag}${(window.FORM_CUES&&window.FORM_CUES[window.cueKey(t.name)])?'<span class="cue-dot">?</span>':''}</div><div class="td">${displayDetail}</div>${setHtml}</div><div class="txp">+${t.xp}XP</div></div>`;
   }).join('')}</div>`;
   return b;
 }
@@ -4285,7 +4285,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=9;
+const APP_VERSION=10;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
@@ -4342,8 +4342,8 @@ renderAll();
 // ================================================================
 // EXERCISE FORM CUES - tap the exercise name
 // ================================================================
-function cueKey(n){return (n||'').toUpperCase().replace(/[^A-Z0-9]/g,'');}
-const FORM_CUES={
+window.cueKey=function(n){return (n||'').toUpperCase().replace(/[^A-Z0-9]/g,'');};
+window.FORM_CUES={
 GOBLETSQUAT:'Hold the bell at your chest, elbows inside your knees. Squat deep, chest tall, drive through your heels. The bell is a counterweight - let it pull you deeper.',
 GOBLETSQUATS:'Hold the bell at your chest, elbows inside your knees. Squat deep, chest tall, drive through your heels.',
 BODYWEIGHTSQUATS:'Feet shoulder-width, chest up, hips drop below your knees, drive through your heels. Arms out front for balance.',
