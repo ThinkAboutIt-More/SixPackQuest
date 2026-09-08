@@ -120,8 +120,8 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
 @keyframes mnPakBob{from{transform:translate(-50%,-180%)}to{transform:translate(-50%,-210%)}}
 .pu-wrap{position:relative;z-index:10;max-width:1100px;margin:0 auto 8px;padding:0 20px;box-sizing:border-box;}
 .pu-label{font-size:0.23rem;color:#aaa;margin-bottom:4px;}
-.pu-track{display:flex;gap:2px;flex-wrap:wrap;}
-.pu-seg{width:12px;height:12px;background:#1a1a1a;border:1px solid #333;transition:all .3s;}
+.pu-track{display:flex;gap:2px;}
+.pu-seg{flex:1;height:14px;background:#1a1a1a;border:1px solid #333;transition:all .3s;}
 .pu-seg.filled,.pu-seg.mushroom,.pu-seg.star{background:linear-gradient(135deg,var(--coin),#ff8c00);border-color:var(--coin-d);box-shadow:0 0 4px rgba(255,215,0,.5);}
 .pu-seg.mushroom{box-shadow:0 0 8px rgba(255,165,0,.9);}
 .pu-seg.star{box-shadow:0 0 10px rgba(255,220,0,1);animation:twS .5s infinite alternate;}
@@ -198,7 +198,7 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
 
   /* Task rows */
   .task-row{padding:10px 12px;margin-bottom:6px;}
-  .tn{font-size:0.42rem;}
+  .tn{font-size:0.5rem;}
   .td{font-size:1rem;}
   .txp{font-size:0.38rem;}
   .chk{width:22px;height:22px;font-size:.75rem;margin-top:3px;}
@@ -317,7 +317,7 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
 .task-row.done .chk{background:#00aa33;border-color:#00ff55;}
 .task-row.bonus-row.done .chk{background:var(--coin-d);border-color:var(--coin);}
 .ti{flex:1;}
-.tn{font-size:0.30rem;color:#ddd;line-height:1.6;}
+.tn{font-size:0.38rem;color:#fff;line-height:1.6;}
 .td{font-family:'VT323',monospace;font-size:.85rem;color:#777;margin-top:1px;}
 .txp{font-size:0.26rem;color:var(--coin);flex-shrink:0;text-shadow:1px 1px 0 #7a5800;margin-top:2px;}
 .task-row.done .txp{color:#00cc55;}
@@ -352,12 +352,14 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
 .drink-option:hover{background:#0a0a22;}
 .drink-option:active{background:#111133;}
 .drink-option:last-child{border-bottom:none;}
-.qa-pill{background:#0a1a0a;border:2px solid #1a4a1a;padding:5px 7px;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .12s;user-select:none;position:relative;}
+.qa-pill{background:#0a1a0a;border:2px solid #1a4a1a;padding:9px 10px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .12s;user-select:none;position:relative;}
 .qa-pill:hover{border-color:var(--pipe);background:#112211;}
 .qa-pill:active{transform:scale(.95);}
-.qa-pill .qa-icon{font-size:1.3rem;line-height:1;}
-.qa-pill .qa-name{font-size:0.28rem;color:#aaa;max-width:70px;line-height:1.3;}
-.qa-pill .qa-prot{font-size:0.26rem;color:#00cc55;font-weight:bold;}
+.qa-pill .qa-icon{font-size:1.6rem;line-height:1;}
+.qa-pill .qa-name{font-size:0.34rem;color:#aaa;line-height:1.4;}
+.qa-pill .qa-prot{font-size:0.32rem;color:#00cc55;font-weight:bold;}
+.mini-log-btn{display:inline-flex;align-items:center;gap:5px;background:#0a0a0a;border:2px solid #2a2a2a;padding:3px 8px;cursor:pointer;font-family:'Press Start 2P',monospace;font-size:0.24rem;color:#777;user-select:none;}
+.mini-log-btn:hover{border-color:#444;color:#999;}
 .qa-pill.qa-recent{border-color:#334433;}.qa-pill.qa-recent .qa-name{color:#88cc88;}
 .food-input-row{display:flex;gap:4px;margin-bottom:5px;}
 .fi{flex:1;background:#0d0d0d;border:2px solid #333;color:#fff;padding:4px 6px;font-family:'Press Start 2P',monospace;font-size:0.24rem;outline:none;}
@@ -538,7 +540,7 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
 .cue-box{background:#1a1a00;border:2px solid #7a5800;margin:6px 0 2px;padding:8px 10px;font-family:'VT323',monospace;font-size:.85rem;color:#ffd700;line-height:1.25;}
 .cue-box canvas{image-rendering:pixelated;display:block;margin:6px auto 2px;background:#0a0a14;border:2px solid #333;}
 @media(max-width:859px){
-  .tn{font-size:0.42rem;}
+  .tn{font-size:0.5rem;}
   .td{font-size:1.05rem;}
   .txp{font-size:0.34rem;}
   .chk{width:20px;height:20px;font-size:.7rem;}
@@ -547,7 +549,7 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
   .supp-name{font-size:0.32rem;}
   .supp-detail{font-size:.85rem;}
   .supp-icon{font-size:1.5rem;}
-  .qa-pill .qa-name{font-size:0.3rem;}
+  .qa-pill .qa-name{font-size:0.36rem;}
   .cue-box{font-size:1rem;}
   .smc-l{font-size:0.3rem;}
   .smc-v{font-size:0.66rem;}
@@ -883,20 +885,19 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
       <button onclick="addCustomWater()" style="background:#0044aa;border:none;border-bottom:3px solid #002266;color:#fff;font-family:'Press Start 2P',monospace;font-size:clamp(0.16rem,0.4vw,0.3rem);padding:5px 8px;cursor:pointer;">+ LOG</button>
       <button onclick="resetWaterToday()" style="background:#110000;border:2px solid #330000;color:#553333;font-family:'Press Start 2P',monospace;font-size:clamp(0.12rem,0.35vw,0.26rem);padding:5px 6px;cursor:pointer;" title="Reset today's water">↺</button>
     </div>
-    <div id="hydStatus" style="font-family:'VT323',monospace;font-size:clamp(.65rem,1.2vw,1rem);color:#336699;margin-top:5px;text-align:center;">💧 Log water to track hydration</div>
   </div>
 
   <div class="sec-block">
     <div class="sec-hdr pink" onclick="toggleSec('foodSec')">
       <span class="sec-title">🍕 FOOD LOG</span>
-      <span style="display:flex;align-items:center;gap:4px;"><span class="sec-count" id="foodCount">0g/160g</span><span class="sec-arr" id="arr_foodSec">▼</span></span>
+      <span style="display:flex;align-items:center;gap:6px;"><span id="foodLogToggleBtn" class="mini-log-btn" style="display:none;" onclick="event.stopPropagation();toggleSec('foodLogItems')">📋 <span id="foodLogCount"></span> <span class="sec-arr" id="arr_foodLogItems" style="font-size:0.3rem;">▼</span></span><span class="sec-count" id="foodCount">0g/160g</span><span class="sec-arr" id="arr_foodSec">▼</span></span>
     </div>
     <div id="foodSec">
       <div class="food-area">
 
         <!-- SECTION 2: QUICK DRINKS + EXTRAS -->
         <div class="food-section-lbl">⚡ QUICK ADD — DRINKS + EXTRAS</div>
-        <div id="quickAddRow" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;"></div>
+        <div id="quickAddRow" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:6px;margin-bottom:10px;"></div>
 
         <!-- SECTION 3: LOG ANYTHING YOU ATE -->
         <div class="food-section-lbl">🍽 ATE SOMETHING? LOG IT HERE</div>
@@ -929,16 +930,7 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
 
 
         <!-- LOG LIST -->
-        <div id="foodLogToggleRow" style="display:none;margin-top:6px;">
-          <div onclick="toggleSec('foodLogItems')" style="display:flex;align-items:center;justify-content:space-between;background:#0a0a0a;border:2px solid #222;padding:5px 9px;cursor:pointer;user-select:none;">
-            <span style="font-family:'Press Start 2P',monospace;font-size:0.26rem;color:#888;">📋 LOGGED TODAY</span>
-            <span style="display:flex;align-items:center;gap:6px;">
-              <span id="foodLogCount" style="font-family:'Press Start 2P',monospace;font-size:0.26rem;color:var(--coin);"></span>
-              <span class="sec-arr" id="arr_foodLogItems" style="font-size:0.4rem;color:#888;">▼</span>
-            </span>
-          </div>
-          <div class="food-log-list task-list collapsed" id="foodLogItems"></div>
-        </div>
+        <div class="food-log-list task-list collapsed" id="foodLogItems"></div>
       </div>
     </div>
   </div>
@@ -1862,17 +1854,9 @@ function renderHydration(key){
   const oz=getHydration(key);const goal=64;
   const pct=Math.min(100,Math.round(oz/goal*100));
   const fill=document.getElementById('hydFill');
-  const status=document.getElementById('hydStatus');
   const total=document.getElementById('hydTotal');
   if(fill)fill.style.width=pct+'%';
   if(total)total.textContent=oz+'oz / '+goal+'oz';
-  if(status){
-    if(oz>=goal)status.textContent='💧 FULLY HYDRATED — MAXIMUM GAINS';
-    else if(oz>=48)status.textContent='💧 SO CLOSE — one more drink';
-    else if(oz>=32)status.textContent='💧 HALFWAY — keep sipping';
-    else if(oz>=16)status.textContent='💧 GETTING THERE...';
-    else status.textContent='💧 DEHYDRATED — drink up';
-  }
   renderFreqWater();
 }
 
@@ -2422,7 +2406,7 @@ function makeCompletedLog(key,p,done,sets){
     </div>`);
   });
   // Supplements from suppDone
-  ['daily_s0','daily_s1','daily_s2','daily_s2b','daily_creatine'].forEach(id=>{
+  ['daily_s0','daily_s1','daily_s2','daily_s2b','daily_s2c','daily_s2d','daily_creatine'].forEach(id=>{
     const sd=suppDone[id];if(!sd||!sd.checked)return;
     const label=id==='daily_s2_a'?'CHOMPS #1':id==='daily_s2_b'?'CHOMPS #2':sd.name||id;
     rows.push(`<div class="task-row done" style="opacity:.7;" onclick="toggleSupp('${id}',${sd.protein||0},'${sd.name||''}')">
@@ -2432,20 +2416,9 @@ function makeCompletedLog(key,p,done,sets){
     </div>`);
   });
 
-  if(!rows.length){
-    b.innerHTML=`<div class="sec-hdr" style="background:#0a0a0a;border-color:#1a1a1a;" onclick="toggleSec('${sid}')">
-      <span class="sec-title" style="color:#333;">✓ COMPLETED TODAY</span>
-      <span class="sec-count" style="color:#222;">0</span>
-    </div>
-    <div class="task-list collapsed" id="${sid}"><div style="padding:10px;font-family:VT323,monospace;font-size:.85rem;color:#333;text-align:center;">nothing checked off yet</div></div>`;
-    return b;
-  }
-  b.innerHTML=`<div class="sec-hdr" style="background:#0a0a0a;border-color:#222;" onclick="toggleSec('${sid}')">
-    <span class="sec-title" style="color:#555;">✓ COMPLETED TODAY</span>
-    <span style="display:flex;align-items:center;gap:4px;">
-      <span class="sec-count" style="color:#444;">${rows.length}</span>
-      <span class="sec-arr" id="arr_${sid}" style="color:#444;">▼</span>
-    </span>
+  if(!rows.length){ b.style.display='none'; return b; }
+  b.innerHTML=`<div style="display:flex;justify-content:flex-end;margin-bottom:2px;">
+    <span class="mini-log-btn" onclick="toggleSec('${sid}')">✓ ${rows.length} DONE <span class="sec-arr" id="arr_${sid}" style="font-size:0.3rem;">▼</span></span>
   </div>
   <div class="task-list collapsed" id="${sid}">${rows.join('')}</div>`;
   return b;
@@ -2666,7 +2639,7 @@ const DRINK_OPTIONS=[
 function getSuppDone(key){ return getDS(key).suppDone||{}; }
 
 // Only these IDs are valid supplement keys — anything else is ignored
-const VALID_SUPP_IDS=new Set(['daily_s0','daily_s1','daily_s2','daily_s2b','daily_creatine']);
+const VALID_SUPP_IDS=new Set(['daily_s0','daily_s1','daily_s2','daily_s2b','daily_s2c','daily_s2d','daily_creatine']);
 
 function calcSuppProt(key){
   const sd=getSuppDone(key);
@@ -2712,35 +2685,31 @@ function pickDrinkForSupp(suppId, drinkName, drinkProtein){
 }
 
 function makeSuppSection(supps, done){
-  const sid='ss_'+Math.random().toString(36).slice(2,7);
   const key=dKey(currentDate);
   const suppDone=getSuppDone(key);
-  const b=document.createElement('div');b.className='sec-block';
-  // doneCount: for chomps x2, count each stick separately
-  const doneCount=supps.reduce((a,t)=>{
-    if(t.type==='chomps'&&t.name.includes('x2')){
-      return a+(suppDone['daily_s2']?.checked?1:0)+(suppDone['daily_s2b']?.checked?1:0);
-    }
-    return a+(done.includes(t.id)?1:0);
-  },0);
-  const totalCount=supps.reduce((a,t)=>a+(t.type==='chomps'&&t.name.includes('x2')?2:1),0);
+  const wrap=document.createElement('div');
 
-  const rowsHTML=supps.map(t=>{
+  function rowHTML(t){
     const isShake=t.type==='shake1'||t.type==='shake2';
     const isChomps=t.type==='chomps';
 
-    // ── CHOMPS — one row, tap a dot per stick ──
+    // ── CHOMPS — one flex row, tap a dot per stick ──
     if(isChomps){
-      const sticks=t.name.includes('x2')?2:1;
-      const ids=sticks===2?['daily_s2','daily_s2b']:['daily_s2'];
-      const cnt=ids.filter(cid=>suppDone[cid]&&suppDone[cid].checked).length;
-      const dots=ids.map(cid=>{const c=!!(suppDone[cid]&&suppDone[cid].checked);return`<div class="set-dot${c?' done-set':''}" onclick="event.stopPropagation();toggleSupp('${cid}',10,'Chomps')">${c?'✓':''}</div>`;}).join('');
-      return`<div class="supp-row${cnt===sticks?' done':''}" id="tr_${t.id}">
+      const groups=[
+        {label:'BEEF · 10g each',ids:['daily_s2','daily_s2b'],p:10,name:'Chomps Beef'},
+        {label:'CHICKEN · 12g each',ids:['daily_s2c','daily_s2d'],p:12,name:'Chomps Chicken'}
+      ];
+      const cnt=groups.reduce((n,g)=>n+g.ids.filter(cid=>suppDone[cid]&&suppDone[cid].checked).length,0);
+      const tracks=groups.map(g=>{
+        const dots=g.ids.map(cid=>{const c=!!(suppDone[cid]&&suppDone[cid].checked);return`<div class="set-dot${c?' done-set':''}" onclick="event.stopPropagation();toggleSupp('${cid}',${g.p},'${g.name}')">${c?'✓':''}</div>`;}).join('');
+        return`<div class="set-tracker" style="margin-top:4px;">${dots}<span class="set-label">${g.label}</span></div>`;
+      }).join('');
+      return`<div class="supp-row${cnt>0?' done':''}" id="tr_${t.id}">
         <span class="supp-icon">🥩</span>
         <div class="supp-info">
-          <div class="supp-name">CHOMPS</div>
-          <div class="supp-detail">tap a dot per stick · 10g each</div>
-          <div class="set-tracker" style="margin-top:4px;">${dots}<span class="set-label">${cnt}/${sticks} sticks</span></div>
+          <div class="supp-name">CHOMPS <span style="color:#555;">— ${cnt} stick${cnt!==1?'s':''}</span></div>
+          <div class="supp-detail">flex slot · tap a dot per stick</div>
+          ${tracks}
         </div>
       </div>`;
     }
@@ -2750,15 +2719,15 @@ function makeSuppSection(supps, done){
     const pickedName=sd?.name||'';
     const pickedProt=sd?.protein||0;
 
-    // ── CREATINE (rest day) ──
+    // ── CREATINE — its own big daily tap ──
     if(t.id==='daily_creatine'){
-      return`<div class="supp-row${isChecked?' done':''}" id="tr_${t.id}" onclick="toggleSupp('${t.id}',0,'Creatine')" style="cursor:pointer;">
-        <span class="supp-icon">${t.icon}</span>
+      return`<div class="supp-row${isChecked?' done':''}" id="tr_${t.id}" onclick="toggleSupp('${t.id}',0,'Creatine')" style="cursor:pointer;border-color:${isChecked?'':'#886600'};background:${isChecked?'':'#141000'};">
+        <span class="supp-icon" style="font-size:1.8rem;">💊</span>
         <div class="supp-info">
-          <div class="supp-name">${t.name}</div>
-          <div class="supp-detail">${isChecked?'<span style="color:#00cc44;">✓ done</span>':t.detail}</div>
+          <div class="supp-name" style="color:#ffcc44;">CREATINE</div>
+          <div class="supp-detail">${isChecked?'<span style="color:#00cc44;">✓ taken today</span>':'5g · every single day — tap when taken'}</div>
         </div>
-        <div class="supp-status"><div class="supp-check">${isChecked?'✓':'<span style="font-size:.6rem;color:#555;">TAP</span>'}</div></div>
+        <div class="supp-status"><div class="supp-check" style="${isChecked?'':'border-color:#ffcc44;color:#ffcc44;'}">${isChecked?'✓':'<span style="font-size:.6rem;">TAP</span>'}</div></div>
       </div>`;
     }
 
@@ -2767,7 +2736,7 @@ function makeSuppSection(supps, done){
       return`<div class="supp-row done" id="tr_${t.id}" onclick="toggleSupp('${t.id}',${pickedProt},'${pickedName}')" style="cursor:pointer;" title="Tap to uncheck">
         <span class="supp-icon">${t.icon}</span>
         <div class="supp-info">
-          <div class="supp-name">${t.name}</div>
+          <div class="supp-name">${t.type==='shake1'?t.name.replace(/\s*\+\s*CREATINE/i,''):t.name}</div>
           <div class="supp-detail"><span style="color:#00cc44;">✓ ${pickedName||'done'}${pickedProt?` · +${pickedProt}g`:''}</span></div>
         </div>
         <div class="supp-status"><div class="supp-check">✓</div></div>
@@ -2775,37 +2744,60 @@ function makeSuppSection(supps, done){
     }
 
     // ── SHAKE — pick a drink ──
-    const optionsHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;padding:4px;">`+
+    const optionsHTML=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;padding:6px;">`+
       DRINK_OPTIONS.map(opt=>`
         <div onclick="pickDrinkForSupp('${t.id}','${opt.name}',${opt.protein})"
-          style="background:#0a0a1a;border:2px solid #1a1a44;padding:8px 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;">
+          style="background:#0a0a1a;border:2px solid #1a1a44;padding:8px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;">
           <span style="font-size:1.3rem;">${opt.icon}</span>
           <div style="font-size:0.2rem;color:#ccc;line-height:1.4;">${opt.name}</div>
           <div style="font-family:VT323,monospace;font-size:.6rem;color:#555;">${opt.detail}</div>
           <div style="font-size:0.28rem;color:#00ff88;font-weight:bold;margin-top:2px;">+${opt.protein}g</div>
         </div>`).join('')+
       `</div>`;
+    const shakeName=t.type==='shake1'?t.name.replace(/\s*\+\s*CREATINE/i,''):t.name;
+    const shakeDetail=t.type==='shake1'?'Pick your drink':t.detail;
     return`<div class="supp-row" id="tr_${t.id}" style="flex-direction:column;align-items:stretch;padding:0;">
       <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-bottom:1px solid #0d0d22;">
         <span class="supp-icon">${t.icon}</span>
         <div class="supp-info">
-          <div class="supp-name">${t.name}</div>
-          <div class="supp-detail">${t.detail}</div>
+          <div class="supp-name">${shakeName}</div>
+          <div class="supp-detail">${shakeDetail}</div>
         </div>
       </div>
       ${optionsHTML}
     </div>`;
-  }).join('');
+  }
 
-  b.innerHTML=`<div class="sec-hdr blue" onclick="toggleSec('${sid}')">
-    <span class="sec-title">🧠 DAILY NON-NEGOTIABLES</span>
-    <span style="display:flex;align-items:center;gap:4px;">
-      <span class="sec-count">${doneCount}/${totalCount}</span>
-      <span class="sec-arr" id="arr_${sid}">▼</span>
-    </span>
-  </div>
-  <div id="${sid}"><div class="supp-grid">${rowsHTML}</div></div>`;
-  return b;
+  function suppBlock(title,hdrCls,list,required){
+    const sid='ss_'+Math.random().toString(36).slice(2,7);
+    const b=document.createElement('div');b.className='sec-block';
+    const rowsHTML=list.map(rowHTML).join('');
+    let countHtml='';
+    if(required){
+      const dc=list.filter(t=>done.includes(t.id)).length;
+      countHtml=`<span class="sec-count">${dc}/${list.length}</span>`;
+    }else{
+      const taps=list.reduce((n,t)=>{
+        if(t.type==='chomps')return n+['daily_s2','daily_s2b','daily_s2c','daily_s2d'].filter(cid=>suppDone[cid]?.checked).length;
+        return n+(suppDone[t.id]?.checked?1:0);
+      },0);
+      if(taps)countHtml=`<span class="sec-count" style="color:#666;">${taps} today</span>`;
+    }
+    b.innerHTML=`<div class="sec-hdr ${hdrCls}" onclick="toggleSec('${sid}')">
+      <span class="sec-title">${title}</span>
+      <span style="display:flex;align-items:center;gap:4px;">${countHtml}<span class="sec-arr" id="arr_${sid}">▼</span></span>
+    </div>
+    <div id="${sid}"><div class="supp-grid">${rowsHTML}</div></div>`;
+    return b;
+  }
+
+  // Shake #1 + creatine = locked non-negotiables. Shake #2 + Chomps = flex backup taps.
+  const core=supps.filter(t=>t.type==='shake1'||t.id==='daily_creatine');
+  if(!core.some(t=>t.id==='daily_creatine'))core.push({id:'daily_creatine',icon:'💊',name:'CREATINE',detail:'5g daily',protein:0,xp:0});
+  const flex=supps.filter(t=>t.type==='shake2'||t.type==='chomps');
+  if(core.length)wrap.appendChild(suppBlock('🧠 DAILY NON-NEGOTIABLES','blue',core,true));
+  if(flex.length)wrap.appendChild(suppBlock('🥤 FLEX FUEL — OPTIONAL BACKUP','gold',flex,false));
+  return wrap;
 }
 
 function renderFoodLog(){
@@ -2813,15 +2805,15 @@ function renderFoodLog(){
   const tot=calcProt(foods);
 
   // Update the collapsible log list
-  const toggleRow=document.getElementById('foodLogToggleRow');
+  const toggleBtn=document.getElementById('foodLogToggleBtn');
   const list=document.getElementById('foodLogItems');
   const countEl=document.getElementById('foodLogCount');
   if(!list)return;
 
   list.innerHTML='';
   if(foods.length){
-    toggleRow.style.display='block';
-    countEl.textContent=`${foods.length} item${foods.length!==1?'s':''} · ${tot}g`;
+    toggleBtn.style.display='inline-flex';
+    countEl.textContent=`${foods.length} · ${tot}g`;
     foods.forEach((f,i)=>{
       const cat=f.category||'meal';
       const entryClass=cat==='cheat'?'entry-cheat':cat==='fuel'?'entry-fuel':'entry-meal';
@@ -2840,7 +2832,7 @@ function renderFoodLog(){
       list.appendChild(el);
     });
   }else{
-    toggleRow.style.display='none';
+    toggleBtn.style.display='none';
   }
 
   renderProtBar();
@@ -3455,7 +3447,7 @@ const PRESET_FOODS=[
   {icon:'🥛',name:'Slate (30g)',detail:'30g protein can',protein:30},
   {icon:'🥛',name:'Slate (20g)',detail:'20g protein can',protein:20},
   {icon:'🥩',name:'Chomps Beef',detail:'1 stick original beef',protein:10},
-  {icon:'🍗',name:'Chomps Chicken',detail:'1 stick chicken',protein:10},
+  {icon:'🍗',name:'Chomps Chicken',detail:'1 stick original chicken',protein:12},
   {icon:'🍫',name:'RX Bar',detail:'1 bar',protein:12},
   {icon:'🌿',name:'Aloha Bar',detail:'1 bar, plant-based',protein:14},
 ];
@@ -3706,6 +3698,8 @@ function calcSuppCals(key){
   if(sd.daily_s1?.checked)c+=200;
   if(sd.daily_s2?.checked)c+=100;
   if(sd.daily_s2b?.checked)c+=100;
+  if(sd.daily_s2c?.checked)c+=80;
+  if(sd.daily_s2d?.checked)c+=80;
   return c;
 }
 
@@ -4174,7 +4168,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=14;
+const APP_VERSION=15;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
