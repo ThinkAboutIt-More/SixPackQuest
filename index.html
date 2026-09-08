@@ -519,6 +519,21 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
 .bg-coin{position:fixed;font-size:.9rem;animation:bgCoin linear infinite;opacity:.12;pointer-events:none;z-index:2;}
 @keyframes bgCoin{0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)}}
 </style>
+<style>
+/* mobile tap-target pass - sizing only, no visual redesign */
+@media (max-width:860px){
+  button,[onclick]{touch-action:manipulation;}
+  input,textarea,select{font-size:16px!important;}
+  .mode-btn{min-width:40px;min-height:40px;display:inline-flex;align-items:center;justify-content:center;}
+  [onclick*="changeDay"]{min-width:52px;min-height:44px;}
+  .task-row{padding:12px 10px;}
+  .chk{min-width:26px;min-height:26px;display:inline-flex;align-items:center;justify-content:center;}
+  [onclick*="addWaterToday"],[onclick*="resetWaterToday"],[onclick*="addCustomWater"]{min-height:44px;min-width:44px;}
+  [onclick*="toggleSupp"]{min-height:48px;}
+  [onclick*="quickAddFood"],[onclick*="logShake"],[onclick*="pickDrinkForSupp"]{min-height:48px;}
+  .sec-hdr{min-height:44px;}
+}
+</style>
 </head>
 <body>
 
@@ -1326,8 +1341,8 @@ const PLAN={
       workout:[
         {id:'m0',name:'JUMP ROPE WARMUP',detail:'150 skips — easy pace, get blood moving',sets:1,rn:'150 skips',xp:15},
         {id:'m1',name:'JUMP ROPE INTERVALS',detail:'5 × 100 skips / 30s rest',sets:5,rn:'100 skips',xp:40},
-        {id:'m2',name:'GOBLET SQUAT',detail:'4 × 15 reps (35lb kettlebell)',sets:4,rn:'15 reps',xp:50},
-        {id:'m3',name:'KETTLEBELL SWINGS',detail:'5 × 20 reps (35lb kettlebell)',sets:5,rn:'20 reps',xp:60},
+        {id:'m2',name:'GOBLET SQUAT',detail:'4 × 15 reps (40lb kettlebell)',sets:4,rn:'15 reps',xp:50},
+        {id:'m3',name:'KETTLEBELL SWINGS',detail:'5 × 20 reps (40lb kettlebell)',sets:5,rn:'20 reps',xp:60},
         {id:'m4',name:'ONE-ARM KETTLEBELL ROW',detail:'3 × 12 per arm (35lb kettlebell)',sets:3,rn:'12/arm',xp:50},
         {id:'m9',name:'KETTLEBELL FACE PULL (BENT ROW HIGH)',detail:'3 × 12 — pull KB to chin, elbows flared high (rear delt + upper back)',sets:3,rn:'12 reps',xp:40},
         {id:'m5',name:'OVERHEAD KETTLEBELL PRESS',detail:'3 × 10 per arm (35lb kettlebell)',sets:3,rn:'10/arm',xp:50},
@@ -1385,7 +1400,7 @@ const PLAN={
       workout:[
         {id:'f0',name:'JUMP ROPE WARMUP',detail:'150 skips — prime shoulders + hips for KB',sets:1,rn:'150 skips',xp:15},
         {id:'f1',name:'BURPEE TO SQUAT JUMP',detail:'3 × 8 reps',sets:3,rn:'8 reps',xp:45},
-        {id:'f2',name:'GOBLET SQUATS',detail:'4 × 12 (35lb kettlebell)',sets:4,rn:'12 reps',xp:45},
+        {id:'f2',name:'GOBLET SQUATS',detail:'4 × 12 (40lb kettlebell)',sets:4,rn:'12 reps',xp:45},
         {id:'f3',name:'ONE-ARM KETTLEBELL ROW',detail:'3 × 12 per arm',sets:3,rn:'12/arm',xp:50},
         {id:'f9',name:'KETTLEBELL FACE PULL (BENT ROW HIGH)',detail:'3 × 12 — pull to chin, elbows flared (rear delt finisher)',sets:3,rn:'12 reps',xp:40},
         {id:'f4',name:'OVERHEAD KETTLEBELL PRESS',detail:'3 × 10 per arm',sets:3,rn:'10/arm',xp:50},
@@ -1930,11 +1945,11 @@ function applyProg(t,week){
   }else if(t.id==='m3'||t.id==='w4'||t.id==='f5'){
     // KB swings
     const v=p('kbswings',week);
-    detail=`${v.sets} × ${v.reps} reps (35lb kettlebell)`;sets=v.sets;rn=`${v.reps} reps`;
+    detail=`${v.sets} × ${v.reps} reps (40lb kettlebell)`;sets=v.sets;rn=`${v.reps} reps`;
   }else if(t.id==='m2'||t.id==='f2'){
     // goblet squats
     const v=p('goblet',week);
-    detail=`4 × ${v} reps (35lb kettlebell)`;rn=`${v} reps`;
+    detail=`4 × ${v} reps (40lb kettlebell)`;rn=`${v} reps`;
   }else if(t.id==='m5'||t.id==='f4'){
     // OH KB press — add reps
     const reps=week>=10?12:week>=7?11:week>=4?10:10;
@@ -3123,7 +3138,7 @@ function dismissPause(){document.getElementById('pauseOvl').classList.remove('sh
 let mjump=false;
 function marioJump(){if(mjump)return;jumpSfx();mjump=true;drawMario(true);spawnEasterText(['IT\'S-A ME, PAKALU!','MAMA MIA!','LET\'S-A GO!','WAHOOOO!'][Math.floor(Math.random()*4)],50+Math.random()*200,90);setTimeout(()=>{drawMario(false);mjump=false;},400);}
 
-function changeDay(d){currentDate=new Date(currentDate);currentDate.setDate(currentDate.getDate()+d);renderAll();}
+function changeDay(d){const nd=new Date(currentDate);nd.setDate(nd.getDate()+d);const _s=loadS();if(_s._qs){const _qs=new Date(_s._qs+'T12:00:00');const _nd=new Date(nd);_nd.setHours(0,0,0,0);if(_nd<_qs){showNotif('⛔ NO LOOKING BACK — THE QUEST STARTED TODAY','pnk');return;}}currentDate=nd;renderAll();}
 function goToday(){currentDate=new Date();currentDate.setHours(0,0,0,0);renderAll();}
 // ── STATS / HALL OF STATS ────────────────────────────────────
 function calcWeekStats(w){
@@ -4293,7 +4308,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=5;
+const APP_VERSION=6;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
@@ -4340,6 +4355,12 @@ setInterval(async()=>{try{
     d.style.cssText='position:fixed;bottom:8px;left:8px;z-index:9999;background:#ffd700;color:#000;font-family:"Press Start 2P",monospace;font-size:0.25rem;padding:8px 10px;border:3px solid #000;cursor:pointer';
     d.textContent='★ NEW VERSION - TAP TO REFRESH';d.onclick=()=>location.reload();document.body.appendChild(d);
   }}catch(e){}},300000);
+
+// day-1 prev-button state + pre-quest archive (fresh-start guard)
+try{const _s0=loadS();if(_s0._qs){let _moved=false;Object.keys(_s0).forEach(k=>{if(/^\d{4}-\d{2}-\d{2}$/.test(k)&&k<_s0._qs){_s0._archive=_s0._archive||{};_s0._archive[k]=_s0[k];delete _s0[k];_moved=true;}});if(_moved)saveS(_s0);}}catch(e){}
+const __origRenderAll=renderAll;
+renderAll=function(){__origRenderAll();try{const s=loadS();const b=document.querySelector('[onclick="changeDay(-1)"]');if(b){if(s._qs){const qs=new Date(s._qs+'T12:00:00');const cur=new Date(currentDate);cur.setHours(0,0,0,0);const atStart=cur<=qs;b.disabled=atStart;b.style.opacity=atStart?'0.35':'1';}else{b.disabled=false;b.style.opacity='1';}}}catch(e){}};
+renderAll();
 </script>
 </body>
 </html>
