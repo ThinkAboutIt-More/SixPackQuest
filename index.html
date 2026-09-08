@@ -1623,7 +1623,7 @@ const setDS=(k,ds)=>{const s=loadS();s[k]=ds;saveS(s)};
 function getAllT(p){return[...(p.workout||[]),...(p.supps||[]),...(p.bonuses||[])]}
 function getCoreT(p){return[...(p.workout||[])]}
 function calcXP(done,sets,p,extras){let x=0;getAllT(p).forEach(t=>{if(done.includes(t.id)){x+=t.xp;}else if(t.sets&&sets&&sets[t.id]>0){x+=Math.floor(t.xp*(sets[t.id]/t.sets)*0.7);}});if(extras)extras.forEach(e=>x+=(e.xp||20));return x;}
-function calcPct(done,p,ds){if(p.type==='rest')return 100;let c=(p.workout||[]);if(ds&&Array.isArray(ds._express))c=c.filter(t=>ds._express.includes(t.id));if(!c.length)return 100;return Math.round(c.filter(t=>done.includes(t.id)).length/c.length*100);}
+function calcPct(done,p,ds){if(p.type==='rest')return 100;let c=(p.workout||[]);if(ds&&Array.isArray(ds._express))c=c.filter(t=>ds._express.includes(t.id));if(!c.length)return 100;const _st=(ds&&ds.sets)||{};let pts=0;c.forEach(t=>{if(done.includes(t.id)){pts+=1;}else{const tot=t.sets||0;if(tot>1)pts+=Math.min(1,((_st[t.id])||0)/tot);}});return Math.round(pts/c.length*100);}
 function calcProt(foods){return(foods||[]).reduce((a,f)=>a+(f.protein||0),0)}
 function calcCals(foods){return(foods||[]).reduce((a,f)=>a+(f.calories||0),0)}
 function calcScore(){const s=loadS();let t=0;Object.keys(s).forEach(k=>{if(!k.startsWith('_')){const ds=s[k];try{const dm=ds._mode||mode;const p=PLAN[dm][new Date(k+'T12:00:00').getDay()];t+=calcXP(ds.done||[],ds.sets||{},p,ds.extras)*10;}catch(e){}}});return t+(s._bonusXP||0);}
@@ -4196,7 +4196,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=27;
+const APP_VERSION=28;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
