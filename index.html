@@ -412,7 +412,7 @@ input{user-select:text;}
 // PAKALU'S SIX PACK QUEST — self-updating web app
 // State: Supabase app_state (cloud source of truth) + localStorage cache
 // ================================================================
-const APP_VERSION="3";
+const APP_VERSION="4";
 document.getElementById('verLbl').textContent=APP_VERSION;
 const SB_URL="https://pmgmtjmilcjrxsalnuxr.supabase.co";
 const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA";
@@ -612,7 +612,7 @@ home:{
 3:{label:'KETTLEBELL STRENGTH',type:'kb',emoji:'🔥',
   workout:[
     {id:'w1',name:'JUMP ROPE',detail:'600 skips — warmup pace',sets:1,rn:'600 skips',xp:35},
-    {id:'w2',name:'SINGLE-LEG ROMANIAN DEADLIFT',detail:'5 × 8 per leg (40lb kettlebell)',sets:5,rn:'8/leg',xp:55},
+    {id:'w2',name:'SINGLE-LEG ROMANIAN DEADLIFT',detail:'5 × 8 per leg (35lb kettlebell)',sets:5,rn:'8/leg',xp:55},
     {id:'w3',name:'REVERSE LUNGES',detail:'3 × 12 per leg',sets:3,rn:'12/leg',xp:50},
     {id:'w4',name:'KETTLEBELL SWINGS',detail:'4 × 20 reps (40lb kettlebell)',sets:4,rn:'20 reps',xp:55,prog:'swings'},
     {id:'w5',name:'PUSH-UPS',detail:'3 × 12-15 reps',sets:3,rn:'12-15',xp:40,prog:'pushups'},
@@ -754,8 +754,8 @@ travel:{
 // ================================================================
 const PROG={
   pullups:{1:{total:12,sets:2,each:6},4:{total:15,sets:3,each:5},7:{total:18,sets:3,each:6},10:{total:21,sets:3,each:7}},
-  goblet:{1:{sets:4,reps:15},4:{sets:4,reps:17},7:{sets:4,reps:20},10:{sets:5,reps:20}}, // 40lb
-  swings:{1:{sets:5,reps:20},4:{sets:5,reps:22},7:{sets:5,reps:25},10:{sets:6,reps:25}}, // 40lb
+  goblet:{1:{sets:4,reps:15,kb:35},4:{sets:4,reps:17,kb:40},7:{sets:4,reps:20,kb:40},10:{sets:5,reps:20,kb:40}},
+  swings:{1:{sets:5,reps:20,kb:35},4:{sets:5,reps:22,kb:40},7:{sets:5,reps:25,kb:40},10:{sets:6,reps:25,kb:40}},
   rows:{1:12,4:13,7:14,10:15},
   press:{1:10,4:10,7:11,10:12},
   abwheel:{1:{sets:3,reps:8},4:{sets:3,reps:10},7:{sets:3,reps:12},10:{sets:4,reps:12}},
@@ -775,8 +775,8 @@ function applyProg(t,week){
   const v=progTier(t.prog,week);let d={...t};
   switch(t.prog){
     case 'pullups': d.detail=`Target ${v.total} total — ${v.sets} sets of ${v.each} reps, stop 2 short of failure`;d.sets=v.sets;d.rn=`~${v.each} each`;break;
-    case 'goblet': d.detail=`${v.sets} × ${v.reps} reps (40lb kettlebell)`;d.sets=v.sets;d.rn=`${v.reps} reps`;break;
-    case 'swings': d.detail=`${v.sets} × ${v.reps} reps (40lb kettlebell)`;d.sets=v.sets;d.rn=`${v.reps} reps`;break;
+    case 'goblet': d.detail=`${v.sets} × ${v.reps} reps (${v.kb}lb kettlebell)`;d.sets=v.sets;d.rn=`${v.reps} reps`;break;
+    case 'swings': d.detail=`${v.sets} × ${v.reps} reps (${v.kb}lb kettlebell)`;d.sets=v.sets;d.rn=`${v.reps} reps`;break;
     case 'rows': d.detail=d.detail.replace(/× \d+/,`× ${v}`).replace(/\d+\/arm/,`${v}/arm`).replace(/\d+ reps/,`${v} reps`);d.rn=d.rn.replace(/\d+/,String(v));break;
     case 'press': d.detail=`3 × ${v} per arm (35lb kettlebell)`;d.rn=`${v}/arm`;break;
     case 'abwheel': d.detail=`${v.sets} × ${v.reps} reps — slow, hips tucked, full control back`;d.sets=v.sets;d.rn=`${v.reps} reps`;break;
