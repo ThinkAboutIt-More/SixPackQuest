@@ -224,7 +224,7 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
   .meal-icon{font-size:2.4rem;}
   .meal-stars{font-size:.95rem;margin-top:4px;}
   .qa-pill{padding:10px 14px;gap:6px;}
-  .qa-pill .qa-icon{font-size:1.5rem;}
+  .qa-pill .qa-icon{font-size:1.8rem;}
   .qa-pill .qa-name{font-size:0.48rem;max-width:100px;line-height:1.5;}
   .qa-pill .qa-prot{font-size:0.58rem;}
   .fi{font-size:0.55rem;padding:10px 12px;}
@@ -355,8 +355,8 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
 .qa-pill{background:#0a1a0a;border:2px solid #1a4a1a;padding:5px 7px;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .12s;user-select:none;position:relative;}
 .qa-pill:hover{border-color:var(--pipe);background:#112211;}
 .qa-pill:active{transform:scale(.95);}
-.qa-pill .qa-icon{font-size:.9rem;line-height:1;}
-.qa-pill .qa-name{font-size:0.2rem;color:#aaa;max-width:60px;line-height:1.3;}
+.qa-pill .qa-icon{font-size:1.3rem;line-height:1;}
+.qa-pill .qa-name{font-size:0.28rem;color:#aaa;max-width:70px;line-height:1.3;}
 .qa-pill .qa-prot{font-size:0.26rem;color:#00cc55;font-weight:bold;}
 .qa-pill.qa-recent{border-color:#334433;}.qa-pill.qa-recent .qa-name{color:#88cc88;}
 .food-input-row{display:flex;gap:4px;margin-bottom:5px;}
@@ -662,8 +662,7 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
       <span id="syncBadge" style="font-family:'Press Start 2P',monospace;font-size:0.2rem;color:#7fff9e;align-self:center;">SYNCED</span><button class="mode-btn" onclick="openSyncPanel()" title="Backup / Restore data" style="background:#1a1a00;border-color:#7a5800;color:var(--coin);">💾</button>
       <button class="mode-btn" onclick="openStats()" title="Hall of Stats" style="background:#001a1a;border-color:#007755;color:#00ffaa;">🏆</button>
       <button class="mode-btn" onclick="openPR()" title="Personal Records" style="background:#1a1000;border-color:#776600;color:#ffcc00;">🏅</button>
-      <button class="mode-btn" onclick="openPhotoLog()" title="Photo Log Meal" style="background:#001a00;border-color:#006622;color:#00ff88;">📸</button>
-    </div>
+      </div>
   </div>
 </div>
 
@@ -873,7 +872,9 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
     </div>
     <!-- Quick add buttons -->
     <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px;">
+      <button onclick="addWaterToday(19.2)" style="flex:1;background:#001a3a;border:3px solid #2288ff;color:#66bbff;font-family:'Press Start 2P',monospace;font-size:clamp(0.16rem,0.4vw,0.36rem);padding:5px 4px;cursor:pointer;">+19.2oz<br><span style="font-family:'VT323',monospace;font-size:.65rem;color:#4499dd;">liquid death</span></button>
       <button onclick="addWaterToday(24)" style="flex:1;background:#001133;border:2px solid #0066cc;color:#44aaff;font-family:'Press Start 2P',monospace;font-size:clamp(0.16rem,0.4vw,0.36rem);padding:5px 4px;cursor:pointer;">+24oz<br><span style="font-family:'VT323',monospace;font-size:.65rem;color:#336699;">home cup</span></button>
+      <button onclick="addWaterToday(25.36)" style="flex:1;background:#001133;border:2px solid #0066cc;color:#44aaff;font-family:'Press Start 2P',monospace;font-size:clamp(0.16rem,0.4vw,0.36rem);padding:5px 4px;cursor:pointer;">+25.4oz<br><span style="font-family:'VT323',monospace;font-size:.65rem;color:#336699;">evian</span></button>
       <div id="hydFreqRow" style="display:contents;"></div>
     </div>
     <!-- Custom amount -->
@@ -899,7 +900,6 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
 
         <!-- SECTION 3: LOG ANYTHING YOU ATE -->
         <div class="food-section-lbl">🍽 ATE SOMETHING? LOG IT HERE</div>
-        <div style="font-family:'VT323',monospace;font-size:clamp(.8rem, 1.4vw, 1.3rem);color:#555;margin-bottom:5px;">Type anything — chicken, rice, pizza, banana. AI looks up the protein and adds it to your bar.</div>
         <div class="food-input-row">
           <input class="fi" id="logName" placeholder="ex: 2 eggs, grilled salmon, protein bar, bag of chips..."
             onkeydown="if(event.key==='Enter')lookupAndLog()"
@@ -927,15 +927,6 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
           </div>
         </div>
 
-        <!-- SECTION 4: AI RESTAURANT COACH -->
-        <div class="food-section-lbl" style="margin-top:8px;">🤖 AI COACH — WHAT SHOULD I ORDER?</div>
-        <div style="font-family:'VT323',monospace;font-size:clamp(.8rem, 1.4vw, 1.3rem);color:#666;margin-bottom:4px;">At a restaurant? Type where you are and get the highest-protein order + what to skip.</div>
-        <div class="food-input-row">
-          <input class="fi" id="foodInput" placeholder="ex: taco bell, mcdonald's, airport, tired and hungry..." onkeydown="if(event.key==='Enter')askFood()"/>
-          <button class="fb" onclick="askFood()">🤖 ASK</button>
-        </div>
-        <div class="ai-box" id="aiBox"><span style="color:#333">// Tell me where you are — I'll tell you exactly what to order</span></div>
-        <button onclick="openPhotoLog()" style="width:100%;margin-top:6px;background:#001a00;color:#00cc55;border:2px solid #005522;border-bottom:4px solid #000;padding:8px;font-family:'Press Start 2P',monospace;font-size:0.22rem;cursor:pointer;">📸 PHOTO LOG — SNAP YOUR MEAL</button>
 
         <!-- LOG LIST -->
         <div id="foodLogToggleRow" style="display:none;margin-top:6px;">
@@ -2559,7 +2550,7 @@ function addCustomWater(){
 function renderFreqWater(){
   const row=document.getElementById('hydFreqRow');if(!row)return;
   const s=loadS();const freq=s._waterFreq||{};
-  const fixed=new Set([24]);
+  const fixed=new Set([24,19.2,25.36]);
   const sorted=Object.entries(freq)
     .filter(([oz])=>!fixed.has(Number(oz)))
     .sort((a,b)=>b[1]-a[1])
@@ -2662,9 +2653,8 @@ function renderProtBar(){
 // Drink options for shake pickers
 const DRINK_OPTIONS=[
   {name:'Slate Milk Ultra',protein:42,icon:'🥛',detail:'42g can'},
-  {name:'Core Power Elite',protein:42,icon:'🥛',detail:'42g bottle'},
   {name:'Slate Milk Protein',protein:30,icon:'🥛',detail:'30g can'},
-  {name:'Ghost Protein Shake',protein:25,icon:'🥛',detail:'25g scoop'},
+  {name:'Slate Milk 20g',protein:20,icon:'🥛',detail:'20g can'},
 ];
 
 // Drink options for shake pickers
@@ -2739,30 +2729,19 @@ function makeSuppSection(supps, done){
     const isShake=t.type==='shake1'||t.type==='shake2';
     const isChomps=t.type==='chomps';
 
-    // ── CHOMPS — always render as individual sticks ──
+    // ── CHOMPS — one row, tap a dot per stick ──
     if(isChomps){
       const sticks=t.name.includes('x2')?2:1;
-      if(sticks===2){
-        return['daily_s2','daily_s2b'].map((cid,i)=>{
-          const cChecked=!!(suppDone[cid]?.checked);
-          return`<div class="supp-row${cChecked?' done':''}" id="tr_${cid}" onclick="toggleSupp('${cid}',10,'Chomps')" style="cursor:pointer;">
-            <span class="supp-icon">🥩</span>
-            <div class="supp-info">
-              <div class="supp-name">CHOMPS #${i+1}</div>
-              <div class="supp-detail">${cChecked?'<span style="color:#00cc44;">✓ logged · +10g</span>':'1 stick · 10g · tap when eaten'}</div>
-            </div>
-            <div class="supp-status"><div class="supp-check">${cChecked?'✓':'<span style="font-size:.6rem;color:#555;">TAP</span>'}</div></div>
-          </div>`;
-        }).join('');
-      }
-      const cChecked=!!(suppDone[t.id]?.checked);
-      return`<div class="supp-row${cChecked?' done':''}" id="tr_${t.id}" onclick="toggleSupp('${t.id}',10,'Chomps')" style="cursor:pointer;">
+      const ids=sticks===2?['daily_s2','daily_s2b']:['daily_s2'];
+      const cnt=ids.filter(cid=>suppDone[cid]&&suppDone[cid].checked).length;
+      const dots=ids.map(cid=>{const c=!!(suppDone[cid]&&suppDone[cid].checked);return`<div class="set-dot${c?' done-set':''}" onclick="event.stopPropagation();toggleSupp('${cid}',10,'Chomps')">${c?'✓':''}</div>`;}).join('');
+      return`<div class="supp-row${cnt===sticks?' done':''}" id="tr_${t.id}">
         <span class="supp-icon">🥩</span>
         <div class="supp-info">
-          <div class="supp-name">${t.name}</div>
-          <div class="supp-detail">${cChecked?'<span style="color:#00cc44;">✓ logged · +10g</span>':'1 stick · 10g · tap when eaten'}</div>
+          <div class="supp-name">CHOMPS</div>
+          <div class="supp-detail">tap a dot per stick · 10g each</div>
+          <div class="set-tracker" style="margin-top:4px;">${dots}<span class="set-label">${cnt}/${sticks} sticks</span></div>
         </div>
-        <div class="supp-status"><div class="supp-check">${cChecked?'✓':'<span style="font-size:.6rem;color:#555;">TAP</span>'}</div></div>
       </div>`;
     }
 
@@ -3472,11 +3451,13 @@ function switchDayMode(key){
 
 // Quick-add DRINKS + EXTRAS only (meals are in the ranked cards above)
 const PRESET_FOODS=[
-  {icon:'🥛',name:'Slate Milk Ultra (42g)',detail:'42g protein ultra elite can',protein:42},
-  {icon:'🥛',name:'Core Power Elite',detail:'42g protein shake bottle',protein:42},
-  {icon:'🥛',name:'Ghost Protein Shake',detail:'1 scoop Ghost whey',protein:25},
-  {icon:'🥛',name:'Slate Milk Protein (30g)',detail:'30g protein chocolate milk can',protein:30},
-  {icon:'🥩',name:'Chomps Beef Stick',detail:'1 stick original beef',protein:10},
+  {icon:'🥛',name:'Slate Ultra (42g)',detail:'42g protein ultra can',protein:42},
+  {icon:'🥛',name:'Slate (30g)',detail:'30g protein can',protein:30},
+  {icon:'🥛',name:'Slate (20g)',detail:'20g protein can',protein:20},
+  {icon:'🥩',name:'Chomps Beef',detail:'1 stick original beef',protein:10},
+  {icon:'🍗',name:'Chomps Chicken',detail:'1 stick chicken',protein:10},
+  {icon:'🍫',name:'RX Bar',detail:'1 bar',protein:12},
+  {icon:'🌿',name:'Aloha Bar',detail:'1 bar, plant-based',protein:14},
 ];
 
 function getFrequentFoods(limit=3){
@@ -4193,7 +4174,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=13;
+const APP_VERSION=14;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
