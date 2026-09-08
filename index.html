@@ -861,26 +861,6 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
   </div>
   <div id="dayContent"></div>
 
-  <!-- PROTEIN QUEST BAR — standalone between workout and food -->
-  <div id="protQuestBar" style="margin-bottom:7px;background:#000;border:3px solid #880044;padding:10px 12px;">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-      <div style="font-family:'Press Start 2P',monospace;font-size:0.26rem;color:var(--pink);">💪 PROTEIN QUEST</div>
-      <div style="font-family:'Press Start 2P',monospace;font-size:0.32rem;" id="pqbNumber" style="color:#00ff88;">0g / 160g</div>
-    </div>
-    <!-- Bar track with milestone markers -->
-    <div style="position:relative;height:18px;background:#111;border:2px solid #333;overflow:visible;">
-      <div id="pqbFill" style="height:100%;width:0%;transition:width .5s cubic-bezier(.4,0,.2,1);background:linear-gradient(90deg,#880044,#ff0088);position:relative;">
-        <div style="position:absolute;right:0;top:0;bottom:0;width:3px;background:rgba(255,255,255,0.6);"></div>
-      </div>
-      <!-- 80g milestone marker -->
-      <div style="position:absolute;left:50%;top:-3px;bottom:-3px;width:2px;background:#ffaa00;opacity:0.7;"></div>
-      <div style="position:absolute;left:50%;top:-14px;transform:translateX(-50%);font-family:'VT323',monospace;font-size:.55rem;color:#ffaa00;">80g</div>
-      <!-- 160g end label -->
-      <div style="position:absolute;right:2px;top:50%;transform:translateY(-50%);font-family:'VT323',monospace;font-size:.55rem;color:#555;">160g</div>
-    </div>
-    <div id="pqbStatus" style="font-family:'VT323',monospace;font-size:.68rem;color:#666;margin-top:5px;text-align:center;">Log food below to track progress</div>
-  </div>
-
   <!-- HYDRATION METER -->
   <div id="hydrationBar" style="margin-bottom:7px;background:#000;border:3px solid #0066cc;padding:10px 12px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
@@ -1914,11 +1894,8 @@ function renderWorldMap(){
     const boss=BOSSES[w-1];const pct=getWeekPct(w);const unlocked=w<=cw;
     const node=document.createElement('div');
     node.className='wk-node'+(w===cw?' cur':!unlocked?' locked':pct>=80?' cleared':w<cw?' available':'');
-    const emoji=WORLD_EMOJIS[w-1];
-    const dimStyle=!unlocked?'opacity:0.3':'';
     const glowStyle=pct>=80&&unlocked?'filter:drop-shadow(0 0 5px gold)':'';
-    const showBoss=unlocked&&(w===cw||pct>=80);
-    const iconHtml=showBoss?`<div class="wk-castle wk-boss" style="${glowStyle}">${getBossSVG(w)}</div>`:`<div class="wk-castle" style="${dimStyle};${glowStyle}">${emoji}</div>`;
+    const iconHtml=`<div class="wk-castle wk-boss" style="${glowStyle}">${getBossSVG(w)}</div>`;
     node.innerHTML=`${iconHtml}<div class="wk-lbl">W${w}</div><div class="wk-pct">${unlocked?pct+'%':'🔒'}</div>${w<12?'<div class="wk-conn"></div>':''}`;
     node.title=boss.world+' — '+boss.name;
     node.onclick=()=>openWorldMap(w);
@@ -2036,9 +2013,58 @@ function drawSMWMap(focusWeek){
     ctx.fillStyle='#fff';
     ctx.beginPath();ctx.moveTo(ix-8,iy+10);ctx.lineTo(ix,iy);ctx.lineTo(ix+8,iy+10);ctx.closePath();ctx.fill();
   });
-  // Castle battlements
+  // Castle battlements + towers + flag
   [[260,40],[275,36],[285,32],[CW-5,20]].forEach(([cx,cy])=>{
     ctx.fillStyle='#550000';ctx.fillRect(cx-3,cy-8,6,8);
+  });
+  ctx.fillStyle='#550000';ctx.fillRect(CW-40,8,10,26);ctx.fillRect(CW-44,4,18,6);
+  ctx.fillStyle='#cc2200';ctx.beginPath();ctx.moveTo(CW-30,4);ctx.lineTo(CW-30,14);ctx.lineTo(CW-18,9);ctx.closePath();ctx.fill();
+
+  // Clouds drifting in the sky
+  [[60,60],[150,40],[240,55],[330,30]].forEach(([cx,cy])=>{
+    ctx.fillStyle='rgba(255,255,255,0.85)';
+    ctx.beginPath();ctx.ellipse(cx,cy,18,8,0,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.ellipse(cx+14,cy+3,12,6,0,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.ellipse(cx-13,cy+3,10,5,0,0,Math.PI*2);ctx.fill();
+  });
+
+  // Grassland: bushes + flowers
+  [[20,420],[90,430],[180,455],[250,465],[320,445],[370,420]].forEach(([bx,by])=>{
+    ctx.fillStyle='#2a6a10';ctx.beginPath();ctx.arc(bx,by,7,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#3a8a1a';ctx.beginPath();ctx.arc(bx-2,by-3,4,0,Math.PI*2);ctx.fill();
+  });
+  [[45,435],[135,445],[205,470],[295,455],[360,435],[75,415]].forEach(([fx,fy],i)=>{
+    ctx.fillStyle=['#ffdd00','#ff66aa','#fff','#ff8844'][i%4];
+    ctx.fillRect(fx,fy,3,3);
+  });
+
+  // Cave zone: stalactites
+  [[20,205],[55,215],[95,222],[140,232]].forEach(([sx,sy])=>{
+    ctx.fillStyle='#1a0526';
+    ctx.beginPath();ctx.moveTo(sx-8,sy);ctx.lineTo(sx,sy+18);ctx.lineTo(sx+8,sy);ctx.closePath();ctx.fill();
+  });
+
+  // Bridge/sky zone: water sparkles
+  [[270,300],[300,320],[330,340],[290,350],[355,330]].forEach(([wx,wy])=>{
+    ctx.fillStyle='rgba(180,220,255,0.8)';ctx.fillRect(wx,wy,6,2);ctx.fillRect(wx+2,wy-2,2,6);
+  });
+
+  // Forest: extra dense trees
+  [[180,225],[215,215],[250,230],[280,215],[310,225]].forEach(([tx,ty])=>{
+    ctx.fillStyle='#0a3a0a';ctx.beginPath();ctx.arc(tx,ty-10,9,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#1a5a10';ctx.beginPath();ctx.arc(tx,ty-15,6,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#3a2010';ctx.fillRect(tx-2,ty-8,4,8);
+  });
+
+  // Lava zone: glowing cracks
+  ctx.strokeStyle='rgba(255,120,0,0.6)';ctx.lineWidth=2;
+  [[115,140,140,150],[170,130,200,145],[210,165,240,160]].forEach(([x1,y1,x2,y2])=>{
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo((x1+x2)/2+4,(y1+y2)/2+4);ctx.lineTo(x2,y2);ctx.stroke();
+  });
+
+  // Ice zone: snowflakes
+  [[210,95],[250,105],[290,85],[320,110],[235,120]].forEach(([ix,iy])=>{
+    ctx.fillStyle='rgba(255,255,255,0.9)';ctx.fillRect(ix,iy,4,1);ctx.fillRect(ix+1,iy-1,2,3);ctx.fillRect(ix+1.5,iy+1,1,1);
   });
   // Ground strip at bottom
   ctx.fillStyle='#2a5a10';ctx.fillRect(0,CH-20,CW,20);
@@ -2139,7 +2165,7 @@ function buildMapNodeOverlay(cw){
     // Icon: cleared=★, locked=🔒, else boss SVG scaled down
     let iconContent='';
     if(isLocked){
-      iconContent=`<span style="font-size:.9rem;">🔒</span>`;
+      iconContent=`<div style="position:relative;width:32px;height:32px;filter:grayscale(1);">${getBossSVG(n.w).replace('width="44"','width="32"').replace('height="44"','height="32"')}<span style="position:absolute;bottom:-3px;right:-3px;font-size:.55rem;line-height:1;">🔒</span></div>`;
     }else if(isCleared){
       iconContent=`<div style="position:relative;width:32px;height:32px;">${getBossSVG(n.w).replace('width="44"','width="32"').replace('height="44"','height="32"')}<span style="position:absolute;bottom:-2px;right:-2px;font-size:.65rem;line-height:1;">✓</span></div>`;
     }else{
@@ -2614,7 +2640,6 @@ function renderProtBar(){
   const fill=document.getElementById('pqbFill');
   const num=document.getElementById('pqbNumber');
   const status=document.getElementById('pqbStatus');
-  if(!fill)return;
 
   let grad,statusMsg,numColor;
   if(tot===0){
@@ -2635,8 +2660,7 @@ function renderProtBar(){
     numColor='#00ff88';
   }
 
-  fill.style.width=pct+'%';
-  fill.style.background=grad;
+  if(fill){fill.style.width=pct+'%';fill.style.background=grad;}
   if(num){num.textContent=tot+'g / 160g';num.style.color=numColor;}
   if(status){status.textContent=statusMsg;status.style.color=tot>=160?'#00ff88':tot>=80?'#4488ff':'#666';}
 
@@ -4194,7 +4218,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=18;
+const APP_VERSION=19;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
