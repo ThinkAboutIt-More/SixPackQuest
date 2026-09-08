@@ -267,6 +267,11 @@ input{user-select:text;}
 .rest-box .rt span{font-size:.22rem;color:#666;}
 .mute-btn{position:fixed;top:calc(10px + env(safe-area-inset-top));right:10px;z-index:9001;background:#000;border:3px solid var(--coin-dark);color:#eee;font-size:1.05rem;padding:6px 9px;cursor:pointer;}
 .foot{text-align:center;color:#225;margin:16px 0 4px;font-family:var(--ps2p);font-size:.2rem;line-height:2.2;text-shadow:1px 1px 0 rgba(255,255,255,.3);}
+
+.hdr-row{display:flex;align-items:center;justify-content:center;gap:12px;}
+.easter-text{position:fixed;z-index:9999;font-family:var(--ps2p);font-size:.34rem;color:var(--coin);text-shadow:2px 2px 0 #000;animation:easterPop 2s ease-out forwards;pointer-events:none;}
+@keyframes easterPop{0%{transform:translateY(0) scale(.6);opacity:0}15%{opacity:1;transform:translateY(-12px) scale(1.1)}80%{opacity:1}100%{transform:translateY(-46px) scale(1);opacity:0}}
+.bg-coin{position:fixed;z-index:1;font-size:1.2rem;animation:hbFloat 2s ease-in-out infinite alternate;pointer-events:none;opacity:.8;}
 </style>
 
 </head>
@@ -277,7 +282,7 @@ input{user-select:text;}
 <button class="mute-btn" id="muteBtn" title="sound on/off">🔊</button>
 <div class="wrap">
   <div class="hdr">
-    <h1>PAKALU'S SIX PACK QUEST 🍄</h1>
+    <div class="hdr-row"><canvas id="marioCanvas" width="36" height="44" onclick="marioJump()" title="Click Pakalu!" style="image-rendering:pixelated;cursor:pointer;width:54px;height:66px;"></canvas><h1>PAKALU'S SIX PACK QUEST 🍄</h1></div>
     <div class="sub">12 worlds. One princess. Zero skipped days.</div>
     <div><span class="sync-badge busy" id="syncBadge"><span class="sync-dot"></span><span id="syncTxt">CONNECTING</span></span></div>
   </div>
@@ -362,7 +367,7 @@ input{user-select:text;}
 </div>
 <div class="pm-overlay" id="pmOverlay">
   <div class="pm-box">
-    <canvas class="pm-portrait" id="pmPortrait" width="16" height="16"></canvas>
+    <canvas class="pm-portrait" id="pmPortrait" width="36" height="44" style="width:58px;height:71px;"></canvas>
     <div class="pm-bubble">
       <div class="pm-name">PAKALU</div>
       <div class="pm-text" id="pmText"></div>
@@ -376,7 +381,7 @@ input{user-select:text;}
     <div class="boss-scene">
       <canvas class="boss-portrait" id="bossPortrait" width="16" height="16"></canvas>
       <div class="boss-vs">VS</div>
-      <canvas class="boss-player" id="bossPlayer" width="16" height="16"></canvas>
+      <canvas class="boss-player" id="bossPlayer" width="36" height="44"></canvas>
     </div>
     <div class="boss-name" id="bossName"></div>
     <div class="boss-story" id="bossStory"></div>
@@ -407,12 +412,52 @@ input{user-select:text;}
 // PAKALU'S SIX PACK QUEST — self-updating web app
 // State: Supabase app_state (cloud source of truth) + localStorage cache
 // ================================================================
-const APP_VERSION="2";
+const APP_VERSION="3";
 document.getElementById('verLbl').textContent=APP_VERSION;
 const SB_URL="https://pmgmtjmilcjrxsalnuxr.supabase.co";
 const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA";
 const SB_DOC="sixpack:state";
 const WATER_GOAL=100, PROTEIN_GOAL=160;
+
+// ================================================================
+// PAKALU — the original character, verbatim from v4 (red P hat, brown skin)
+// ================================================================
+function drawPakalu(canvasId,jumping=false){
+  const c=document.getElementById(canvasId);if(!c)return;
+  const ctx=c.getContext('2d');ctx.clearRect(0,0,36,44);
+  const y=jumping?1:7;
+  ctx.fillStyle='#cc0000';ctx.fillRect(8,y,20,6);ctx.fillRect(5,y+6,26,4);
+  ctx.fillStyle='#aa0000';ctx.fillRect(5,y+9,26,2);
+  ctx.fillStyle='#2a1400';
+  ctx.fillRect(5,y+10,4,8);ctx.fillRect(27,y+10,4,8);ctx.fillRect(7,y+8,22,3);
+  ctx.fillStyle='#c8783c';ctx.fillRect(7,y+10,22,14);
+  ctx.fillStyle='#fff';ctx.fillRect(10,y+12,5,5);ctx.fillRect(21,y+12,5,5);
+  ctx.fillStyle='#1a1a1a';ctx.fillRect(11,y+13,3,3);ctx.fillRect(22,y+13,3,3);
+  ctx.fillStyle='#a0582a';ctx.fillRect(15,y+17,6,4);
+  ctx.fillStyle='#2a1400';ctx.fillRect(9,y+21,8,3);ctx.fillRect(19,y+21,8,3);
+  ctx.fillStyle='#1a1a8c';ctx.fillRect(7,y+24,22,12);
+  ctx.fillStyle='#cc0000';ctx.fillRect(5,y+24,4,10);ctx.fillRect(27,y+24,4,10);
+  ctx.fillStyle='#ffd700';ctx.fillRect(12,y+26,3,3);ctx.fillRect(21,y+26,3,3);
+  ctx.fillStyle='#1a1a8c';ctx.fillRect(8,y+36,8,6);ctx.fillRect(20,y+36,8,6);
+  ctx.fillStyle='#4a2a00';ctx.fillRect(6,y+40,12,4);ctx.fillRect(18,y+40,12,4);
+  ctx.fillStyle='#fff';
+  ctx.fillRect(14,y+1,2,6);
+  ctx.fillRect(16,y+1,3,1);
+  ctx.fillRect(19,y+2,2,2);
+  ctx.fillRect(16,y+4,3,1);
+}
+let mjump=false;
+function marioJump(){
+  if(mjump)return;jumpSfx();mjump=true;drawPakalu('marioCanvas',true);
+  spawnEasterText(["IT'S-A ME, PAKALU!",'MAMA MIA!',"LET'S-A GO!",'WAHOOOO!'][Math.floor(Math.random()*4)],60+Math.random()*160,90);
+  setTimeout(()=>{drawPakalu('marioCanvas',false);mjump=false;},400);
+}
+function spawnEasterText(msg,x,y){
+  const el=document.createElement('div');el.className='easter-text';el.textContent=msg;
+  el.style.cssText=`left:${x}px;top:${y}px;`;document.body.appendChild(el);
+  setTimeout(()=>el.remove(),2100);
+}
+function genBgDecos(){['🪙','⭐'].forEach((e,i)=>{const c=document.createElement('div');c.className='bg-coin';c.textContent=e;c.style.cssText=`left:${8+i*45}%;bottom:${66+Math.random()*12}%;animation-duration:${2+Math.random()*1.5}s;animation-delay:${Math.random()}s;`;document.body.appendChild(c);});}
 
 // ================================================================
 // PIXEL SPRITES (16x16) — Pakalu (brown Mario, P hat), Princess, Bowser, Toad
@@ -1264,7 +1309,7 @@ function checkBoss(){
 }
 function showBoss(b){
   drawSprite($('bossPortrait'),SPR_BOWSER);
-  drawSprite($('bossPlayer'),SPR_PAKALU);
+  drawPakalu('bossPlayer');
   $('bossTitleBar').textContent=b.world;
   $('bossName').textContent=b.emoji+' '+b.name+' '+b.emoji;
   $('bossStory').textContent=b.story;
@@ -1321,7 +1366,7 @@ function showDailyMessage(){
   const dayNum=Math.floor(Date.now()/86400000);
   const q=DAILY_QUOTES[dayNum%DAILY_QUOTES.length];
   $('pmOverlay').classList.add('show');
-  drawSprite($('pmPortrait'),SPR_PAKALU);
+  drawPakalu('pmPortrait');
   const el=$('pmText');el.textContent='';
   let i=0;clearInterval(pmTyping);
   pmTyping=setInterval(()=>{
@@ -1379,6 +1424,8 @@ function drawCastle(){
   try{const raw=localStorage.getItem('spq_cache');if(raw)S=Object.assign(S,JSON.parse(raw));}catch(e){}
   questStart();
   drawCastle();
+  drawPakalu('marioCanvas');
+  genBgDecos();
   $('muteBtn').textContent=S._muted?'🔇':'🔊';
   renderAll();
   setupHiddenBlocks();
