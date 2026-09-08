@@ -244,6 +244,29 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
   .spillover-hdr{padding:10px 14px;}
   .spill-title{font-size:0.42rem;}
   .spill-note{font-size:.92rem;}
+
+  /* Desktop readability bump - text/icons only, boxes unchanged */
+  .supp-name{font-size:0.48rem;}
+  .supp-detail{font-size:1.05rem;}
+  .set-label{font-size:1rem;}
+  .txp{font-size:0.46rem;}
+  .mini-log-btn{font-size:0.34rem;padding:5px 10px;}
+  .qa-pill .qa-name{font-size:0.52rem;}
+  .qa-pill .qa-prot{font-size:0.62rem;}
+  .ptl{font-size:0.54rem;}
+  .prog-lbl{font-size:0.4rem;}
+  .prog-pct{font-size:0.48rem;}
+  .smc-l{font-size:0.36rem;}
+  .smc-v{font-size:0.82rem;}
+  .cue-box{font-size:1rem;}
+  .mode-btn{font-size:0.42rem;padding:6px 11px;}
+  .nav-btn,.today-btn{font-size:0.44rem;padding:8px 16px;}
+  .spill-title{font-size:0.5rem;}
+  .fen{font-size:0.58rem;}
+  .fep{font-size:0.64rem;}
+  .food-section-lbl{font-size:0.68rem;}
+  .mini-day-n{font-size:0.36rem;}
+  .mini-day-p{font-size:0.52rem;}
 }
 .day-nav{display:flex;align-items:center;justify-content:space-between;background:#000;border:3px solid var(--coin);padding:6px 10px;margin-bottom:7px;}
 .nav-btn{background:var(--red);color:#fff;border:none;padding:4px 8px;cursor:pointer;font-family:'Press Start 2P',monospace;font-size:0.28rem;border-bottom:3px solid #880000;transition:all .1s;}
@@ -661,7 +684,7 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
         <button class="mode-btn" id="homeBtn" onclick="setMode('home')">🏠</button>
         <button class="mode-btn" id="travelBtn" onclick="setMode('travel')">✈️</button>
       </div>
-      <span id="syncBadge" style="font-family:'Press Start 2P',monospace;font-size:0.2rem;color:#7fff9e;align-self:center;">SYNCED</span><button class="mode-btn" onclick="openSyncPanel()" title="Backup / Restore data" style="background:#1a1a00;border-color:#7a5800;color:var(--coin);">💾</button>
+      <span id="syncBadge" style="font-family:'Press Start 2P',monospace;font-size:0.32rem;color:#7fff9e;align-self:center;">SYNCED</span><button class="mode-btn" onclick="openSyncPanel()" title="Backup / Restore data" style="background:#1a1a00;border-color:#7a5800;color:var(--coin);">💾</button>
       <button class="mode-btn" onclick="openStats()" title="Hall of Stats" style="background:#001a1a;border-color:#007755;color:#00ffaa;">🏆</button>
       <button class="mode-btn" onclick="openPR()" title="Personal Records" style="background:#1a1000;border-color:#776600;color:#ffcc00;">🏅</button>
       </div>
@@ -874,9 +897,9 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
     </div>
     <!-- Quick add buttons -->
     <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px;">
-      <button onclick="addWaterToday(19.2)" style="flex:1;background:#001a3a;border:3px solid #2288ff;color:#66bbff;font-family:'Press Start 2P',monospace;font-size:clamp(0.16rem,0.4vw,0.36rem);padding:5px 4px;cursor:pointer;">+19.2oz<br><span style="font-family:'VT323',monospace;font-size:.65rem;color:#4499dd;">liquid death</span></button>
-      <button onclick="addWaterToday(24)" style="flex:1;background:#001133;border:2px solid #0066cc;color:#44aaff;font-family:'Press Start 2P',monospace;font-size:clamp(0.16rem,0.4vw,0.36rem);padding:5px 4px;cursor:pointer;">+24oz<br><span style="font-family:'VT323',monospace;font-size:.65rem;color:#336699;">home cup</span></button>
-      <button onclick="addWaterToday(25.36)" style="flex:1;background:#001133;border:2px solid #0066cc;color:#44aaff;font-family:'Press Start 2P',monospace;font-size:clamp(0.16rem,0.4vw,0.36rem);padding:5px 4px;cursor:pointer;">+25.4oz<br><span style="font-family:'VT323',monospace;font-size:.65rem;color:#336699;">evian</span></button>
+      <button onclick="addWaterToday(19.2)" style="flex:1;background:#001a3a;border:3px solid #2288ff;color:#66bbff;font-family:'Press Start 2P',monospace;font-size:clamp(0.2rem,0.5vw,0.42rem);padding:5px 4px;cursor:pointer;">+19.2oz<br><span style="font-family:'VT323',monospace;font-size:.65rem;color:#4499dd;">liquid death</span></button>
+      <button onclick="addWaterToday(24)" style="flex:1;background:#001133;border:2px solid #0066cc;color:#44aaff;font-family:'Press Start 2P',monospace;font-size:clamp(0.2rem,0.5vw,0.42rem);padding:5px 4px;cursor:pointer;">+24oz<br><span style="font-family:'VT323',monospace;font-size:.65rem;color:#336699;">home cup</span></button>
+      <button onclick="addWaterToday(25.36)" style="flex:1;background:#001133;border:2px solid #0066cc;color:#44aaff;font-family:'Press Start 2P',monospace;font-size:clamp(0.2rem,0.5vw,0.42rem);padding:5px 4px;cursor:pointer;">+25.4oz<br><span style="font-family:'VT323',monospace;font-size:.65rem;color:#336699;">evian</span></button>
       <div id="hydFreqRow" style="display:contents;"></div>
     </div>
     <!-- Custom amount -->
@@ -2283,7 +2306,7 @@ function renderDay(){
   const DNAMES=['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
   document.getElementById('dayNameBig').textContent=DNAMES[dow];
   // Show mode indicator + switch button if needed
-  const modeTag=`<span style="font-size:0.18rem;color:${dayMode==='home'?'#4488ff':'#ffaa00'};margin-left:6px;cursor:pointer;" onclick="switchDayMode('${key}')" title="Tap to switch this day's mode">${dayMode==='home'?'🏠 HOME':'✈️ TRAVEL'} ↺</span>`;
+  const modeTag=`<span style="font-size:0.34rem;color:${dayMode==='home'?'#4488ff':'#ffaa00'};margin-left:6px;cursor:pointer;" onclick="switchDayMode('${key}')" title="Tap to switch this day's mode">${dayMode==='home'?'🏠 HOME':'✈️ TRAVEL'} ↺</span>`;
   document.getElementById('daySubTitle').innerHTML=p.label+modeTag;
   const pct=calcPct(done,p,ds);const xp=calcXP(done,sets,p,ds.extras);
   document.getElementById('smcPct').textContent=pct+'%';document.getElementById('smcXp').textContent=xp;
@@ -2529,7 +2552,7 @@ function renderFreqWater(){
     .sort((a,b)=>b[1]-a[1])
     .slice(0,3);
   row.innerHTML=sorted.map(([oz])=>`
-    <button onclick="addWaterToday(${oz})" style="flex:1;background:#001122;border:2px solid #003366;color:#44aaff;font-family:'Press Start 2P',monospace;font-size:clamp(0.16rem,0.4vw,0.36rem);padding:5px 4px;cursor:pointer;">
+    <button onclick="addWaterToday(${oz})" style="flex:1;background:#001122;border:2px solid #003366;color:#44aaff;font-family:'Press Start 2P',monospace;font-size:clamp(0.2rem,0.5vw,0.42rem);padding:5px 4px;cursor:pointer;">
       +${oz}oz<br><span style="font-family:'VT323',monospace;font-size:.65rem;color:#336699;">${oz}oz</span>
     </button>`).join('');
 }
@@ -2748,10 +2771,10 @@ function makeSuppSection(supps, done){
       DRINK_OPTIONS.map(opt=>`
         <div onclick="pickDrinkForSupp('${t.id}','${opt.name}',${opt.protein})"
           style="background:#0a0a1a;border:2px solid #1a1a44;padding:8px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;">
-          <span style="font-size:1.3rem;">${opt.icon}</span>
-          <div style="font-size:0.2rem;color:#ccc;line-height:1.4;">${opt.name}</div>
-          <div style="font-family:VT323,monospace;font-size:.6rem;color:#555;">${opt.detail}</div>
-          <div style="font-size:0.28rem;color:#00ff88;font-weight:bold;margin-top:2px;">+${opt.protein}g</div>
+          <span style="font-size:1.6rem;">${opt.icon}</span>
+          <div style="font-size:0.32rem;color:#ccc;line-height:1.4;">${opt.name}</div>
+          <div style="font-family:VT323,monospace;font-size:.85rem;color:#555;">${opt.detail}</div>
+          <div style="font-size:0.38rem;color:#00ff88;font-weight:bold;margin-top:2px;">+${opt.protein}g</div>
         </div>`).join('')+
       `</div>`;
     const shakeName=t.type==='shake1'?t.name.replace(/\s*\+\s*CREATINE/i,''):t.name;
@@ -4168,7 +4191,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=15;
+const APP_VERSION=16;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
