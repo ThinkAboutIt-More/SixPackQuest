@@ -1652,7 +1652,9 @@ function getSpillover(todayKey){
     const k=dKey(d);const ds=getDS(k);
     const dm=getDayMode(k);const p=PLAN[dm][d.getDay()];
     if(p.type==='rest')continue;
-    const allIncomplete=[...(p.workout||[]),...(p.bonuses||[])].filter(t=>!((ds.done||[]).includes(t.id)));
+    const origWeek=Math.min(12,Math.max(1,Math.floor((d-questStart)/(7*86400000))+1));
+    const wl=(p.workout||[]).filter(t=>!Array.isArray(ds._express)||ds._express.includes(t.id));
+    const allIncomplete=[...wl,...(p.bonuses||[])].filter(t=>!((ds.done||[]).includes(t.id))).map(t=>applyProg(t,origWeek));
     if(allIncomplete.length>0){
       allIncomplete.forEach(t=>{results.push({...t,_sf:k,_sl:dayLabel(lb)});});
     }
@@ -2932,9 +2934,9 @@ function toggleTask(id){
 function toggleSpill(origKey,taskId){
   const ds=getDS(origKey);if(!ds.done)ds.done=[];
   const idx=ds.done.indexOf(taskId);
-  if(idx===-1){ds.done.push(taskId);checkSfx();spawnCoin(window.innerWidth/2,150);showNotif('📋 SPILLOVER DONE!','org');}
-  else ds.done.splice(idx,1);
-  setDS(origKey,ds);renderAll();
+  if(idx===-1){ds.done.push(taskId);checkSfx();spawnCoin(window.innerWidth/2,150);showNotif('📋 SPILLOVER DONE!','org');setDS(origKey,ds);checkWeekComplete();}
+  else{ds.done.splice(idx,1);setDS(origKey,ds);}
+  renderAll();
 }
 
 function addSpillSet(origKey,taskId,totalSets,dotIdx){
@@ -2946,7 +2948,7 @@ function addSpillSet(origKey,taskId,totalSets,dotIdx){
   ds.sets[taskId]=next;
   if(next>=totalSets){
     if(!ds.done)ds.done=[];
-    if(!ds.done.includes(taskId))ds.done.push(taskId);
+    if(!ds.done.includes(taskId)){ds.done.push(taskId);setDS(origKey,ds);checkWeekComplete();}
     setSfx();spawnCoin(window.innerWidth/2,150);showNotif('📋 SPILLOVER DONE!','org');
   } else setSfx();
   setDS(origKey,ds);renderAll();
@@ -4192,7 +4194,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=24;
+const APP_VERSION=25;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
