@@ -2880,7 +2880,7 @@ function addSet(taskId,totalSets,setIndex){
 }
 
 // ── UNDO STACK ──────────────────────────────────────────────
-const undoStack=[];
+const undoStack=[];let __undoTO=null;
 function pushUndo(action){undoStack.push(action);if(undoStack.length>20)undoStack.shift();renderUndoBtn();}
 function renderUndoBtn(){
   const btn=document.getElementById('undoBtn');if(!btn)return;
@@ -2888,7 +2888,8 @@ function renderUndoBtn(){
     const last=undoStack[undoStack.length-1];
     btn.style.display='block';
     document.getElementById('undoLabel').textContent=last.label.toUpperCase().slice(0,30);
-  }else{btn.style.display='none';}
+    clearTimeout(__undoTO);__undoTO=setTimeout(()=>{btn.style.display='none';},5000);
+  }else{clearTimeout(__undoTO);btn.style.display='none';}
 }
 function undoLast(){
   const action=undoStack.pop();if(!action)return;
@@ -4196,7 +4197,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=28;
+const APP_VERSION=29;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
