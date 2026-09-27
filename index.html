@@ -1540,6 +1540,49 @@ const PLAN={
   }
 };
 
+// V32 PROGRAM: reviewed shorter strength-first week. Sep 26 remains in LEGACY_PLAN.
+const LEGACY_PLAN={home:{6:PLAN.home[6]},travel:{6:PLAN.travel[6]}};
+const mk=(id,name,detail,sets,rn,xp=40)=>({id,name,detail,sets,rn,xp});
+const sharedSupps=PLAN.home[1].supps;
+const warm=(id,travel=false)=>mk(id,travel?'SHADOW ROPE WARMUP':'JUMP ROPE WARMUP','4 min easy rope or shadow-rope + shoulder/hip mobility; then 3 controlled rounds with short rests, 2 min cooldown. Hard stop at 45 min including any bonus; no walking',1,'4 min',15);
+const circuit=(label,type,workout,bonuses=[],optional=false)=>({label,type,emoji:optional?'🟢':'💪',workout,bonuses,supps:sharedSupps});
+const coreBonus={id:'v32_ab',name:'⭐ OPTIONAL 3-5 MIN AB FINISHER',detail:'Choose ONE: plank 3 × 30-45s, OR side plank 2 × 25-35s/side, OR hollow hold 3 × 20-30s. Rest as needed. Skip if sore; included in the 45-min hard cap (Saturday 30-min cap). Never required for day completion.',xp:20};
+const satBonuses=(travel=false)=>[
+  {id:'v32_sat_rope',name:'⭐ OPTIONAL +2 MIN EASY ROPE',detail:'Choose at most one Saturday bonus; shadow-rope if needed. Stay under 30 min.',xp:20},
+  {id:'v32_sat_pull',name:travel?'⭐ OPTIONAL PRONE Y-T-W':'⭐ OPTIONAL 2 EASY PULL-UP SETS',detail:travel?'2 × 8 each Y/T/W, no unsafe doorframe or furniture rows; choose one bonus, stay under 30 min.':'2 × 4-6, stop 1-2 reps before failure; choose one bonus, stay under 30 min.',xp:25},
+  {id:'v32_sat_wheel',name:travel?'⭐ OPTIONAL HOLLOW HOLD':'⭐ OPTIONAL AB WHEEL',detail:travel?'2 × 20-30s with control; choose one bonus, stay under 30 min.':'2 × 5-8 controlled reps if form is sound; choose one bonus, stay under 30 min.',xp:25}
+];
+for(const travel of [false,true]){
+ const p=PLAN[travel?'travel':'home'],sub=(a,b)=>travel?b:a;
+ p[1]=circuit('FULL BODY A · 30-40 MIN','kb',[
+  warm('v32_m_warm',travel),mk('v32_m_squat',sub('GOBLET SQUAT','SLOW BODYWEIGHT SQUAT'),sub('3 rounds × 12, 35lb weeks 1-3; 40lb from week 4 if crisp','3 rounds × 15, slow full range'),3,sub('12','15')),
+  mk('v32_m_row',sub('ONE-ARM KB ROW','PRONE Y-T-W RAISES'),sub('3 rounds × 10/arm, 35lb','3 rounds × 8 each Y/T/W; no unverified furniture row'),3,sub('10/arm','8 each')),
+  mk('v32_m_push','PUSH-UPS','3 rounds × 8-12; incline OK',3,'8-12'),
+  mk('v32_m_swing',sub('KETTLEBELL SWING','BODYWEIGHT HIP HINGE'),sub('3 rounds × 15, 35lb weeks 1-3; 40lb from week 4 if crisp','3 rounds × 15 slow hinges'),3,'15'),
+  mk('v32_m_press',sub('OVERHEAD KB PRESS','PIKE PUSH-UP'),sub('3 rounds × 6-8/arm, manageable 35lb only with clean form','3 rounds × 6-8'),3,sub('6-8/arm','6-8')),
+  mk('v32_m_pull',sub('PULL-UPS','PRONE SWIMMERS'),sub('3 rounds × 4-6, always stop 1-2 reps shy of failure','3 rounds × 10; no bar required'),3,sub('4-6','10'))
+ ],[{id:'v32_m_rope',name:'⭐ OPTIONAL EASY ROPE',detail:'5-8 min easy rope or shadow-rope; only if total stays under 45 min.',xp:20}]);
+ p[2]=circuit('ABS + CONDITIONING · 30-40 MIN','abs',[
+  warm('v32_t_warm',travel),mk('v32_t_burpee','BURPEES','3 rounds × 8; step-back OK',3,'8'),mk('v32_t_v','SUITCASES · SEATED V-TUCKS','3 rounds × 12, controlled',3,'12'),mk('v32_t_dead','DEAD BUG','3 rounds × 8/side',3,'8/side'),mk('v32_t_plank','PLANK HOLD','3 rounds × 35-45s',3,'35-45s'),mk('v32_t_bicycle','BICYCLE CRUNCH','3 rounds × 12/side',3,'12/side'),mk('v32_t_rope',sub('JUMP ROPE','SHADOW ROPE'), '3 rounds × 60-90s; controlled pace',3,'60-90s'),mk('v32_t_pull',sub('EASY PULL-UPS','PRONE Y-T-W RAISES'),sub('2 × 4-6 woven into rounds 2 and 3; 1-2 reps in reserve','2 × 8 each Y/T/W, in rounds 2 and 3'),2,sub('4-6','8 each'))
+ ],[{id:'v32_t_wheel',name:sub('⭐ OPTIONAL AB WHEEL','⭐ OPTIONAL HOLLOW HOLD'),detail:sub('2 × 5-8 controlled reps if form is sound; under 45 min','2 × 20-30s controlled; under 45 min'),xp:25}]);
+ p[3]=circuit('FULL BODY B · 30-40 MIN','kb',[
+  warm('v32_w_warm',travel),mk('v32_w_rdl',sub('SINGLE-LEG KB RDL','SLOW SINGLE-LEG HINGE'),sub('3 rounds × 8/leg, 35lb if balanced','3 rounds × 8/leg, no weight'),3,'8/leg'),mk('v32_w_lunge','REVERSE LUNGE','3 rounds × 8/leg',3,'8/leg'),mk('v32_w_push','PUSH-UPS','3 rounds × 8-12',3,'8-12'),mk('v32_w_swing',sub('KETTLEBELL SWING','GLUTE BRIDGE'),sub('3 rounds × 15, 35lb weeks 1-3; 40lb week 4 if crisp','3 rounds × 15'),3,'15'),mk('v32_w_row',sub('ONE-ARM KB ROW','PRONE Y-T-W RAISES'),sub('3 rounds × 10/arm, 35lb','3 rounds × 8 each Y/T/W; stable table row 10 only if verified safe'),3,sub('10/arm','8 each')),mk('v32_w_pull',sub('PULL-UPS','PRONE SWIMMERS'),sub('3 rounds × 4-6, 1-2 reps in reserve','3 rounds × 10; no bar required'),3,sub('4-6','10'))
+ ],[{id:'v32_w_rope',name:'⭐ OPTIONAL EASY ROPE',detail:'5 min easy rope or shadow-rope; only if under 45 min.',xp:20}]);
+ p[4]=circuit('EASY RECOVERY · 30 MIN','cardio',[
+  warm('v32_th_warm',travel),mk('v32_th_rope',sub('EASY JUMP ROPE','EASY SHADOW ROPE'), '18-22 min conversational pace; e.g. 6 × 3 min easy with 30s relaxed resets; no hard intervals or walking; 2 min cooldown, all inside 30 min',1,'18-22 min'),mk('v32_th_dead','DEAD BUG','2 × 8/side, slow',2,'8/side'),mk('v32_th_pull',sub('EASY PULL-UPS','PRONE Y-T-W RAISES'),sub('2 × 4-6, stay 1-2 reps shy of failure','2 × 8 each Y/T/W'),2,sub('4-6','8 each'))
+ ],[],false);
+ p[5]=circuit('FULL BODY C + ABS · 35-40 MIN','combo',[
+  warm('v32_f_warm',travel),mk('v32_f_squat',sub('GOBLET SQUAT','SLOW BODYWEIGHT SQUAT'),sub('3 rounds × 10-12, 35lb weeks 1-3; 40lb week 4 if crisp','3 rounds × 15'),3,sub('10-12','15')),mk('v32_f_row',sub('ONE-ARM KB ROW','PRONE Y-T-W RAISES'),sub('3 rounds × 10/arm, 35lb','3 rounds × 8 each Y/T/W; safe table row only if verified'),3,sub('10/arm','8 each')),mk('v32_f_press',sub('OVERHEAD KB PRESS','PIKE PUSH-UP'),sub('3 rounds × 6-8/arm, manageable 35lb only if clean','3 rounds × 6-8'),3,sub('6-8/arm','6-8')),mk('v32_f_swing',sub('KETTLEBELL SWING','BODYWEIGHT HIP HINGE'),sub('3 rounds × 15, 35lb weeks 1-3; 40lb week 4 if crisp','3 rounds × 15'),3,'15'),mk('v32_f_v','SUITCASES · SEATED V-TUCKS','3 rounds × 12, controlled',3,'12'),mk('v32_f_side','SIDE PLANK','3 rounds × 25-35s/side',3,'25-35s/side'),mk('v32_f_pull',sub('PULL-UPS','PRONE SWIMMERS'),sub('3 rounds × 4-6, 1-2 reps in reserve','3 rounds × 10, no bar needed'),3,sub('4-6','10'))
+ ],[{id:'v32_f_rope',name:'⭐ OPTIONAL EASY ROPE',detail:'5-8 min easy rope or shadow-rope OR choose the ab wheel option, not both if over 45 min.',xp:20},{id:'v32_f_wheel',name:sub('⭐ OPTIONAL AB WHEEL','⭐ OPTIONAL HOLLOW HOLD'),detail:sub('2 × 5-8 controlled reps; only if under 45 min','2 × 20-30s; only if under 45 min'),xp:25}]);
+ p[6]=circuit('OPTIONAL SATURDAY · 20-30 MIN','cardio',[
+  warm('v32_sa_warm',travel),mk('v32_sa_rope',sub('EASY JUMP ROPE','EASY SHADOW ROPE'),'3 rounds × 2 min, easy',3,'2 min'),mk('v32_sa_push','PUSH-UPS','3 rounds × 8',3,'8'),mk('v32_sa_lunge','REVERSE LUNGE','3 rounds × 10/leg',3,'10/leg'),mk('v32_sa_row',sub('ONE-ARM KB ROW','PRONE Y-T-W RAISES'),sub('3 rounds × 8-10/arm, 35lb if manageable','3 rounds × 8 each Y/T/W; no unsafe furniture'),3,sub('8-10/arm','8 each'))
+ ],satBonuses(travel),true);
+ p[0]={...p[0],bonuses:[...p[0].bonuses,coreBonus]};
+ for(let d=1;d<=6;d++)p[d].bonuses=[...p[d].bonuses,coreBonus];
+}
+// Program checkpoints: 35lb weeks 1-3; week 4 test 40lb for goblets/swings only.
+// At weeks 7/10 improve control or add 1-2 push-up/pull-up reps inside the same time cap.
+
 // ================================================================
 // BOSS PORTRAIT SVGs (inline, ~44x44, character-specific designs)
 // ================================================================
@@ -1627,7 +1670,7 @@ const getDS=k=>{const s=loadS();return s[k]||{done:[],sets:{},foods:[]}};
 const setDS=(k,ds)=>{const s=loadS();s[k]=ds;saveS(s)};
 
 function getDayPlan(dayMode,key){
-  const p=PLAN[dayMode][new Date(key+'T12:00:00').getDay()];
+  const p=(key==='2026-09-26'&&loadS()._qs==='2026-09-26'?LEGACY_PLAN[dayMode][6]:PLAN[dayMode][new Date(key+'T12:00:00').getDay()]);
   if(key!=='2026-09-26'||loadS()._qs!=='2026-09-26')return p;
   const bonus={id:'sa_start_30',name:'⭐ DAY 1 · 30-MIN FULL-BODY START',detail:'3 min warmup (march + arm circles) · 22 min steady circuit: 12 squats, 8 push-ups (incline OK), 8 reverse lunges/leg, 10 bent-over KB rows/arm at home OR 10 prone Y-T-W raises on road, 12 suitcases; repeat with 20-40s rest as needed · 5 min easy rope or shadow-rope + stretch. Stop at 30 min. Log complete only after you finish.',xp:50};
   return {...p,bonuses:[...(p.bonuses||[]),bonus]};
@@ -1640,11 +1683,11 @@ function calcProt(foods){return(foods||[]).reduce((a,f)=>a+(f.protein||0),0)}
 function calcCals(foods){return(foods||[]).reduce((a,f)=>a+(f.calories||0),0)}
 function calcScore(){const s=loadS();let t=0;Object.keys(s).forEach(k=>{if(!k.startsWith('_')){const ds=s[k];try{const dm=ds._mode||mode;const p=getDayPlan(dm,k);t+=calcXP(ds.done||[],ds.sets||{},p,ds.extras)*10;}catch(e){}}});return t+(s._bonusXP||0);}
 function calcCoins(){const s=loadS();let c=0;Object.keys(s).forEach(k=>{if(!k.startsWith('_')){const ds=s[k];try{const dm=ds._mode||mode;const p=getDayPlan(dm,k);getAllT(p).forEach(t=>{if((ds.done||[]).includes(t.id))c++;});}catch(e){}}});return c+(s._totalCoins||0);}
-function calcLives(){const today=new Date();today.setHours(0,0,0,0);const s=loadS();const questStart=s._qs?new Date(s._qs+'T12:00:00'):today;questStart.setHours(0,0,0,0);let missed=0;for(let i=1;i<=7;i++){const d=new Date(today);d.setDate(today.getDate()-i);if(d<questStart)continue;const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=PLAN[dm][d.getDay()];if(p.type==='rest')continue;if(calcPct(ds.done||[],p,ds)<30)missed++;}return Math.max(1,3-Math.floor(missed/2));}
-function calcStreak(){const today=new Date();today.setHours(0,0,0,0);const s=loadS();const questStart=s._qs?new Date(s._qs+'T12:00:00'):today;questStart.setHours(0,0,0,0);let streak=0;for(let i=0;i<90;i++){const d=new Date(today);d.setDate(today.getDate()-i);if(d<questStart)break;const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=PLAN[dm][d.getDay()];if(p.type==='rest'){streak++;continue;}if(calcPct(ds.done||[],p,ds)>=80)streak++;else break;}return streak;}
-function getWeekPct(w){const s=loadS();if(!s._qs||w>getQW()||w<1)return 0;const start=new Date(s._qs+'T12:00:00');let tot=0,comp=0;for(let i=0;i<7;i++){const d=new Date(start);d.setDate(start.getDate()+(w-1)*7+i);const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=PLAN[dm][d.getDay()];const ct=getCoreT(p).filter(t=>!Array.isArray(ds._express)||ds._express.includes(t.id));tot+=ct.length;comp+=ct.filter(t=>(ds.done||[]).includes(t.id)).length;}return tot>0?Math.round(comp/tot*100):0;}
-function getPowerPct(){const today=new Date();today.setHours(0,0,0,0);let done=0,total=0;for(let i=0;i<7;i++){const d=new Date(today);d.setDate(today.getDate()-today.getDay()+i);if(d>today)break;const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=PLAN[dm][d.getDay()];if(p.type==='rest')continue;const ct=getCoreT(p);total+=ct.length;done+=ct.filter(t=>(ds.done||[]).includes(t.id)).length;}return total>0?Math.round(done/total*100):0;}
-function checkPause(){const today=new Date();today.setHours(0,0,0,0);const s=loadS();const questStart=s._qs?new Date(s._qs+'T12:00:00'):today;questStart.setHours(0,0,0,0);let missed=0;const d=new Date(questStart);while(d<today){const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=PLAN[dm][d.getDay()];if(p.type!=='rest'&&calcPct(ds.done||[],p,ds)<50)missed++;d.setDate(d.getDate()+1);}return missed;}
+function calcLives(){const today=new Date();today.setHours(0,0,0,0);const s=loadS();const questStart=s._qs?new Date(s._qs+'T12:00:00'):today;questStart.setHours(0,0,0,0);let missed=0;for(let i=1;i<=7;i++){const d=new Date(today);d.setDate(today.getDate()-i);if(d<questStart)continue;const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=getDayPlan(dm,k);if(p.type==='rest'||d.getDay()===6)continue;if(calcPct(ds.done||[],p,ds)<30)missed++;}return Math.max(1,3-Math.floor(missed/2));}
+function calcStreak(){const today=new Date();today.setHours(0,0,0,0);const s=loadS();const questStart=s._qs?new Date(s._qs+'T12:00:00'):today;questStart.setHours(0,0,0,0);let streak=0;for(let i=0;i<90;i++){const d=new Date(today);d.setDate(today.getDate()-i);if(d<questStart)break;const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=getDayPlan(dm,k);if(p.type==='rest'||d.getDay()===6){streak++;continue;}if(calcPct(ds.done||[],p,ds)>=80)streak++;else break;}return streak;}
+function getWeekPct(w){const s=loadS();if(!s._qs||w>getQW()||w<1)return 0;const start=new Date(s._qs+'T12:00:00');let tot=0,comp=0;for(let i=0;i<7;i++){const d=new Date(start);d.setDate(start.getDate()+(w-1)*7+i);const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=getDayPlan(dm,k);if(d.getDay()===6&&k!=='2026-09-26')continue;const ct=getCoreT(p).filter(t=>!Array.isArray(ds._express)||ds._express.includes(t.id));tot+=ct.length;comp+=ct.filter(t=>(ds.done||[]).includes(t.id)).length;}return tot>0?Math.round(comp/tot*100):0;}
+function getPowerPct(){const today=new Date();today.setHours(0,0,0,0);let done=0,total=0;for(let i=0;i<7;i++){const d=new Date(today);d.setDate(today.getDate()-today.getDay()+i);if(d>today)break;const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=getDayPlan(dm,k);if(p.type==='rest'||d.getDay()===6)continue;const ct=getCoreT(p);total+=ct.length;done+=ct.filter(t=>(ds.done||[]).includes(t.id)).length;}return total>0?Math.round(done/total*100):0;}
+function checkPause(){const today=new Date();today.setHours(0,0,0,0);const s=loadS();const questStart=s._qs?new Date(s._qs+'T12:00:00'):today;questStart.setHours(0,0,0,0);let missed=0;const d=new Date(questStart);while(d<today){const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=getDayPlan(dm,k);if(p.type!=='rest'&&d.getDay()!==6&&calcPct(ds.done||[],p,ds)<50)missed++;d.setDate(d.getDate()+1);}return missed;}
 function getSpillover(todayKey){
   const results=[];
   const s=loadS();
@@ -1662,11 +1705,11 @@ function getSpillover(todayKey){
     const d=new Date(todayKey+'T12:00:00');d.setDate(d.getDate()-lb);
     if(d<questStart)continue;
     const k=dKey(d);const ds=getDS(k);
-    const dm=getDayMode(k);const p=PLAN[dm][d.getDay()];
-    if(p.type==='rest')continue;
+    const dm=getDayMode(k);const p=getDayPlan(dm,k);
+    if(p.type==='rest'||(d.getDay()===6&&k!=='2026-09-26'))continue;
     const origWeek=Math.min(12,Math.max(1,Math.floor((d-questStart)/(7*86400000))+1));
     const wl=(p.workout||[]).filter(t=>!Array.isArray(ds._express)||ds._express.includes(t.id));
-    const allIncomplete=[...wl,...(p.bonuses||[])].filter(t=>!((ds.done||[]).includes(t.id))).map(t=>applyProg(t,origWeek));
+    const allIncomplete=[...wl,...(p.bonuses||[]).filter(b=>k==='2026-09-26'&&b.id==='sa_start_30')].filter(t=>!((ds.done||[]).includes(t.id))).map(t=>applyProg(t,origWeek));
     if(allIncomplete.length>0){
       allIncomplete.forEach(t=>{results.push({...t,_sf:k,_sl:dayLabel(lb)});});
     }
@@ -1707,6 +1750,7 @@ function getProgVal(key,week){
 
 // Apply week progression to a task's detail text
 function applyProg(t,week){
+  if(t.id.startsWith('v32_')){const extra=week>=10?2:week>=7?1:0;if(extra&&/v32_[mwf]_push|v32_[mwf]_pull/.test(t.id)){const detail=t.detail.replace(/(\d+)-(\d+)/,(all,a,b)=>(+a+extra)+'-'+(+b+extra));return {...t,detail:detail+' · week '+(week>=10?'10':'7')+' progression, only with clean reps and 1-2 in reserve',rn:t.rn.replace(/(\d+)-(\d+)/,(all,a,b)=>(+a+extra)+'-'+(+b+extra))};}return t;}
   const p=getProgVal.bind(null);
   let name=t.name,detail=t.detail,sets=t.sets,rn=t.rn;
   if(t.id==='m6'||t.id==='w6'||t.id==='f7'||t.id==='t6'||t.id==='sa2'){
@@ -2229,7 +2273,7 @@ function renderWeekDaysRow(){
   weekStart.setDate(weekStart.getDate()-weekStart.getDay());
   for(let i=0;i<7;i++){
     const d=new Date(weekStart);d.setDate(weekStart.getDate()+i);
-    const k=dKey(d);const dm=getDayMode(k);const p=PLAN[dm][d.getDay()];
+    const k=dKey(d);const dm=getDayMode(k);const p=getDayPlan(dm,k);
     const beforeStart=!!(loadS()._qs&&k<loadS()._qs);
     const pct=beforeStart?0:calcPct(getDS(k).done||[],p,getDS(k));const isCurr=dKey(d)===dKey(currentDate);
     const cell=document.createElement('div');
@@ -2330,12 +2374,12 @@ function renderDay(){
   document.getElementById('smcStreak').textContent=calcStreak()+'🔥';document.getElementById('smcProt').textContent=(calcProt(ds.foods)+calcSuppProt(key))+'g';
   const today=new Date();today.setHours(0,0,0,0);let wxp=0;
   const viewedWeekStart=new Date(currentDate);viewedWeekStart.setDate(currentDate.getDate()-currentDate.getDay());
-  for(let i=0;i<7;i++){const d=new Date(viewedWeekStart);d.setDate(viewedWeekStart.getDate()+i);const kk=dKey(d);const dd=getDS(kk);const dm=getDayMode(kk);wxp+=calcXP(dd.done||[],dd.sets||{},PLAN[dm][d.getDay()],dd.extras);}
+  for(let i=0;i<7;i++){const d=new Date(viewedWeekStart);d.setDate(viewedWeekStart.getDate()+i);const kk=dKey(d);const dd=getDS(kk);const dm=getDayMode(kk);wxp+=calcXP(dd.done||[],dd.sets||{},getDayPlan(dm,kk),dd.extras);}
   document.getElementById('smcWkXp').textContent=wxp;
   document.getElementById('pgDay').style.width=pct+'%';document.getElementById('pgDayP').textContent=pct+'%';
   const prot=calcProt(ds.foods)+calcSuppProt(key);const pp=Math.min(100,Math.round(prot/160*100));
   document.getElementById('pgProt').style.width=pp+'%';document.getElementById('pgProtP').textContent=prot+'g';
-  let wt=0,wc=0;for(let i=0;i<7;i++){const d=new Date(viewedWeekStart);d.setDate(viewedWeekStart.getDate()+i);const dk=dKey(d);const dm=getDayMode(dk);const pl=PLAN[dm][d.getDay()];const ct=getCoreT(pl).filter(t=>{const _e=getDS(dk)._express;return!Array.isArray(_e)||_e.includes(t.id);});const dd=getDS(dk).done||[];wt+=ct.length;wc+=ct.filter(t=>dd.includes(t.id)).length;}
+  let wt=0,wc=0;for(let i=0;i<7;i++){const d=new Date(viewedWeekStart);d.setDate(viewedWeekStart.getDate()+i);const dk=dKey(d);const dm=getDayMode(dk);const pl=getDayPlan(dm,dk);if(d.getDay()===6&&dk!=='2026-09-26')continue;const ct=getCoreT(pl).filter(t=>{const _e=getDS(dk)._express;return!Array.isArray(_e)||_e.includes(t.id);});const dd=getDS(dk).done||[];wt+=ct.length;wc+=ct.filter(t=>dd.includes(t.id)).length;}
   const wpct=wt>0?Math.round(wc/wt*100):0;document.getElementById('pgWk').style.width=wpct+'%';document.getElementById('pgWkP').textContent=wpct+'%';
   const todayStart=new Date();todayStart.setHours(0,0,0,0);
   const thisWeekStart=new Date(todayStart);thisWeekStart.setDate(todayStart.getDate()-todayStart.getDay());
@@ -2367,7 +2411,7 @@ function renderDay(){
         setHtml=`<div class="set-tracker" onclick="event.stopPropagation()">${Array.from({length:st},(_,i)=>`<div class="set-dot${i<sd?' done-set':''}" onclick="addSpillSet('${t._sf}','${t.id}',${st},${i})">${i<sd?'✓':i+1}</div>`).join('')}<span class="set-label${sd>0?' ok':''}">${sd}/${st} sets${t.rn?' ('+t.rn+')':''}</span></div>`;
       }
       // In travel mode, swap KB/pull-up tasks to their travel equivalent
-      const travelSub=(mode==='travel'&&!od&&HOME_TO_TRAVEL[t.id]);
+      const travelSub=(mode==='travel'&&!od&&HOME_TO_TRAVEL[t.id]&&!t.id.startsWith('v32_'));
       const displayName=travelSub?HOME_TO_TRAVEL[t.id].name:t.name;
       const displayDetail=travelSub?HOME_TO_TRAVEL[t.id].detail:t.detail;
       const subTag=travelSub?`<span style="font-family:'Press Start 2P',monospace;font-size:0.16rem;background:#003300;color:#44ff88;padding:1px 4px;margin-left:5px;vertical-align:middle;">✈ TRAVEL SUB</span>`:'';
@@ -2398,6 +2442,7 @@ function renderDay(){
     <div class="rest-msg">REST DAY, PAKALU.<br>RECOVERY IS TRAINING.<br>HIT YOUR SUPPLEMENTS & EAT 160g PROTEIN.<br>THE PRINCESS IS STILL WAITING. ♥<br><br><span style="font-size:0.5rem;color:#ffff44">★ DID YOU KNOW? ★</span><br>Mario never skipped rest day either.<br>That's why he always saved the princess.<br><br><span style="font-size:0.4rem;color:#88aaff">★ FUN FACT ★</span><br>Your muscles actually GROW on rest days,<br>not during workouts. Today is doing work.</div>`;
     rb.appendChild(createZzzEasterEgg());
     cont.appendChild(rb);
+    if(p.bonuses&&p.bonuses.length)cont.appendChild(makeSection('⭐ OPTIONAL BONUS TASKS','gold',p.bonuses,done,sets,true));
   }else{
     if(p.workout&&p.workout.length){const _wl=ds._express;cont.appendChild(makeSection(Array.isArray(_wl)?'⚡ EXPRESS DAY — 20-MIN FLOOR':'⚡ WORKOUT','red',Array.isArray(_wl)?p.workout.filter(t=>_wl.includes(t.id)):p.workout,done,sets,false));}
     if(p.bonuses&&p.bonuses.length) cont.appendChild(makeSection('⭐ BONUS TASKS','gold',p.bonuses,done,sets,true));
@@ -2416,7 +2461,7 @@ function makeSection(title,hdrCls,tasks,done,sets,isBonus){
   b.innerHTML=`<div class="sec-hdr ${hdrCls}" onclick="toggleSec('${sid}')"><span class="sec-title">${title}</span><span style="display:flex;align-items:center;gap:4px;"><span class="sec-count">${dc}/${progTasks.length}</span><span class="sec-arr" id="arr_${sid}">▼</span></span></div>
   <div class="task-list" id="${sid}">
   ${progTasks.map(t=>{const isDone=done.includes(t.id);const st=t.sets||0;const sd=(sets&&sets[t.id])||0;
-    const sub=mode==='travel'&&!isDone&&HOME_TO_TRAVEL[t.id];
+    const sub=mode==='travel'&&!isDone&&HOME_TO_TRAVEL[t.id]&&!t.id.startsWith('v32_');
     const displayName=sub?HOME_TO_TRAVEL[t.id].name:t.name;
     const displayDetail=sub?HOME_TO_TRAVEL[t.id].detail:t.detail;
     const subTag=sub?`<span style="font-family:'Press Start 2P',monospace;font-size:0.16rem;background:#003300;color:#44ff88;padding:1px 4px;margin-left:5px;vertical-align:middle;">✈ TRAVEL SUB</span>`:'';
@@ -3050,7 +3095,7 @@ function calcWeekStats(w){
     if(dKey(d)>dKey(new Date()))continue;
     const k=dKey(d);const ds=getDS(k);
     const dm=getDayMode(k);const p=getDayPlan(dm,k);
-    const ct=getCoreT(p);
+    const ct=d.getDay()===6&&k!=='2026-09-26'?[]:getCoreT(p);
     coreTotal+=ct.length;
     const dayDone=ct.filter(t=>(ds.done||[]).includes(t.id)).length;
     coreDone+=dayDone;
@@ -3079,7 +3124,7 @@ function calcAllTimeStats(){
   Object.keys(s).forEach(k=>{
     if(k.startsWith('_')||k<s._qs||k>dKey(new Date()))return;
     const ds=s[k];const dm=getDayMode(k);
-    try{const p=PLAN[dm][new Date(k+'T12:00:00').getDay()];
+    try{const p=getDayPlan(dm,k);
     if(p.type!=='rest'&&calcPct(ds.done||[],p,ds)===100)perfectDays++;}catch(e){}
   });
   return{totalXP,totalCoins,totalProtein:Math.round(totalProtein),bestStreak,bestWeekXP,bestWeekNum,totalWorkoutDays,perfectDays,perfect100,currentWeek:qw};
@@ -4211,7 +4256,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=31;
+const APP_VERSION=32;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
@@ -4412,19 +4457,19 @@ function startCueDemo(cv,key){
 // EXPRESS 20-MIN DAY - the floor for crunch days
 // ================================================================
 const EXPRESS_SETS={
- home_1:['m2','m3','m6'],travel_1:['m2','m3','m4'],
- home_2:['t1','t2','t6'],travel_2:['t1','t2','t6'],
- home_3:['w2','w4','w6'],travel_3:['w2','w4','w6'],
- home_4:['th1','th2'],travel_4:['th1','th2'],
- home_5:['f2','f5','f7'],travel_5:['f2','f3','f5'],
- home_6:['sa1','sa2'],travel_6:['sa1','sa2'],
+ home_1:['v32_m_warm','v32_m_squat','v32_m_row','v32_m_push','v32_m_swing'],travel_1:['v32_m_warm','v32_m_squat','v32_m_row','v32_m_push','v32_m_swing'],
+ home_2:['v32_t_warm','v32_t_burpee','v32_t_v','v32_t_dead','v32_t_rope'],travel_2:['v32_t_warm','v32_t_burpee','v32_t_v','v32_t_dead','v32_t_rope'],
+ home_3:['v32_w_warm','v32_w_rdl','v32_w_lunge','v32_w_push','v32_w_row'],travel_3:['v32_w_warm','v32_w_rdl','v32_w_lunge','v32_w_push','v32_w_row'],
+ home_4:['v32_th_warm','v32_th_rope','v32_th_dead'],travel_4:['v32_th_warm','v32_th_rope','v32_th_dead'],
+ home_5:['v32_f_warm','v32_f_squat','v32_f_row','v32_f_v','v32_f_side'],travel_5:['v32_f_warm','v32_f_squat','v32_f_row','v32_f_v','v32_f_side'],
+ home_6:['v32_sa_warm','v32_sa_rope','v32_sa_push'],travel_6:['v32_sa_warm','v32_sa_rope','v32_sa_push']
 };
 function toggleExpress(){
   const key=dKey(currentDate);const ds=getDS(key);
-  const p=PLAN[ds._mode||mode][currentDate.getDay()];
+  const p=getDayPlan(ds._mode||mode,key);
   if(p.type==='rest'){showNotif('😴 REST DAY — NO EXPRESS NEEDED','pnk');return;}
   if(Array.isArray(ds._express)){delete ds._express;showNotif('FULL DAY RESTORED — GO GET IT ALL','grn');}
-  else{const wl=EXPRESS_SETS[(ds._mode||mode)+'_'+currentDate.getDay()];if(!wl)return;ds._express=wl;showNotif('⏱ EXPRESS DAY — PULL + SWING + LEGS, ~20 MIN. THE FLOOR, NOT THE CEILING.','grn');}
+  else{const wl=key==='2026-09-26'?{home_6:['sa1','sa2'],travel_6:['sa1','sa2']}[(ds._mode||mode)+'_6']:EXPRESS_SETS[(ds._mode||mode)+'_'+currentDate.getDay()];if(!wl)return;ds._express=wl;showNotif('⏱ EXPRESS DAY — SHORTER TASK LIST, ~20 MIN. THE FLOOR, NOT THE CEILING.','grn');}
   setDS(key,ds);renderAll();
 }
 const __origRenderAll2=renderAll;
