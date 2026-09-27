@@ -1196,8 +1196,12 @@ const DAILY_QUOTES=[
 ];
 
 function getTodayQuote(){
-  const dayNum=Math.floor(Date.now()/86400000);
-  return DAILY_QUOTES[dayNum%DAILY_QUOTES.length];
+  // Narrative unlocks by quest week, never by the calendar's epoch-day index.
+  const week=getQW();
+  const eligible=DAILY_QUOTES.filter((q,i)=>!(i===10||i===11||i===18||i===21||i===20) || week>=12);
+  const start=loadS()._qs||dKey(new Date());
+  const questDay=Math.max(0,Math.round((Date.UTC(...dKey(new Date()).split('-').map((n,i)=>i===1?+n-1:+n))-Date.UTC(...start.split('-').map((n,i)=>i===1?+n-1:+n)))/86400000));
+  return eligible[questDay%eligible.length];
 }
 
 let pmTyping=null;
@@ -1622,17 +1626,23 @@ const saveS=s=>{localStorage.setItem('spq_v5',JSON.stringify(s));try{cloudPush()
 const getDS=k=>{const s=loadS();return s[k]||{done:[],sets:{},foods:[]}};
 const setDS=(k,ds)=>{const s=loadS();s[k]=ds;saveS(s)};
 
+function getDayPlan(dayMode,key){
+  const p=PLAN[dayMode][new Date(key+'T12:00:00').getDay()];
+  if(key!=='2026-09-26'||loadS()._qs!=='2026-09-26')return p;
+  const bonus={id:'sa_start_30',name:'⭐ DAY 1 · 30-MIN FULL-BODY START',detail:'3 min warmup (march + arm circles) · 22 min steady circuit: 12 squats, 8 push-ups (incline OK), 8 reverse lunges/leg, 10 bent-over KB rows/arm at home OR 10 prone Y-T-W raises on road, 12 suitcases; repeat with 20-40s rest as needed · 5 min easy rope or shadow-rope + stretch. Stop at 30 min. Log complete only after you finish.',xp:50};
+  return {...p,bonuses:[...(p.bonuses||[]),bonus]};
+}
 function getAllT(p){return[...(p.workout||[]),...(p.supps||[]),...(p.bonuses||[])]}
 function getCoreT(p){return[...(p.workout||[])]}
 function calcXP(done,sets,p,extras){let x=0;getAllT(p).forEach(t=>{if(done.includes(t.id)){x+=t.xp;}else if(t.sets&&sets&&sets[t.id]>0){x+=Math.floor(t.xp*(sets[t.id]/t.sets)*0.7);}});if(extras)extras.forEach(e=>x+=(e.xp||20));return x;}
 function calcPct(done,p,ds){if(p.type==='rest')return 100;let c=(p.workout||[]);if(ds&&Array.isArray(ds._express))c=c.filter(t=>ds._express.includes(t.id));if(!c.length)return 100;const _st=(ds&&ds.sets)||{};let pts=0;c.forEach(t=>{if(done.includes(t.id)){pts+=1;}else{const tot=t.sets||0;if(tot>1)pts+=Math.min(1,((_st[t.id])||0)/tot);}});return Math.round(pts/c.length*100);}
 function calcProt(foods){return(foods||[]).reduce((a,f)=>a+(f.protein||0),0)}
 function calcCals(foods){return(foods||[]).reduce((a,f)=>a+(f.calories||0),0)}
-function calcScore(){const s=loadS();let t=0;Object.keys(s).forEach(k=>{if(!k.startsWith('_')){const ds=s[k];try{const dm=ds._mode||mode;const p=PLAN[dm][new Date(k+'T12:00:00').getDay()];t+=calcXP(ds.done||[],ds.sets||{},p,ds.extras)*10;}catch(e){}}});return t+(s._bonusXP||0);}
-function calcCoins(){const s=loadS();let c=0;Object.keys(s).forEach(k=>{if(!k.startsWith('_')){const ds=s[k];try{const dm=ds._mode||mode;const p=PLAN[dm][new Date(k+'T12:00:00').getDay()];getAllT(p).forEach(t=>{if((ds.done||[]).includes(t.id))c++;});}catch(e){}}});return c+(s._totalCoins||0);}
+function calcScore(){const s=loadS();let t=0;Object.keys(s).forEach(k=>{if(!k.startsWith('_')){const ds=s[k];try{const dm=ds._mode||mode;const p=getDayPlan(dm,k);t+=calcXP(ds.done||[],ds.sets||{},p,ds.extras)*10;}catch(e){}}});return t+(s._bonusXP||0);}
+function calcCoins(){const s=loadS();let c=0;Object.keys(s).forEach(k=>{if(!k.startsWith('_')){const ds=s[k];try{const dm=ds._mode||mode;const p=getDayPlan(dm,k);getAllT(p).forEach(t=>{if((ds.done||[]).includes(t.id))c++;});}catch(e){}}});return c+(s._totalCoins||0);}
 function calcLives(){const today=new Date();today.setHours(0,0,0,0);const s=loadS();const questStart=s._qs?new Date(s._qs+'T12:00:00'):today;questStart.setHours(0,0,0,0);let missed=0;for(let i=1;i<=7;i++){const d=new Date(today);d.setDate(today.getDate()-i);if(d<questStart)continue;const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=PLAN[dm][d.getDay()];if(p.type==='rest')continue;if(calcPct(ds.done||[],p,ds)<30)missed++;}return Math.max(1,3-Math.floor(missed/2));}
 function calcStreak(){const today=new Date();today.setHours(0,0,0,0);const s=loadS();const questStart=s._qs?new Date(s._qs+'T12:00:00'):today;questStart.setHours(0,0,0,0);let streak=0;for(let i=0;i<90;i++){const d=new Date(today);d.setDate(today.getDate()-i);if(d<questStart)break;const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=PLAN[dm][d.getDay()];if(p.type==='rest'){streak++;continue;}if(calcPct(ds.done||[],p,ds)>=80)streak++;else break;}return streak;}
-function getWeekPct(w){const s=loadS();if(!s._qs)return 0;const start=new Date(s._qs+'T12:00:00');let tot=0,comp=0;for(let i=0;i<7;i++){const d=new Date(start);d.setDate(start.getDate()+(w-1)*7+i);const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=PLAN[dm][d.getDay()];const ct=getCoreT(p).filter(t=>!Array.isArray(ds._express)||ds._express.includes(t.id));tot+=ct.length;comp+=ct.filter(t=>(ds.done||[]).includes(t.id)).length;}return tot>0?Math.round(comp/tot*100):0;}
+function getWeekPct(w){const s=loadS();if(!s._qs||w>getQW()||w<1)return 0;const start=new Date(s._qs+'T12:00:00');let tot=0,comp=0;for(let i=0;i<7;i++){const d=new Date(start);d.setDate(start.getDate()+(w-1)*7+i);const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=PLAN[dm][d.getDay()];const ct=getCoreT(p).filter(t=>!Array.isArray(ds._express)||ds._express.includes(t.id));tot+=ct.length;comp+=ct.filter(t=>(ds.done||[]).includes(t.id)).length;}return tot>0?Math.round(comp/tot*100):0;}
 function getPowerPct(){const today=new Date();today.setHours(0,0,0,0);let done=0,total=0;for(let i=0;i<7;i++){const d=new Date(today);d.setDate(today.getDate()-today.getDay()+i);if(d>today)break;const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=PLAN[dm][d.getDay()];if(p.type==='rest')continue;const ct=getCoreT(p);total+=ct.length;done+=ct.filter(t=>(ds.done||[]).includes(t.id)).length;}return total>0?Math.round(done/total*100):0;}
 function checkPause(){const today=new Date();today.setHours(0,0,0,0);const s=loadS();const questStart=s._qs?new Date(s._qs+'T12:00:00'):today;questStart.setHours(0,0,0,0);let missed=0;const d=new Date(questStart);while(d<today){const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=PLAN[dm][d.getDay()];if(p.type!=='rest'&&calcPct(ds.done||[],p,ds)<50)missed++;d.setDate(d.getDate()+1);}return missed;}
 function getSpillover(todayKey){
@@ -1663,7 +1673,7 @@ function getSpillover(todayKey){
   }
   return results;
 }
-function getQW(){const s=loadS();if(!s._qs)return 1;return Math.min(12,Math.max(1,Math.floor((new Date()-new Date(s._qs+'T12:00:00'))/(7*86400000))+1));}
+function getQW(){const s=loadS();if(!s._qs)return 1;const today=dKey(new Date());const epoch=k=>Date.UTC(...k.split('-').map((n,i)=>i===1?+n-1:+n));return Math.min(12,Math.max(1,Math.floor((epoch(today)-epoch(s._qs))/(7*86400000))+1));}
 
 // ================================================================
 // WEEK PROGRESSION — scales targets every 3 weeks
@@ -2220,11 +2230,12 @@ function renderWeekDaysRow(){
   for(let i=0;i<7;i++){
     const d=new Date(weekStart);d.setDate(weekStart.getDate()+i);
     const k=dKey(d);const dm=getDayMode(k);const p=PLAN[dm][d.getDay()];
-    const pct=calcPct(getDS(k).done||[],p,getDS(k));const isCurr=dKey(d)===dKey(currentDate);
+    const beforeStart=!!(loadS()._qs&&k<loadS()._qs);
+    const pct=beforeStart?0:calcPct(getDS(k).done||[],p,getDS(k));const isCurr=dKey(d)===dKey(currentDate);
     const cell=document.createElement('div');
-    cell.className='mini-day'+(isCurr?' active-day':pct===100?' done-day':'');
+    cell.className='mini-day'+(isCurr?' active-day':!beforeStart&&pct===100?' done-day':'');
     cell.innerHTML=`<div class="mini-day-n">${['S','M','T','W','T','F','S'][i]}</div><div class="mini-day-p">${pct>0?pct+'%':'·'}</div>`;
-    cell.onclick=()=>{currentDate=new Date(d);renderAll();};
+    cell.onclick=()=>{if(beforeStart){showNotif('⛔ QUEST STARTS '+loadS()._qs,'pnk');return;}currentDate=new Date(d);renderAll();};
     el.appendChild(cell);
   }
 }
@@ -2308,7 +2319,7 @@ function renderDay(){
   const dow=currentDate.getDay();const key=dKey(currentDate);
   const ds=getDS(key);const done=ds.done||[];const sets=ds.sets||{};
   const dayMode=getDayMode(key);
-  const p=PLAN[dayMode][dow];
+  const p=getDayPlan(dayMode,key);
   const DNAMES=['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
   document.getElementById('dayNameBig').textContent=DNAMES[dow];
   // Show mode indicator + switch button if needed
@@ -2904,7 +2915,7 @@ function undoLast(){
 function toggleTask(id){
   const key=dKey(currentDate);const ds=getDS(key);if(!ds.done)ds.done=[];
   lockDayMode(key);
-  const dow=currentDate.getDay();const dayMode=getDayMode(key);const p=PLAN[dayMode][dow];
+  const dow=currentDate.getDay();const dayMode=getDayMode(key);const p=getDayPlan(dayMode,key);
   const isBonus=(p.bonuses||[]).find(t=>t.id===id);
   const task=getAllT(p).find(t=>t.id===id);
   const idx=ds.done.indexOf(id);
@@ -3031,13 +3042,14 @@ function goToday(){currentDate=new Date();currentDate.setHours(0,0,0,0);renderAl
 function calcWeekStats(w){
   const s=loadS();
   if(!s._qs)return{xp:0,pct:0,days:0,coins:0,protein:0};
+  if(w>getQW()||w<1)return{xp:0,pct:0,days:0,coins:0,protein:0};
   const start=new Date(s._qs+'T12:00:00');
   let xp=0,coreDone=0,coreTotal=0,activeDays=0,coins=0,protein=0;
   for(let i=0;i<7;i++){
     const d=new Date(start);d.setDate(start.getDate()+(w-1)*7+i);
-    if(d>new Date())continue;
+    if(dKey(d)>dKey(new Date()))continue;
     const k=dKey(d);const ds=getDS(k);
-    const dm=getDayMode(k);const p=PLAN[dm][d.getDay()];
+    const dm=getDayMode(k);const p=getDayPlan(dm,k);
     const ct=getCoreT(p);
     coreTotal+=ct.length;
     const dayDone=ct.filter(t=>(ds.done||[]).includes(t.id)).length;
@@ -3062,10 +3074,10 @@ function calcAllTimeStats(){
     if(ws.xp>bestWeekXP){bestWeekXP=ws.xp;bestWeekNum=w;}
     if(ws.pct===100)perfect100++;
   }
-  // Count perfect days
+  // Count perfect days only since this quest began.
   let perfectDays=0;
   Object.keys(s).forEach(k=>{
-    if(k.startsWith('_'))return;
+    if(k.startsWith('_')||k<s._qs||k>dKey(new Date()))return;
     const ds=s[k];const dm=getDayMode(k);
     try{const p=PLAN[dm][new Date(k+'T12:00:00').getDay()];
     if(p.type!=='rest'&&calcPct(ds.done||[],p,ds)===100)perfectDays++;}catch(e){}
@@ -4171,7 +4183,7 @@ setInterval(renderAll,60000);
   }
 
   // 4. WEEKLY ADAPTATION — Monday morning, look at last week and suggest focus
-  if(new Date().getDay()===1&&hour>=8&&hour<11){
+  if(getQW()>1&&new Date().getDay()===1&&hour>=8&&hour<11){
     const lastWeekFired=sessionStorage.getItem('weekAdapt_'+key);
     if(!lastWeekFired){
       sessionStorage.setItem('weekAdapt_'+key,'1');
@@ -4199,7 +4211,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=30;
+const APP_VERSION=31;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
