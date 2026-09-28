@@ -969,7 +969,7 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
 <canvas id="runCanvas" style="position:fixed;bottom:51px;left:0;right:0;width:100%;height:44px;z-index:52;pointer-events:none;image-rendering:pixelated;"></canvas>
 
 <!-- UNDO BUTTON -->
-<div id="undoBtn" onclick="undoLast()" style="display:none;position:fixed;bottom:100px;left:50%;transform:translateX(-50%);z-index:5000;background:#1a0a00;border:3px solid #ff4400;padding:10px 18px;cursor:pointer;font-family:'Press Start 2P',monospace;font-size:clamp(0.35rem,1.5vw,0.65rem);color:#fff;min-height:48px;display:flex;align-items:center;white-space:nowrap;box-shadow:0 3px 0 #880000;">
+<div id="undoBtn" onclick="undoLast()" style="display:none;position:fixed;bottom:100px;left:50%;transform:translateX(-50%);z-index:5000;background:#1a0a00;border:3px solid #ff4400;padding:10px 18px;cursor:pointer;font-family:'Press Start 2P',monospace;font-size:clamp(0.35rem,1.5vw,0.65rem);color:#fff;min-height:48px;align-items:center;white-space:nowrap;box-shadow:0 3px 0 #880000;">
   ↩ UNDO: <span id="undoLabel">LAST ACTION</span>
 </div>
 <div class="brick-row"></div>
@@ -1608,7 +1608,7 @@ for(const md of ['home','travel']){
 
     if(day===1||day===3||day===5){const bonus=plan.bonuses.find(x=>x.id==='v32_'+({1:'m',3:'w',5:'f'}[day])+'_rope');if(bonus){bonus.name='⭐ OPTIONAL EASY '+(travel?'SHADOW ROPE':'JUMP ROPE');bonus.detail='300 easy '+(travel?'shadow jumps':'skips')+'; after the core if time and form allow.';}}
     if(day===2){const rope=plan.workout.find(x=>x.id==='v32_t_rope');rope.detail='3 rounds × 150 '+(travel?'shadow jumps':'rope skips')+' at controlled pace.';rope.rn='150 '+(travel?'shadow jumps':'skips');}
-    if(day===4){const rope=plan.workout.find(x=>x.id==='v32_th_rope');rope.detail='6 easy rounds × 300 '+(travel?'shadow jumps':'rope skips')+'; 10 slow breaths between rounds, conversational effort, no hard intervals. Express: 4 rounds × 300. Keep the whole day inside 30 min.';rope.sets=6;rope.rn='300 '+(travel?'shadow jumps':'skips');}
+    if(day===4){const rope=plan.workout.find(x=>x.id==='v32_th_rope');rope.detail='6 easy rounds × 300 '+(travel?'shadow jumps':'rope skips')+'; 20-30s relaxed rest between rounds, conversational effort, no hard intervals. Express: 4 rounds × 300. Keep the whole day inside 30 min.';rope.sets=6;rope.rn='300 '+(travel?'shadow jumps':'skips');}
     if(day===6){const rope=plan.workout.find(x=>x.id==='v32_sa_rope');rope.detail='3 rounds × 150 easy '+(travel?'shadow jumps':'rope skips')+'.';rope.rn='150 '+(travel?'shadow jumps':'skips');const b=plan.bonuses.find(x=>x.id==='v32_sat_rope');b.name='⭐ OPTIONAL EASY '+(travel?'SHADOW ROPE':'JUMP ROPE');b.detail='150 more easy '+(travel?'shadow jumps':'skips')+'; choose at most one Saturday bonus, after the core if time and form allow.';}
     // Friday and Tuesday already have separate moves, but split the V-tuck alias out of the task title.
     for(const t of plan.workout)if(t.name==='SUITCASES · SEATED V-TUCKS')t.name='SEATED V-TUCKS (SUITCASES)';
@@ -1655,7 +1655,7 @@ for(const md of ['home','travel']){
   set(3,'v32_w_swing',2,'12-15',travel?'2 × 12-15 glute bridges, controlled squeeze.':'2 × 12-15 crisp swings, 35lb weeks 1-3; 40lb week 4 if crisp.');
   set(3,'v32_w_row',2,travel?'8 each':'8-10/arm',travel?'2 × 8 each Y/T/W. Scapular work only; not a comparable loaded row.':'2 × 8-10/arm one-arm KB rows, manageable 35lb. Pair with push-ups.');
   set(3,'v32_w_pull',2,travel?'10':'4-6',travel?'2 × 10 prone swimmers, controlled. Not loaded pulling.':'2 × 4-6 pull-ups, 1-2 reps in reserve; take a rest if grip or form fades.');
-  set(4,'v32_th_rope',4,travel?'300 shadow jumps':'300 skips',`4 easy rounds × 300 ${travel?'shadow jumps':'rope skips'}; 10 slow breaths between rounds. Conversational pace; cap all required work at 30 minutes.`);
+  set(4,'v32_th_rope',4,travel?'300 shadow jumps':'300 skips',`4 easy rounds × 300 ${travel?'shadow jumps':'rope skips'}; 20-30s relaxed rest between rounds. Conversational pace; cap all required work at 30 minutes.`);
   set(4,'v32_th_dead',2,'8/side','2 × 8/side dead bugs, slow and controlled.');
   set(4,'v32_th_pull',2,travel?'8 each':'4-6',travel?'2 × 8 each Y/T/W, easy shoulder work, not loaded pulling.':'2 × 4-6 easy pull-ups, 1-2 reps in reserve.');
   set(5,'v32_f_squat',2,travel?'12-15':'10-12',travel?'2 × 12-15 slow full-range squats.':'2 × 10-12 goblet squats, 35lb weeks 1-3; 40lb week 4 if crisp. Pair with shoulder/scapular work.');
@@ -1681,6 +1681,24 @@ for(const md of ['home','travel'])for(const day of [1,2,3,4,5,6]){const w=PLAN[m
 
 for(const md of ['home','travel']){const p=PLAN[md][1];const i=p.workout.findIndex(t=>t.id==='v32_m_press');const t=p.workout.splice(i,1)[0];t.name='⭐ OPTIONAL '+t.name;t.detail+=' Extra shoulder work after the core; not a miss.';p.bonuses.unshift(t);}
 
+// Pending progression note for home push-ups; floor is the base, not feet-up by default.
+for(const day of [1,2,3,4,5,6])for(const t of [...PLAN.home[day].workout,...PLAN.home[day].bonuses]){
+  if(/PUSH-UPS/.test(t.name)&&!/PIKE|DIAMOND|CLOSE-GRIP/.test(t.name)){
+    t.detail+=' Progression: first own 2 × 12 clean floor push-ups. Then, if the bed is stable and feet will not slide, try elevated feet-on-bed decline push-ups; they are harder and emphasize upper chest/shoulders. Keep the same controlled form, and return to floor if it slips.';
+  }
+}
+// V37: seconds, not breath counts, on every current hold. Keep the established task ids.
+for(const md of ['home','travel'])for(let day=0;day<=6;day++){
+  const p=PLAN[md][day];
+  for(const t of [...(p.workout||[]),...(p.bonuses||[])]){
+    if(t.id==='v33_ab_plank'){t.rn='20-30s';t.detail='3 × 20-30s plank. Choose ONE optional ab hold; skip if sore. Not required for day completion.';}
+    if(t.id==='v33_ab_side'){t.rn='15-20s/side';t.detail='2 × 15-20s/side side plank. Choose ONE optional ab hold; skip if sore. Not required for day completion.';}
+    if(t.id==='v33_ab_hollow'){t.rn='10-15s';t.detail='3 × 10-15s hollow hold. Choose ONE optional ab hold; skip if sore. Not required for day completion.';}
+    if(t.id==='v32_f_side'){t.rn='15-20s/side';t.detail='1 × 15-20s/side, hips level; do not rush. Only count clean hold time.';}
+    if(t.id==='v32_t_plank'){t.rn='20-30s';t.detail='2 × 20-30s plank. Optional after the core; not a miss.';}
+    if(t.id==='v32_th_rope')t.detail=t.detail.replace('20-30s relaxed rest between rounds','20-30s relaxed rest between rounds');
+  }
+}
 // A legacy workout must remain on Sep 26 but its combined day-one bonus becomes checkable pieces.
 const legacyStart=dayMode=>[
  v33Task('v33_d1_squat','⭐ SQUATS','3 steady rounds × 12 squats.',3,'12',9),
@@ -3046,20 +3064,17 @@ function addSet(taskId,totalSets,setIndex){
 
 // ── UNDO STACK ──────────────────────────────────────────────
 const undoStack=[];let __undoTO=null;
-function pushUndo(action){undoStack.push(action);if(undoStack.length>20)undoStack.shift();renderUndoBtn();}
-function renderUndoBtn(){
+function pushUndo(action){
+  undoStack.length=0;undoStack.push(action);
   const btn=document.getElementById('undoBtn');if(!btn)return;
-  if(undoStack.length>0){
-    const last=undoStack[undoStack.length-1];
-    btn.style.display='block';
-    document.getElementById('undoLabel').textContent=last.label.toUpperCase().slice(0,30);
-    clearTimeout(__undoTO);__undoTO=setTimeout(()=>{btn.style.display='none';},60000);
-  }else{clearTimeout(__undoTO);btn.style.display='none';}
+  document.getElementById('undoLabel').textContent=action.label.toUpperCase().slice(0,30);
+  btn.style.display='flex';
+  clearTimeout(__undoTO);__undoTO=setTimeout(()=>{btn.style.display='none';undoStack.length=0;},60000);
 }
 function undoLast(){
   const action=undoStack.pop();if(!action)return;
+  clearTimeout(__undoTO);const btn=document.getElementById('undoBtn');if(btn)btn.style.display='none';
   action.fn();
-  renderUndoBtn();
   showNotif('↩ UNDONE: '+action.label,'');
   renderAll();
 }
@@ -3096,7 +3111,7 @@ function toggleTask(id){
     }
   }else{
     ds.done.splice(idx,1);if(ds.sets)ds.sets[id]=0;setDS(key,ds);
-    pushUndo({label:(task?task.name:'task')+' (re-check)',fn:()=>{const d=getDS(key);if(!d.done.includes(id))d.done.push(id);setDS(key,d);}});
+    clearTimeout(__undoTO);undoStack.length=0;document.getElementById('undoBtn').style.display='none';
   }
   renderAll();
 }
@@ -4365,7 +4380,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=36;
+const APP_VERSION=37;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
