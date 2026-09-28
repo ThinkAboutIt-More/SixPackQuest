@@ -1583,6 +1583,45 @@ for(const travel of [false,true]){
 // Program checkpoints: 35lb weeks 1-3; week 4 test 40lb for goblets/swings only.
 // At weeks 7/10 improve control or add 1-2 push-up/pull-up reps inside the same time cap.
 
+// V33: one checkmark for one exercise. All future plans use countable rope targets.
+const v33Task=(id,name,detail,sets=1,rn='',xp=12)=>({id,name,detail,sets,rn,xp});
+for(const md of ['home','travel']){
+  const p=PLAN[md],travel=md==='travel';
+  for(let day=1;day<=6;day++){
+    const plan=p[day],warm=plan.workout[0];
+    warm.detail=(day===6?'150':'200')+' easy '+(travel?'shadow jumps':'rope skips')+'; smooth pace, not a race. Hard stop at '+(day===6?'30':'45')+' min including any bonuses; no walking.';
+    warm.rn=(day===6?'150':'200')+' '+(travel?'shadow jumps':'skips');
+    plan.workout.splice(1,0,v33Task('v33_'+day+'_shoulder','SHOULDER CIRCLES','10 slow circles each direction.',1,'10 each direction',6),v33Task('v33_'+day+'_hip','HIP HINGES','10 controlled hip hinges.',1,'10',6));
+    plan.workout.push(v33Task('v33_'+day+'_cool_shoulder','COOLDOWN SHOULDER ROLLS','10 slow relaxed shoulder rolls.',1,'10',5),v33Task('v33_'+day+'_cool_hip','COOLDOWN HIP STRETCH','10 relaxed breaths/side, no walking.',1,'10 breaths/side',5));
+    if(day===1||day===3||day===5){const bonus=plan.bonuses.find(x=>x.id==='v32_'+({1:'m',3:'w',5:'f'}[day])+'_rope');if(bonus){bonus.name='⭐ OPTIONAL EASY '+(travel?'SHADOW ROPE':'JUMP ROPE');bonus.detail='300 easy '+(travel?'shadow jumps':'skips')+'; only if still within the 45-min cap.';}}
+    if(day===2){const rope=plan.workout.find(x=>x.id==='v32_t_rope');rope.detail='3 rounds × 150 '+(travel?'shadow jumps':'rope skips')+' at controlled pace.';rope.rn='150 '+(travel?'shadow jumps':'skips');}
+    if(day===4){const rope=plan.workout.find(x=>x.id==='v32_th_rope');rope.detail='6 easy rounds × 300 '+(travel?'shadow jumps':'rope skips')+'; 10 slow breaths between rounds, conversational effort, no hard intervals. Express: 4 rounds × 300. Keep the whole day inside 30 min.';rope.sets=6;rope.rn='300 '+(travel?'shadow jumps':'skips');}
+    if(day===6){const rope=plan.workout.find(x=>x.id==='v32_sa_rope');rope.detail='3 rounds × 150 easy '+(travel?'shadow jumps':'rope skips')+'.';rope.rn='150 '+(travel?'shadow jumps':'skips');const b=plan.bonuses.find(x=>x.id==='v32_sat_rope');b.name='⭐ OPTIONAL EASY '+(travel?'SHADOW ROPE':'JUMP ROPE');b.detail='150 more easy '+(travel?'shadow jumps':'skips')+'; choose at most one Saturday bonus, stay under 30 min.';}
+    // Friday and Tuesday already have separate moves, but split the V-tuck alias out of the task title.
+    for(const t of plan.workout)if(t.name==='SUITCASES · SEATED V-TUCKS')t.name='SEATED V-TUCKS (SUITCASES)';
+  }
+  // An optional ab choice is three separate checkboxes, with a one-choice rule at interaction time.
+  for(let day=0;day<=6;day++){
+    const plan=p[day];plan.bonuses=plan.bonuses.flatMap(t=>t.id!=='v32_ab'?[t]:[
+      v33Task('v33_ab_plank','⭐ OPTIONAL PLANK','3 sets × 6-8 slow breaths. Choose ONE ab option; skip if sore, no effect on day completion. '+(day===6?'30':'45')+'-min total cap.',3,'6-8 breaths',20),
+      v33Task('v33_ab_side','⭐ OPTIONAL SIDE PLANK','2 sets × 5-6 slow breaths/side. Choose ONE ab option; skip if sore, no effect on day completion. '+(day===6?'30':'45')+'-min total cap.',2,'5-6 breaths/side',20),
+      v33Task('v33_ab_hollow','⭐ OPTIONAL HOLLOW HOLD','3 sets × 4-6 slow breaths. Choose ONE ab option; skip if sore, no effect on day completion. '+(day===6?'30':'45')+'-min total cap.',3,'4-6 breaths',20)
+    ]);
+  }
+}
+// A legacy workout must remain on Sep 26 but its combined day-one bonus becomes checkable pieces.
+const legacyStart=dayMode=>[
+ v33Task('v33_d1_march','⭐ DAY 1 MARCH IN PLACE','100 easy steps on the spot.',1,'100 steps',4),
+ v33Task('v33_d1_arms','⭐ DAY 1 ARM CIRCLES','10 each direction, relaxed.',1,'10 each direction',3),
+ v33Task('v33_d1_squat','⭐ DAY 1 SQUATS','3 steady rounds × 12 squats.',3,'12',7),
+ v33Task('v33_d1_push','⭐ DAY 1 PUSH-UPS','3 steady rounds × 8; incline OK.',3,'8',7),
+ v33Task('v33_d1_lunge','⭐ DAY 1 REVERSE LUNGES','3 steady rounds × 8/leg.',3,'8/leg',7),
+ v33Task('v33_d1_row',dayMode==='travel'?'⭐ DAY 1 PRONE Y-T-W':'⭐ DAY 1 BENT-OVER KB ROW',dayMode==='travel'?'3 steady rounds × 10 Y/T/W raises; no unsafe furniture.':'3 steady rounds × 10/arm; use manageable KB.',3,dayMode==='travel'?'10 each':'10/arm',7),
+ v33Task('v33_d1_tuck','⭐ DAY 1 SEATED V-TUCKS','3 steady rounds × 12 suitcases.',3,'12',7),
+ v33Task('v33_d1_rope',dayMode==='travel'?'⭐ DAY 1 SHADOW ROPE':'⭐ DAY 1 JUMP ROPE','250 easy '+(dayMode==='travel'?'shadow jumps':'skips')+' to finish; stop the full session at 30 min.',1,'250 '+(dayMode==='travel'?'shadow jumps':'skips'),4),
+ v33Task('v33_d1_stretch','⭐ DAY 1 STRETCH','10 slow relaxed breaths/side to finish; stop the full session at 30 min.',1,'10 breaths/side',4)
+];
+
 // ================================================================
 // BOSS PORTRAIT SVGs (inline, ~44x44, character-specific designs)
 // ================================================================
@@ -1672,8 +1711,7 @@ const setDS=(k,ds)=>{const s=loadS();s[k]=ds;saveS(s)};
 function getDayPlan(dayMode,key){
   const p=(key==='2026-09-26'&&loadS()._qs==='2026-09-26'?LEGACY_PLAN[dayMode][6]:PLAN[dayMode][new Date(key+'T12:00:00').getDay()]);
   if(key!=='2026-09-26'||loadS()._qs!=='2026-09-26')return p;
-  const bonus={id:'sa_start_30',name:'⭐ DAY 1 · 30-MIN FULL-BODY START',detail:'3 min warmup (march + arm circles) · 22 min steady circuit: 12 squats, 8 push-ups (incline OK), 8 reverse lunges/leg, 10 bent-over KB rows/arm at home OR 10 prone Y-T-W raises on road, 12 suitcases; repeat with 20-40s rest as needed · 5 min easy rope or shadow-rope + stretch. Stop at 30 min. Log complete only after you finish.',xp:50};
-  return {...p,bonuses:[...(p.bonuses||[]),bonus]};
+  return {...p,bonuses:[...(p.bonuses||[]),...legacyStart(dayMode)]};
 }
 function getAllT(p){return[...(p.workout||[]),...(p.supps||[]),...(p.bonuses||[])]}
 function getCoreT(p){return[...(p.workout||[])]}
@@ -1709,7 +1747,7 @@ function getSpillover(todayKey){
     if(p.type==='rest'||(d.getDay()===6&&k!=='2026-09-26'))continue;
     const origWeek=Math.min(12,Math.max(1,Math.floor((d-questStart)/(7*86400000))+1));
     const wl=(p.workout||[]).filter(t=>!Array.isArray(ds._express)||ds._express.includes(t.id));
-    const allIncomplete=[...wl,...(p.bonuses||[]).filter(b=>k==='2026-09-26'&&b.id==='sa_start_30')].filter(t=>!((ds.done||[]).includes(t.id))).map(t=>applyProg(t,origWeek));
+    const allIncomplete=[...wl,...(p.bonuses||[]).filter(b=>k==='2026-09-26'&&b.id.startsWith('v33_d1_'))].filter(t=>!((ds.done||[]).includes(t.id))).map(t=>applyProg(t,origWeek));
     if(allIncomplete.length>0){
       allIncomplete.forEach(t=>{results.push({...t,_sf:k,_sl:dayLabel(lb)});});
     }
@@ -2477,7 +2515,7 @@ function makeCompletedLog(key,p,done,sets){
   const b=document.createElement('div');b.className='sec-block';
   const sid='cl_'+Math.random().toString(36).slice(2,7);
   const week=getQW();
-  const allTasks=[...(p.workout||[]),...(p.supps||[])].map(t=>applyProg(t,week));
+  const allTasks=[...(p.workout||[]),...(p.supps||[]),...(p.bonuses||[])].map(t=>applyProg(t,week));
   const suppDone=getSuppDone(key);
 
   // Build list of everything checked today
@@ -2933,7 +2971,7 @@ function addSet(taskId,totalSets,setIndex){
   const cur=(ds.sets[taskId]||0);
   ds.sets[taskId]=setIndex<cur?setIndex:setIndex+1;
   setSfx();spawnCoin(window.innerWidth/2,150);
-  if(ds.sets[taskId]>=totalSets){if(!ds.done)ds.done=[];if(!ds.done.includes(taskId)){ds.done.push(taskId);checkSfx();showNotif('💪 ALL SETS DONE!','grn');}}
+  if(ds.sets[taskId]>=totalSets){if(taskId.startsWith('v33_ab_')||taskId.startsWith('v32_sat_')){const prefix=taskId.startsWith('v33_ab_')?'v33_ab_':'v32_sat_';ds.done=(ds.done||[]).filter(x=>!x.startsWith(prefix));for(const k of Object.keys(ds.sets||{}))if(k.startsWith(prefix)&&k!==taskId)delete ds.sets[k];}if(!ds.done)ds.done=[];if(!ds.done.includes(taskId)){ds.done.push(taskId);checkSfx();showNotif('💪 ALL SETS DONE!','grn');}}
   setDS(key,ds);renderAll();
 }
 
@@ -2965,6 +3003,8 @@ function toggleTask(id){
   const task=getAllT(p).find(t=>t.id===id);
   const idx=ds.done.indexOf(id);
   if(idx===-1){
+    if(id.startsWith('v33_ab_')){ds.done=ds.done.filter(x=>!x.startsWith('v33_ab_'));for(const k of Object.keys(ds.sets||{}))if(k.startsWith('v33_ab_'))delete ds.sets[k];}
+    if(id.startsWith('v32_sat_')){ds.done=ds.done.filter(x=>!x.startsWith('v32_sat_'));for(const k of Object.keys(ds.sets||{}))if(k.startsWith('v32_sat_'))delete ds.sets[k];}
     ds.done.push(id);if(task&&task.sets){if(!ds.sets)ds.sets={};ds.sets[id]=task.sets;}
     setDS(key,ds);
     // Check for PR
@@ -4256,7 +4296,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=32;
+const APP_VERSION=33;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
@@ -4457,12 +4497,12 @@ function startCueDemo(cv,key){
 // EXPRESS 20-MIN DAY - the floor for crunch days
 // ================================================================
 const EXPRESS_SETS={
- home_1:['v32_m_warm','v32_m_squat','v32_m_row','v32_m_push','v32_m_swing'],travel_1:['v32_m_warm','v32_m_squat','v32_m_row','v32_m_push','v32_m_swing'],
- home_2:['v32_t_warm','v32_t_burpee','v32_t_v','v32_t_dead','v32_t_rope'],travel_2:['v32_t_warm','v32_t_burpee','v32_t_v','v32_t_dead','v32_t_rope'],
- home_3:['v32_w_warm','v32_w_rdl','v32_w_lunge','v32_w_push','v32_w_row'],travel_3:['v32_w_warm','v32_w_rdl','v32_w_lunge','v32_w_push','v32_w_row'],
- home_4:['v32_th_warm','v32_th_rope','v32_th_dead'],travel_4:['v32_th_warm','v32_th_rope','v32_th_dead'],
- home_5:['v32_f_warm','v32_f_squat','v32_f_row','v32_f_v','v32_f_side'],travel_5:['v32_f_warm','v32_f_squat','v32_f_row','v32_f_v','v32_f_side'],
- home_6:['v32_sa_warm','v32_sa_rope','v32_sa_push'],travel_6:['v32_sa_warm','v32_sa_rope','v32_sa_push']
+ home_1:['v32_m_warm','v33_1_shoulder','v33_1_hip','v32_m_squat','v32_m_row','v32_m_push','v32_m_swing','v33_1_cool_shoulder','v33_1_cool_hip'],travel_1:['v32_m_warm','v33_1_shoulder','v33_1_hip','v32_m_squat','v32_m_row','v32_m_push','v32_m_swing','v33_1_cool_shoulder','v33_1_cool_hip'],
+ home_2:['v32_t_warm','v33_2_shoulder','v33_2_hip','v32_t_burpee','v32_t_v','v32_t_dead','v32_t_rope','v33_2_cool_shoulder','v33_2_cool_hip'],travel_2:['v32_t_warm','v33_2_shoulder','v33_2_hip','v32_t_burpee','v32_t_v','v32_t_dead','v32_t_rope','v33_2_cool_shoulder','v33_2_cool_hip'],
+ home_3:['v32_w_warm','v33_3_shoulder','v33_3_hip','v32_w_rdl','v32_w_lunge','v32_w_push','v32_w_row','v33_3_cool_shoulder','v33_3_cool_hip'],travel_3:['v32_w_warm','v33_3_shoulder','v33_3_hip','v32_w_rdl','v32_w_lunge','v32_w_push','v32_w_row','v33_3_cool_shoulder','v33_3_cool_hip'],
+ home_4:['v32_th_warm','v33_4_shoulder','v33_4_hip','v32_th_rope','v32_th_dead','v33_4_cool_shoulder','v33_4_cool_hip'],travel_4:['v32_th_warm','v33_4_shoulder','v33_4_hip','v32_th_rope','v32_th_dead','v33_4_cool_shoulder','v33_4_cool_hip'],
+ home_5:['v32_f_warm','v33_5_shoulder','v33_5_hip','v32_f_squat','v32_f_row','v32_f_v','v32_f_side','v33_5_cool_shoulder','v33_5_cool_hip'],travel_5:['v32_f_warm','v33_5_shoulder','v33_5_hip','v32_f_squat','v32_f_row','v32_f_v','v32_f_side','v33_5_cool_shoulder','v33_5_cool_hip'],
+ home_6:['v32_sa_warm','v33_6_shoulder','v33_6_hip','v32_sa_rope','v32_sa_push','v33_6_cool_shoulder','v33_6_cool_hip'],travel_6:['v32_sa_warm','v33_6_shoulder','v33_6_hip','v32_sa_rope','v32_sa_push','v33_6_cool_shoulder','v33_6_cool_hip']
 };
 function toggleExpress(){
   const key=dKey(currentDate);const ds=getDS(key);
