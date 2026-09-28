@@ -1691,9 +1691,9 @@ for(const day of [1,2,3,4,5,6])for(const t of [...PLAN.home[day].workout,...PLAN
 for(const md of ['home','travel'])for(let day=0;day<=6;day++){
   const p=PLAN[md][day];
   for(const t of [...(p.workout||[]),...(p.bonuses||[])]){
-    if(t.id==='v33_ab_plank'){t.rn='20-30s';t.detail='3 × 20-30s plank. Choose ONE optional ab hold; skip if sore. Not required for day completion.';}
-    if(t.id==='v33_ab_side'){t.rn='15-20s/side';t.detail='2 × 15-20s/side side plank. Choose ONE optional ab hold; skip if sore. Not required for day completion.';}
-    if(t.id==='v33_ab_hollow'){t.rn='10-15s';t.detail='3 × 10-15s hollow hold. Choose ONE optional ab hold; skip if sore. Not required for day completion.';}
+    if(t.id==='v33_ab_plank'){t.rn='20-30s';t.detail='3 × 20-30s plank. Optional after the core; skip if sore. Not required for day completion.';}
+    if(t.id==='v33_ab_side'){t.rn='15-20s/side';t.detail='2 × 15-20s/side side plank. Optional after the core; skip if sore. Not required for day completion.';}
+    if(t.id==='v33_ab_hollow'){t.rn='10-15s';t.detail='3 × 10-15s hollow hold. Optional after the core; skip if sore. Not required for day completion.';}
     if(t.id==='v32_f_side'){t.rn='15-20s/side';t.detail='1 × 15-20s/side, hips level; do not rush. Only count clean hold time.';}
     if(t.id==='v32_t_plank'){t.rn='20-30s';t.detail='2 × 20-30s plank. Optional after the core; not a miss.';}
     if(t.id==='v32_th_rope')t.detail=t.detail.replace('20-30s relaxed rest between rounds','20-30s relaxed rest between rounds');
@@ -1706,6 +1706,24 @@ for(const md of ['home','travel'])for(let day=0;day<=6;day++){
     if(t.id==='v33_ab_plank'||t.id==='v32_t_plank'){
       t.sets=1;t.rn='1 min total';
       t.detail='Accumulate 1 minute of clean standard plank. Pause and add short holds until the total reaches 1 minute; no need to do it unbroken. If form stays solid, progress to 90 seconds total, then 2 minutes total on future days. Optional after the core; never a miss.';
+    }
+  }
+}
+// V39: current holds use one seconds-total effort and one checkbox.
+for(const md of ['home','travel'])for(let day=0;day<=6;day++){
+  const p=PLAN[md][day];for(const t of [...(p.workout||[]),...(p.bonuses||[])]){
+    if(t.id==='v33_ab_plank'||t.id==='v32_t_plank'){
+      t.sets=1;t.rn='60 seconds total';
+      t.detail='Hold a clean standard plank for 60 seconds total. One effort; check it off when done. Stop if form slips. Optional after the core; never a miss.';
+    }else if(t.id==='v33_ab_side'){
+      t.sets=1;t.rn='30 seconds per side';
+      t.detail='Hold the side plank for 30 seconds total on each side, keeping hips level. One checkbox after both sides. Optional after the core; not required for day completion.';
+    }else if(t.id==='v32_f_side'){
+      t.sets=1;t.rn='30 seconds per side';
+      t.detail='Hold the side plank for 30 seconds total on each side, keeping hips level. One checkbox after both sides; only clean hold time counts.';
+    }else if(t.id==='v33_ab_hollow'||(md==='travel'&&['v32_t_wheel','v32_f_wheel','v32_sat_wheel'].includes(t.id))){
+      t.sets=1;t.rn='30-45 seconds total';
+      t.detail='Hold the hollow position for 30-45 seconds total. One effort; check it off when done. Stop if your lower back lifts. Optional after the core; never a miss.';
     }
   }
 }
@@ -3068,7 +3086,7 @@ function addSet(taskId,totalSets,setIndex){
   const cur=(ds.sets[taskId]||0);
   ds.sets[taskId]=setIndex<cur?setIndex:setIndex+1;
   setSfx();spawnCoin(window.innerWidth/2,150);
-  if(ds.sets[taskId]>=totalSets){if(taskId.startsWith('v33_ab_')||taskId.startsWith('v32_sat_')){const prefix=taskId.startsWith('v33_ab_')?'v33_ab_':'v32_sat_';ds.done=(ds.done||[]).filter(x=>!x.startsWith(prefix));for(const k of Object.keys(ds.sets||{}))if(k.startsWith(prefix)&&k!==taskId)delete ds.sets[k];}if(!ds.done)ds.done=[];if(!ds.done.includes(taskId)){ds.done.push(taskId);checkSfx();showNotif('💪 ALL SETS DONE!','grn');}}
+  if(ds.sets[taskId]>=totalSets){if(taskId.startsWith('v32_sat_')){const prefix='v32_sat_';ds.done=(ds.done||[]).filter(x=>!x.startsWith(prefix));for(const k of Object.keys(ds.sets||{}))if(k.startsWith(prefix)&&k!==taskId)delete ds.sets[k];}if(!ds.done)ds.done=[];if(!ds.done.includes(taskId)){ds.done.push(taskId);checkSfx();showNotif('💪 ALL SETS DONE!','grn');}}
   setDS(key,ds);renderAll();
 }
 
@@ -3097,7 +3115,6 @@ function toggleTask(id){
   const task=getAllT(p).find(t=>t.id===id);
   const idx=ds.done.indexOf(id);
   if(idx===-1){
-    if(id.startsWith('v33_ab_')){ds.done=ds.done.filter(x=>!x.startsWith('v33_ab_'));for(const k of Object.keys(ds.sets||{}))if(k.startsWith('v33_ab_'))delete ds.sets[k];}
     if(id.startsWith('v32_sat_')){ds.done=ds.done.filter(x=>!x.startsWith('v32_sat_'));for(const k of Object.keys(ds.sets||{}))if(k.startsWith('v32_sat_'))delete ds.sets[k];}
     ds.done.push(id);if(task&&task.sets){if(!ds.sets)ds.sets={};ds.sets[id]=task.sets;}
     setDS(key,ds);
@@ -4390,7 +4407,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=38;
+const APP_VERSION=39;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
