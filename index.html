@@ -1699,6 +1699,16 @@ for(const md of ['home','travel'])for(let day=0;day<=6;day++){
     if(t.id==='v32_th_rope')t.detail=t.detail.replace('20-30s relaxed rest between rounds','20-30s relaxed rest between rounds');
   }
 }
+// V38: measure standard planks by a total minute rather than by short sets.
+// Keep side plank and hollow separate with their existing per-side/quality targets.
+for(const md of ['home','travel'])for(let day=0;day<=6;day++){
+  const p=PLAN[md][day];for(const t of [...(p.workout||[]),...(p.bonuses||[])]){
+    if(t.id==='v33_ab_plank'||t.id==='v32_t_plank'){
+      t.sets=1;t.rn='1 min total';
+      t.detail='Accumulate 1 minute of clean standard plank. Pause and add short holds until the total reaches 1 minute; no need to do it unbroken. If form stays solid, progress to 90 seconds total, then 2 minutes total on future days. Optional after the core; never a miss.';
+    }
+  }
+}
 // A legacy workout must remain on Sep 26 but its combined day-one bonus becomes checkable pieces.
 const legacyStart=dayMode=>[
  v33Task('v33_d1_squat','⭐ SQUATS','3 steady rounds × 12 squats.',3,'12',9),
@@ -4380,7 +4390,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=37;
+const APP_VERSION=38;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
