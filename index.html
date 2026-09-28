@@ -575,6 +575,13 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
 .cue-dot{display:inline-block;margin-left:6px;background:#7a5800;color:#ffd700;font-size:0.2rem;padding:1px 4px;border-radius:3px;vertical-align:middle;}
 .cue-box{background:#1a1a00;border:2px solid #7a5800;margin:6px 0 2px;padding:8px 10px;font-family:'VT323',monospace;font-size:.85rem;color:#ffd700;line-height:1.25;}
 .cue-box canvas{image-rendering:pixelated;display:block;margin:6px auto 2px;background:#0a0a14;border:2px solid #333;}
+.task-row:has(.cue-box){flex-wrap:wrap}.task-row .cue-box{flex:0 0 100%;width:100%;min-width:0;padding:14px;overflow-wrap:anywhere;}
+.cue-guide{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:10px;}
+.cue-step{padding:9px;background:#111100;border-left:3px solid #ffd700;color:#eee7a0;font-size:.9rem;line-height:1.2;}
+.cue-step strong{display:block;color:#ffd700;letter-spacing:1px;font-size:.72rem;margin-bottom:4px;}
+.cue-fallback{font-size:.9rem;line-height:1.3;padding:8px;color:#eee7a0;}
+.uncheck-action{min-width:78px;min-height:42px;padding:7px 8px;background:#4d0909;color:#fff;border:2px solid #ff6834;font-family:'VT323',monospace;font-size:1rem;cursor:pointer;white-space:nowrap;align-self:center;}
+@media(max-width:859px){.cue-guide{grid-template-columns:1fr}.cue-box{padding:10px}.cue-step{font-size:1rem}.uncheck-action{min-width:76px;font-size:1.1rem}.task-row .ti{min-width:0}}
 @media(max-width:859px){
   .tn{font-size:0.5rem;}
   .td{font-size:1.05rem;}
@@ -955,7 +962,7 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
 <canvas id="runCanvas" style="position:fixed;bottom:51px;left:0;right:0;width:100%;height:44px;z-index:52;pointer-events:none;image-rendering:pixelated;"></canvas>
 
 <!-- UNDO BUTTON -->
-<div id="undoBtn" onclick="undoLast()" style="display:none;position:fixed;bottom:100px;left:50%;transform:translateX(-50%);z-index:5000;background:#1a0a00;border:3px solid #ff4400;padding:10px 18px;cursor:pointer;font-family:'Press Start 2P',monospace;font-size:clamp(0.22rem,0.6vw,0.4rem);color:#ff6622;white-space:nowrap;box-shadow:0 3px 0 #880000;">
+<div id="undoBtn" onclick="undoLast()" style="display:none;position:fixed;bottom:100px;left:50%;transform:translateX(-50%);z-index:5000;background:#1a0a00;border:3px solid #ff4400;padding:10px 18px;cursor:pointer;font-family:'Press Start 2P',monospace;font-size:clamp(0.35rem,1.5vw,0.65rem);color:#fff;min-height:48px;display:flex;align-items:center;white-space:nowrap;box-shadow:0 3px 0 #880000;">
   ↩ UNDO: <span id="undoLabel">LAST ACTION</span>
 </div>
 <div class="brick-row"></div>
@@ -2456,12 +2463,12 @@ function renderDay(){
       return`<div class="task-row spill-row${od?' done':''}" id="tr_${t._sf}_${t.id}" onclick="toggleSpill('${t._sf}','${t.id}')">
         <div class="chk">${od?'✓':''}</div>
         <div class="ti">
-          <div class="tn" onclick="event.stopPropagation();toggleCue(this)" data-tn="${t.name}" style="cursor:pointer;">${displayName}${subTag}${(window.FORM_CUES&&window.FORM_CUES[window.cueKey(t.name)])?'<span class="cue-dot">?</span>':''} <span style="font-size:0.22rem;color:#cc8844">(${t._sl?.toUpperCase()})</span></div>
+          <div class="tn" onclick="event.stopPropagation();toggleCue(this)" data-tn="${t.name}" style="cursor:pointer;">${displayName}${subTag}${((window.FORM_CUES&&window.FORM_CUES[window.cueKey(t.name)])||(window.HOWTO_CUES&&window.HOWTO_CUES[window.howtoKey(t.name)]))?'<span class="cue-dot">?</span>':''} <span style="font-size:0.22rem;color:#cc8844">(${t._sl?.toUpperCase()})</span></div>
           <div class="td">${displayDetail}</div>
           ${setHtml}
           ${travelHint}
         </div>
-        <div class="txp">+${t.xp}XP</div>
+        ${od?`<button class="uncheck-action" onclick="event.stopPropagation();toggleSpill('${t._sf}','${t.id}')">↩ UNCHECK</button>`:`<div class="txp">+${t.xp}XP</div>`}
       </div>`;
     }).join('');
     sb.innerHTML=`<div class="spillover-hdr" onclick="toggleSec('spillSec')"><span class="spill-title">📋 UNFINISHED TASKS (${dc}/${spills.length})</span><span class="sec-arr" id="arr_spillSec">▼</span></div>
@@ -2502,7 +2509,7 @@ function makeSection(title,hdrCls,tasks,done,sets,isBonus){
     let setHtml='';
     if(st>1&&!isDone){setHtml=`<div class="set-tracker" onclick="event.stopPropagation()">${Array.from({length:st},(_,i)=>`<div class="set-dot${i<sd?' done-set':''}" onclick="addSet('${t.id}',${st},${i})">${i<sd?'✓':i+1}</div>`).join('')}<span class="set-label${sd>0?' ok':''}">${sd}/${st} sets${t.rn?' ('+t.rn+')':''}</span></div>`;}
     else if(st>1&&isDone){setHtml=`<div class="set-tracker"><span class="set-label ok">ALL ${st} SETS ✓</span></div>`;}
-    return`<div class="task-row${isBonus?' bonus-row':''}${isDone?' done':''}" id="tr_${t.id}" onclick="toggleTask('${t.id}')"><div class="chk">${isDone?'✓':''}</div><div class="ti"><div class="tn" onclick="event.stopPropagation();toggleCue(this)" data-tn="${t.name}" style="cursor:pointer;">${displayName}${subTag}${(window.FORM_CUES&&window.FORM_CUES[window.cueKey(t.name)])?'<span class="cue-dot">?</span>':''}</div><div class="td">${displayDetail}</div>${setHtml}</div><div class="txp">+${t.xp}XP</div></div>`;
+    return`<div class="task-row${isBonus?' bonus-row':''}${isDone?' done':''}" id="tr_${t.id}" onclick="toggleTask('${t.id}')"><div class="chk">${isDone?'✓':''}</div><div class="ti"><div class="tn" onclick="event.stopPropagation();toggleCue(this)" data-tn="${t.name}" style="cursor:pointer;">${displayName}${subTag}${((window.FORM_CUES&&window.FORM_CUES[window.cueKey(t.name)])||(window.HOWTO_CUES&&window.HOWTO_CUES[window.howtoKey(t.name)]))?'<span class="cue-dot">?</span>':''}</div><div class="td">${displayDetail}</div>${setHtml}</div>${isDone?`<button class="uncheck-action" onclick="event.stopPropagation();toggleTask('${t.id}')">↩ UNCHECK</button>`:`<div class="txp">+${t.xp}XP</div>`}</div>`;
   }).join('')}</div>`;
   return b;
 }
@@ -2521,7 +2528,7 @@ function makeCompletedLog(key,p,done,sets){
     rows.push(`<div class="task-row done" style="opacity:.7;" onclick="toggleTask('${t.id}')">
       <div class="chk">✓</div>
       <div class="ti"><div class="tn">${t.name}</div></div>
-      <div class="txp" style="color:#555;">+${t.xp}XP</div>
+      <button class="uncheck-action" onclick="event.stopPropagation();toggleTask('${t.id}')">↩ UNCHECK</button>
     </div>`);
   });
   // Supplements from suppDone
@@ -2980,7 +2987,7 @@ function renderUndoBtn(){
     const last=undoStack[undoStack.length-1];
     btn.style.display='block';
     document.getElementById('undoLabel').textContent=last.label.toUpperCase().slice(0,30);
-    clearTimeout(__undoTO);__undoTO=setTimeout(()=>{btn.style.display='none';},5000);
+    clearTimeout(__undoTO);__undoTO=setTimeout(()=>{btn.style.display='none';},60000);
   }else{clearTimeout(__undoTO);btn.style.display='none';}
 }
 function undoLast(){
@@ -4292,7 +4299,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=34;
+const APP_VERSION=35;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
@@ -4408,17 +4415,56 @@ KBROW:'One hand braced on your knee, flat back. Row the bell to your hip pocket 
 '15JUMPSQUATS':'Squat deep, explode off the floor, land soft straight into the next rep.',
 '2EXTRABURPEEROUNDS':'Down, chest to floor, pop up, small jump. Pace yourself - smooth reps beat sprinting the first round.',
 };
+window.HOWTO_CUES={
+  JUMPROPEWARMUP:['Hold handles at hip height; keep elbows close and wrists loose.','Make one small hop per rope turn, landing softly on the balls of your feet.','Feel your calves and breathing warm up, not an all-out sprint.','Avoid high jumps or swinging your whole arms.'],
+  SHADOWROPEWARMUP:['Stand tall, elbows by your sides; imagine a rope in your hands.','Turn wrists and make small relaxed hops with each imaginary pass.','Feel calves and breathing warm up without stomping.','Do not jump high or rush for speed.'],
+  JUMPROPE:['Start with handles by the hips and enough clearance around you.','Rotate from the wrists; hop just high enough for the rope, count completed skips.','Feel a light, steady rhythm in calves and lungs.','Avoid big arm circles, high jumps or racing the count.'],
+  EASYJUMPROPE:['Set a gentle pace and enough room for the rope.','Hop lightly once per turn; finish each counted round before the next.','You should be able to speak in short sentences.','Avoid sprinting or stiff landings.'],
+  SHADOWROPE:['Keep elbows tucked; mimic the rope turn with your wrists.','Use short easy hops, counting each pass.','Light calf/cardio effort, not an all-out interval.','Avoid hard landings or turning this into a sprint.'],
+  EASYSHADOWROPE:['Stand tall, elbows tucked and wrists circling.','Count easy imaginary rope skips with short hops.','Conversational breathing and soft landings.','Avoid hard intervals on the recovery day.'],
+  GOBLETSQUAT:['Hold the kettlebell close to your chest; feet about shoulder-width.','Sit down between your hips, let knees track with toes, then stand through the whole foot.','Quads and glutes working; torso stays tall.','Do not round your back or let knees collapse inward.'],
+  SLOWBODYWEIGHTSQUAT:['Feet shoulder-width, arms out for balance.','Sit hips down between the legs; stand tall through the whole foot.','Quads and glutes, with controlled full range.','Do not bounce at the bottom or let knees collapse.'],
+  ONEARMKBROW:['Brace the free hand on your own thigh or a verified stable surface; hinge with a flat back.','Pull bell toward your hip, pause, then lower slowly; switch arms.','Feel the side of your back working more than your biceps.','Do not twist the torso or jerk the weight.'],
+  BENTOVERKBROW:['Hinge at the hips; hold your back flat, feet steady.','Pull the bell toward the hip, pause briefly, lower with control.','Feel the lat and upper back, not your low back.','Do not shrug or heave the bell with your whole body.'],
+  PRONEYTWRAISES:['Lie face down with arms reaching long; thumbs point up.','Lift arms into a Y, then T, then W, squeezing shoulder blades gently.','Feel the muscles behind your shoulders and upper back.','Do not crane the neck or throw the arms upward.'],
+  PUSHUPS:['Hands just wider than shoulders; brace glutes and abs in one long line.','Bend elbows about 45 degrees, lower chest, then press back up.','Chest, shoulders and triceps; scale hands to a stable elevated surface if needed.','Do not let hips sag or flare elbows straight out.'],
+  KETTLEBELLSWING:['Stand over the bell; hinge back and grip with both hands.','Hike the bell between the legs, snap hips forward, let it float to chest height.','Feel glutes and hamstrings drive it; arms are guides.','Do not lift with the shoulders or hyperextend the lower back.'],
+  BODYWEIGHTHIPHINGE:['Stand with soft knees, hands at hips.','Push hips back until hamstrings stretch, then stand by squeezing glutes.','Feel the back of the legs and glutes, not low-back strain.','Do not turn it into a deep squat or round your spine.'],
+  OVERHEADKBPRESS:['Bell at one shoulder, wrist straight, ribs stacked over hips.','Press up until arm is beside the ear; lower slowly; switch sides.','Feel shoulders and triceps without low-back arching.','Do not lean back or force a heavy bell through painful range.'],
+  PIKEPUSHUP:['Hands shoulder-width; hips high so torso angles down.','Bend elbows and lower head toward a spot ahead of hands, press back up.','Shoulders and triceps, not a neck drop.','Do not flare elbows wide or collapse your head onto the floor.'],
+  PULLUPS:['Grip bar just wider than shoulders; hang with shoulders active.','Pull elbows toward ribs until chin clears the bar, lower slowly.','Feel lats and upper back; stop one or two reps before failure.','Do not kick, swing or crane your neck over the bar.'],
+  EASYPULLUPS:['Use a secure bar and an active, controlled hang.','Pull elbows down, chin over bar, then lower slowly.','Easy back work with one or two reps left in reserve.','Do not grind to failure on a recovery day.'],
+  BURPEES:['Stand with floor space clear; plant hands in front of feet.','Step or hop feet back, lower with control, return feet, stand or small hop.','Full-body conditioning at a steady pace.','Do not collapse through the back or race sloppy reps.'],
+  SEATEDVTUCKSSUITCASES:['Sit tall, hands lightly behind hips for support.','Extend legs and lean back, then bring knees and chest together; extend again slowly.','Feel your abs control the closing and opening.','Do not yank with arms or throw your legs.'],
+  DEADBUG:['Lie on back, arms to ceiling, hips and knees at right angles.','Lower opposite arm and leg slowly, exhale, return, then switch.','Feel deep abs bracing while low back stays gently pressed down.','Stop the leg sooner if your low back arches.'],
+  PLANKHOLD:['Forearms under shoulders, toes planted, body in one line.','Brace abs and glutes and breathe steadily for the hold.','Feel abs and glutes rather than low-back pressure.','Stop if hips sag; do not hold your breath.'],
+  SIDEPLANK:['Forearm under shoulder; stack feet or stagger for balance.','Lift hips until shoulder, hip and ankle line up; breathe, switch sides.','Feel the side of your waist and shoulder support.','Do not let the bottom shoulder shrug into your ear.'],
+  BICYCLECRUNCH:['Lie on back, hands lightly behind head; lift shoulder blades.','Rotate rib cage toward opposite knee while other leg reaches away; alternate slowly.','Feel abs driving the turn, not the neck.','Do not yank your head or pedal too quickly.'],
+  REVERSELUNGE:['Stand tall, feet under hips; keep a little room behind you.','Step one leg back, bend both knees, then push through front foot to stand; switch.','Front-leg quad and glute; torso stays upright.','Do not let front knee cave inward or slam back knee down.'],
+  SINGLELEGKBRDL:['Stand on one leg, knee soft; hold bell opposite the planted foot if stable.','Hinge at hip as free leg reaches behind; stand by driving planted foot down.','Feel hamstring and glute of planted leg.','Do not round back or chase depth at the cost of balance.'],
+  SLOWSINGLELEGHINGE:['Stand on one foot with knee soft, arms out for balance.','Push hips back while other leg reaches behind; return by squeezing planted glute.','Feel hamstring and glute more than low back.','Do not twist the hips or force depth.'],
+  GLUTEBRIDGE:['Lie on back, knees bent, feet hip-width near your hips.','Press feet into floor, lift hips until torso and thighs align; lower slowly.','Feel glutes doing most of the lift.','Do not overarch low back or shove through toes.'],
+  PRONESWIMMERS:['Lie face down, forehead toward floor, arms long.','Lift arms a little and sweep from overhead toward hips, then back slowly.','Feel upper-back and rear-shoulder muscles.','Do not crank neck up or jerk with the low back.'],
+  HOLLOWHOLD:['Lie on back and press low back gently into the floor.','Lift shoulders and legs slightly, keep breathing; bend knees if back arches.','Feel deep abs while back stays down.','Do not force a straight-leg hold through back pain.'],
+  ABWHEEL:['Kneel on a pad and grip wheel under shoulders; brace abs and glutes.','Roll forward only as far as you can keep ribs down, then pull back with abs.','Feel abs resisting extension, not a pinch in low back.','Do not let low back sag or roll beyond control.'],
+  SEATEDVTUCKS:['Sit on floor, hands lightly behind hips and chest tall.','Extend legs out, then bring knees and chest together, slowly open again.','Feel abs control both directions.','Do not swing legs or yank with arms.'],
+  SQUATS:['Stand feet shoulder-width with whole foot grounded.','Sit down between hips, track knees over toes, stand tall.','Feel quads and glutes working.','Do not collapse knees inward or round the back.'],
+  PRONEYTW:['Lie face down, forehead relaxed, thumbs up.','Raise arms to Y, T and W shapes with small controlled lifts.','Feel rear shoulders and upper back.','Do not lift your neck or fling your arms.'],
+  PULLUPSETS:['Hang with an active shoulder and secure grip.','Pull elbows to ribs, chin over bar, descend slowly.','Feel lats; stop before form breaks.','Do not swing or grind to failure.'],
+  HIGHINTENSITYINTERVALFINISHER:['Set an open floor area; stand with knees soft.','For each burpee, put hands down, step or hop feet back, then return to standing.','Feel whole-body conditioning, not a low-back pinch.','Do not rush broken reps or continue if form fails.']
+};
+window.howtoKey=function(raw){let k=cueKey(raw).replace(/^OPTIONAL/,'');if(k==='2EASYPULLUPSETS')return 'PULLUPSETS';if(k.includes('ABWHEEL'))return 'ABWHEEL';if(k.includes('PRONEYTW'))return 'PRONEYTW';if(k.includes('SEATEDVTUCKS'))return k.includes('SUITCASES')?'SEATEDVTUCKSSUITCASES':'SEATEDVTUCKS';if(k.includes('PULLUPSETS'))return 'PULLUPSETS';if(k.includes('HOLLOW'))return 'HOLLOWHOLD';if(k.includes('PLANK')&&k.includes('SIDE'))return 'SIDEPLANK';if(k.includes('PLANK'))return 'PLANKHOLD';if(k.includes('ROPE')&&k.includes('EASY'))return k.includes('SHADOW')?'EASYSHADOWROPE':'EASYJUMPROPE';return k;};
 function toggleCue(el){
   const row=el.closest('.task-row');if(!row)return;
   const old=row.querySelector('.cue-box');if(old){old.remove();return;}
   const key=cueKey(el.getAttribute('data-tn'));
-  const cue=FORM_CUES[key];if(!cue)return;
+  const howto=HOWTO_CUES[howtoKey(el.getAttribute('data-tn'))];const cue=FORM_CUES[key];if(!howto&&!cue)return;
   const box=document.createElement('div');box.className='cue-box';
   box.onclick=function(e){e.stopPropagation();};
   const cv=document.createElement('canvas');cv.width=32;cv.height=32;cv.style.width='128px';cv.style.height='128px';
   box.appendChild(cv);startCueDemo(cv,key);
-  const cap=document.createElement('div');cap.style.cssText="text-align:center;font-size:.7rem;color:#a08000;margin-bottom:3px;";cap.textContent='PAKALU SHOWS THE MOVE';box.appendChild(cap);
-  const txt=document.createElement('div');txt.textContent=cue;box.appendChild(txt);
+  const cap=document.createElement('div');cap.style.cssText="text-align:center;font-size:.7rem;color:#a08000;margin-bottom:3px;";cap.textContent='PAKALU ANIMATES THE MOVE: START ↔ FINISH';box.appendChild(cap);
+  const txt=document.createElement('div');if(howto){txt.className='cue-guide';['SET UP','DO IT','FEEL','AVOID'].forEach((label,i)=>{const step=document.createElement('div');step.className='cue-step';const heading=document.createElement('strong');heading.textContent=label;step.appendChild(heading);step.appendChild(document.createTextNode(howto[i]));txt.appendChild(step);});}else{txt.className='cue-fallback';txt.textContent=cue;}box.appendChild(txt);
   const x=document.createElement('button');x.textContent='✕ CLOSE';x.style.cssText="display:block;margin:6px auto 0;background:#330000;border:2px solid #7a2000;color:#ff6666;font-family:'Press Start 2P',monospace;font-size:.22rem;padding:6px 12px;cursor:pointer;";x.onclick=function(e){e.stopPropagation();box.remove();};
   box.appendChild(x);
   row.appendChild(box);
@@ -4468,21 +4514,31 @@ function startCueDemo(cv,key){
         ctx.fillStyle=K;ctx.fillRect(8,26,4,2);ctx.fillRect(20,26,4,2);
       }else stand(0,0);
     },
+    HINGE:f=>{floor();hat(f?5:10,f?8:2);head(f?6:11,f?11:5);ctx.fillStyle=B;ctx.fillRect(f?10:11,f?14:9,f?11:8,f?4:7);ctx.fillRect(12,18,3,10);ctx.fillRect(18,18,3,10);ctx.fillStyle=S;ctx.fillRect(f?20:9,f?16:10,3,7);},
+    BRIDGE:f=>{floor();hat(1,22);head(2,25);ctx.fillStyle=B;ctx.fillRect(8,f?19:24,15,4);ctx.fillRect(21,19,3,8);ctx.fillRect(26,20,3,8);},
+    SINGLEHINGE:f=>{floor();hat(f?6:12,f?8:2);head(f?7:13,f?11:5);ctx.fillStyle=B;ctx.fillRect(f?12:13,f?14:9,f?10:6,7);ctx.fillRect(15,20,3,8);ctx.fillRect(f?20:18,f?20:20,f?9:3,3);ctx.fillStyle=S;ctx.fillRect(f?21:19,f?15:10,3,7);},
+    PIKEPUSHUP:f=>{floor();hat(2,f?19:14);head(3,f?22:17);ctx.fillStyle=B;ctx.fillRect(9,f?17:12,13,4);ctx.fillRect(19,f?11:8,4,11);ctx.fillStyle=S;ctx.fillRect(8,20,3,8);ctx.fillRect(23,18,3,10);},
+    HOLLOW:f=>{floor();hat(2,17);head(3,20);ctx.fillStyle=B;ctx.fillRect(9,f?20:23,15,3);ctx.fillRect(23,f?18:21,7,3);ctx.fillStyle=S;ctx.fillRect(9,f?16:20,3,5);},
+    DEADBUG:f=>{floor();hat(1,21);head(2,24);ctx.fillStyle=B;ctx.fillRect(8,23,14,4);ctx.fillRect(f?13:10,f?9:13,3,12);ctx.fillRect(f?25:21,f?13:17,3,7);ctx.fillStyle=S;ctx.fillRect(f?19:13,f?13:8,3,11);},
+    BICYCLE:f=>{floor();hat(1,22);head(2,25);ctx.fillStyle=B;ctx.fillRect(8,23,13,4);ctx.fillRect(f?17:21,f?16:20,9,3);ctx.fillRect(f?23:24,f?13:17,3,11);},
+    VTUCK:f=>{floor();hat(5,16);head(6,19);ctx.fillStyle=B;ctx.fillRect(11,19,10,4);ctx.fillStyle=S;ctx.fillRect(12,23,2,5);ctx.fillRect(20,23,2,5);ctx.fillStyle=B;if(f){ctx.fillRect(20,17,6,3);ctx.fillRect(25,17,3,6);}else{ctx.fillRect(20,22,10,3);}},
+    SIDEPLANK:f=>{floor();hat(2,f?13:19);head(3,f?16:22);ctx.fillStyle=B;ctx.fillRect(9,f?17:23,18,4);ctx.fillStyle=S;ctx.fillRect(9,f?21:25,3,6);},
+    ABWHEEL:f=>{floor();hat(f?6:12,f?11:6);head(f?7:13,f?14:9);ctx.fillStyle=B;ctx.fillRect(f?12:14,f?16:12,f?13:7,4);ctx.fillRect(22,20,3,8);ctx.fillStyle=K;ctx.fillRect(f?6:19,26,5,4);},
     FLEX:f=>{stand(0,0);if(f){ctx.fillStyle=B;ctx.fillRect(13,9,6,9);ctx.fillStyle=S;ctx.fillRect(9,6,3,5);ctx.fillRect(20,6,3,5);hat(12,2);head(13,5);}}
   };
   const MAP={GOBLETSQUAT:'GOBLETSQUAT',GOBLETSQUATS:'GOBLETSQUAT',BODYWEIGHTSQUATS:'GOBLETSQUAT',JUMPSQUATS:'GOBLETSQUAT',
-    KETTLEBELLSWINGS:'KETTLEBELLSWINGS',PULLUPS:'PULLUPS',HANGINGKNEERAISES:'KNEESUP',HANGINGLEGRAISES:'KNEESUP',LSITATTEMPT:'KNEESUP',
+    KETTLEBELLSWINGS:'KETTLEBELLSWINGS',BENTOVERKBROW:'ROW',ONEARMKBROW:'ROW',SEATEDVTUCKS:'VTUCK',SEATEDVTUCKSSUITCASES:'VTUCK',SLOWBODYWEIGHTSQUAT:'GOBLETSQUAT',BODYWEIGHTHIPHINGE:'HINGE',SLOWSINGLELEGHINGE:'SINGLEHINGE',SINGLELEGKBRDL:'SINGLEHINGE',GLUTEBRIDGE:'BRIDGE',PRONESWIMMERS:'PRONEY',SHADOWROPEWARMUP:'JUMPROPE',EASYJUMPROPE:'JUMPROPE',EASYSHADOWROPE:'JUMPROPE',SHADOWROPE:'JUMPROPE',PIKEPUSHUP:'PIKEPUSHUP',SIDEPLANK:'SIDEPLANK',HOLLOWHOLD:'HOLLOW',HIGHINTENSITYINTERVALFINISHER:'BURPEE',ABWHEEL:'ABWHEEL',EASYPULLUPS:'PULLUPS',PULLUPS:'PULLUPS',PULLUPSETS:'PULLUPS',OVERHEADKBPRESS:'PRESS',KETTLEBELLSWING:'KETTLEBELLSWINGS',SQUATS:'GOBLETSQUAT',REVERSELUNGE:'LUNGE',REVERSELUNGES:'LUNGE',PRONEYTW:'PRONEY',DEADBUG:'DEADBUG',BICYCLECRUNCH:'BICYCLE',JUMPROPE:'JUMPROPE',EASYSHADOWROPE:'JUMPROPE',HANGINGKNEERAISES:'KNEESUP',HANGINGLEGRAISES:'KNEESUP',LSITATTEMPT:'KNEESUP',
     OVERHEADKETTLEBELLPRESS:'PRESS',KETTLEBELLCLEANPRESS:'PRESS',ONEARMKETTLEBELLROW:'ROW',TABLEDOORFRAMEROWS:'ROW',
     KETTLEBELLFACEPULLBENTROWHIGH:'FACEPULL',PUSHUPS:'PUSHUP',DIAMONDPUSHUPS:'PUSHUP',CLOSEGRIPPUSHUPS:'PUSHUP',PUSHUPTOSHOULDERTAP:'PUSHUP',
     PLANKVARIATIONS:'PLANK',PLANKHOLD:'PLANK',BURPEES:'BURPEE',BURPEETOSQUATJUMP:'BURPEE',
-    DEADBUG:'CORE',FLUTTERKICKS:'CORE',LYINGKNEERAISES:'CORE',BICYCLECRUNCH:'CORE',HOLLOWBODYHOLD:'CORE',VSITHOLD:'CORE',
+    DEADBUG:'DEADBUG',FLUTTERKICKS:'CORE',LYINGKNEERAISES:'CORE',BICYCLECRUNCH:'BICYCLE',HOLLOWBODYHOLD:'CORE',VSITHOLD:'CORE',
     REVERSELUNGES:'LUNGE',SINGLELEGROMANIANDEADLIFT:'LUNGE',SINGLELEGRDLBODYWEIGHT:'LUNGE',PRONEYTWRAISES:'PRONEY',
     JUMPROPEWARMUP:'JUMPROPE',JUMPROPE:'JUMPROPE',JUMPROPEINTERVALS:'JUMPROPE',JUMPROPECIRCUIT:'JUMPROPE',SHADOWJUMPCIRCUIT:'JUMPROPE',
     JUMPINGJACKSWARMUP:'JACKS',SHADOWJUMPJUMPINGJACKS:'JACKS',BURPEEINTERVALS:'BURPEE',
     KBSWINGS:'KETTLEBELLSWINGS',KBROW:'ROW',
     '6PULLUPS':'PULLUPS','15PUSHUPS':'PUSHUP','20BURPEES':'BURPEE','20KETTLEBELLSWINGS':'KETTLEBELLSWINGS','30KETTLEBELLSWINGS':'KETTLEBELLSWINGS',
     '10CLOSEGRIPPUSHUPS':'PUSHUP','10DIAMONDPUSHUPS':'PUSHUP','10KETTLEBELLPRESSARM':'PRESS','10TABLEROWS':'ROW','15JUMPSQUATS':'GOBLETSQUAT','2EXTRABURPEEROUNDS':'BURPEE'};
-  const fn=DEMOS[MAP[key]]||DEMOS.FLEX;
+  const resolved=MAP[key]||MAP[howtoKey(key)]||(/ROPE/.test(key)?'JUMPROPE':/ROW/.test(key)?'ROW':/PRESS/.test(key)?'PRESS':/SQUAT/.test(key)?'GOBLETSQUAT':/LUNGE/.test(key)?'LUNGE':/PLANK/.test(key)?'PLANK':/HOLLOW|TWIST|TUCK|DEADBUG/.test(key)?'CORE':/WHEEL/.test(key)?'ABWHEEL':null);const fn=DEMOS[resolved]||DEMOS.FLEX;
   let frame=0;
   const draw=f=>{ctx.clearRect(0,0,32,32);fn(f);};
   draw(0);
