@@ -137,6 +137,12 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
 .pause-sub{font-family:'VT323',monospace;font-size:.82rem;color:#ff8888;line-height:1.6;}
 .pause-btn{margin-top:7px;background:var(--red);color:#fff;border:none;padding:5px 11px;cursor:pointer;font-family:'Press Start 2P',monospace;font-size:0.28rem;border-bottom:3px solid #880000;}
 
+.streak-hero{background:#150b00;border:3px solid #f5a623;box-shadow:inset 0 0 0 2px #563000;text-align:center;padding:11px 8px;margin:5px 0 8px;color:#fff;}
+.streak-hero-label{font-family:'Press Start 2P',monospace;color:#ffb234;font-size:clamp(.38rem,1.3vw,.76rem);line-height:1.5}
+.streak-hero-main{font-family:'Press Start 2P',monospace;display:flex;align-items:baseline;justify-content:center;gap:12px;margin:5px 0}
+#streakHeroCount{font-size:clamp(1.25rem,4vw,2.1rem);color:#fff3ae;text-shadow:3px 3px 0 #b54e00}
+.streak-hero-unit{font-size:clamp(.31rem,1vw,.55rem);color:#ffcf68;line-height:1.7}
+.streak-hero-note{font-family:'VT323',monospace;color:#e8b989;font-size:clamp(.76rem,1.4vw,1.02rem);line-height:1.2}
 /* ===== MAIN ===== */
 .main{position:relative;z-index:10;max-width:1100px;margin:0 auto;padding:0 20px 80px;}
 
@@ -867,6 +873,7 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
     <button class="today-btn" onclick="goToday()">▶ TODAY ◀</button>
     <button class="today-btn" id="expressBtn" onclick="toggleExpress()" style="margin-left:6px;">⏱ 20-MIN DAY</button>
   </div>
+  <div class="streak-hero" role="status" aria-live="polite"><div class="streak-hero-label">🔥 QUEST STREAK</div><div class="streak-hero-main"><span id="streakHeroCount">0</span> <span class="streak-hero-unit">DAYS IN A ROW</span></div><div class="streak-hero-note">Planned recovery keeps the streak going.</div></div>
   <div class="stats-mini">
     <div class="smc"><span class="smc-l" id="smcPctLbl">TODAY</span><span class="smc-v" id="smcPct">0%</span></div>
     <div class="smc"><span class="smc-l">XP</span><span class="smc-v" id="smcXp">0</span></div>
@@ -1551,13 +1558,13 @@ const PLAN={
 const LEGACY_PLAN={home:{6:PLAN.home[6]},travel:{6:PLAN.travel[6]}};
 const mk=(id,name,detail,sets,rn,xp=40)=>({id,name,detail,sets,rn,xp});
 const sharedSupps=PLAN.home[1].supps;
-const warm=(id,travel=false)=>mk(id,travel?'SHADOW ROPE WARMUP':'JUMP ROPE WARMUP','4 min easy rope or shadow-rope + shoulder/hip mobility; then 3 controlled rounds with short rests, 2 min cooldown. Hard stop at 45 min including any bonus; no walking',1,'4 min',15);
+const warm=(id,travel=false)=>mk(id,travel?'SHADOW ROPE WARMUP':'JUMP ROPE WARMUP','4 min easy rope or shadow-rope + shoulder/hip mobility; then 3 controlled rounds with short rests, 2 min cooldown. Required core stops at 30 min; bonuses optional; no walking',1,'4 min',15);
 const circuit=(label,type,workout,bonuses=[],optional=false)=>({label,type,emoji:optional?'🟢':'💪',workout,bonuses,supps:sharedSupps});
-const coreBonus={id:'v32_ab',name:'⭐ OPTIONAL 3-5 MIN AB FINISHER',detail:'Choose ONE: plank 3 × 30-45s, OR side plank 2 × 25-35s/side, OR hollow hold 3 × 20-30s. Rest as needed. Skip if sore; included in the 45-min hard cap (Saturday 30-min cap). Never required for day completion.',xp:20};
+const coreBonus={id:'v32_ab',name:'⭐ OPTIONAL 3-5 MIN AB FINISHER',detail:'Choose ONE: plank 3 × 30-45s, OR side plank 2 × 25-35s/side, OR hollow hold 3 × 20-30s. Rest as needed. Skip if sore; optional after the core. Never required for day completion.',xp:20};
 const satBonuses=(travel=false)=>[
-  {id:'v32_sat_rope',name:'⭐ OPTIONAL +2 MIN EASY ROPE',detail:'Choose at most one Saturday bonus; shadow-rope if needed. Stay under 30 min.',xp:20},
-  {id:'v32_sat_pull',name:travel?'⭐ OPTIONAL PRONE Y-T-W':'⭐ OPTIONAL 2 EASY PULL-UP SETS',detail:travel?'2 × 8 each Y/T/W, no unsafe doorframe or furniture rows; choose one bonus, stay under 30 min.':'2 × 4-6, stop 1-2 reps before failure; choose one bonus, stay under 30 min.',xp:25},
-  {id:'v32_sat_wheel',name:travel?'⭐ OPTIONAL HOLLOW HOLD':'⭐ OPTIONAL AB WHEEL',detail:travel?'2 × 20-30s with control; choose one bonus, stay under 30 min.':'2 × 5-8 controlled reps if form is sound; choose one bonus, stay under 30 min.',xp:25}
+  {id:'v32_sat_rope',name:'⭐ OPTIONAL +2 MIN EASY ROPE',detail:'Choose at most one Saturday bonus; shadow-rope if needed. Optional after the core.',xp:20},
+  {id:'v32_sat_pull',name:travel?'⭐ OPTIONAL PRONE Y-T-W':'⭐ OPTIONAL 2 EASY PULL-UP SETS',detail:travel?'2 × 8 each Y/T/W, no unsafe doorframe or furniture rows; choose one bonus, after the core if time and form allow.':'2 × 4-6, stop 1-2 reps before failure; choose one bonus, after the core if time and form allow.',xp:25},
+  {id:'v32_sat_wheel',name:travel?'⭐ OPTIONAL HOLLOW HOLD':'⭐ OPTIONAL AB WHEEL',detail:travel?'2 × 20-30s with control; choose one bonus, after the core if time and form allow.':'2 × 5-8 controlled reps if form is sound; choose one bonus, after the core if time and form allow.',xp:25}
 ];
 for(const travel of [false,true]){
  const p=PLAN[travel?'travel':'home'],sub=(a,b)=>travel?b:a;
@@ -1568,19 +1575,19 @@ for(const travel of [false,true]){
   mk('v32_m_swing',sub('KETTLEBELL SWING','BODYWEIGHT HIP HINGE'),sub('3 rounds × 15, 35lb weeks 1-3; 40lb from week 4 if crisp','3 rounds × 15 slow hinges'),3,'15'),
   mk('v32_m_press',sub('OVERHEAD KB PRESS','PIKE PUSH-UP'),sub('3 rounds × 6-8/arm, manageable 35lb only with clean form','3 rounds × 6-8'),3,sub('6-8/arm','6-8')),
   mk('v32_m_pull',sub('PULL-UPS','PRONE SWIMMERS'),sub('3 rounds × 4-6, always stop 1-2 reps shy of failure','3 rounds × 10; no bar required'),3,sub('4-6','10'))
- ],[{id:'v32_m_rope',name:'⭐ OPTIONAL EASY ROPE',detail:'5-8 min easy rope or shadow-rope; only if total stays under 45 min.',xp:20}]);
+ ],[{id:'v32_m_rope',name:'⭐ OPTIONAL EASY ROPE',detail:'5-8 min easy rope or shadow-rope; after the core if time and form allow.',xp:20}]);
  p[2]=circuit('ABS + CONDITIONING · 30-40 MIN','abs',[
   warm('v32_t_warm',travel),mk('v32_t_burpee','BURPEES','3 rounds × 8; step-back OK',3,'8'),mk('v32_t_v','SUITCASES · SEATED V-TUCKS','3 rounds × 12, controlled',3,'12'),mk('v32_t_dead','DEAD BUG','3 rounds × 8/side',3,'8/side'),mk('v32_t_plank','PLANK HOLD','3 rounds × 35-45s',3,'35-45s'),mk('v32_t_bicycle','BICYCLE CRUNCH','3 rounds × 12/side',3,'12/side'),mk('v32_t_rope',sub('JUMP ROPE','SHADOW ROPE'), '3 rounds × 60-90s; controlled pace',3,'60-90s'),mk('v32_t_pull',sub('EASY PULL-UPS','PRONE Y-T-W RAISES'),sub('2 × 4-6 woven into rounds 2 and 3; 1-2 reps in reserve','2 × 8 each Y/T/W, in rounds 2 and 3'),2,sub('4-6','8 each'))
- ],[{id:'v32_t_wheel',name:sub('⭐ OPTIONAL AB WHEEL','⭐ OPTIONAL HOLLOW HOLD'),detail:sub('2 × 5-8 controlled reps if form is sound; under 45 min','2 × 20-30s controlled; under 45 min'),xp:25}]);
+ ],[{id:'v32_t_wheel',name:sub('⭐ OPTIONAL AB WHEEL','⭐ OPTIONAL HOLLOW HOLD'),detail:sub('2 × 5-8 controlled reps if form is sound; after the core if time and form allow','2 × 20-30s controlled; after the core if time and form allow'),xp:25}]);
  p[3]=circuit('FULL BODY B · 30-40 MIN','kb',[
   warm('v32_w_warm',travel),mk('v32_w_rdl',sub('SINGLE-LEG KB RDL','SLOW SINGLE-LEG HINGE'),sub('3 rounds × 8/leg, 35lb if balanced','3 rounds × 8/leg, no weight'),3,'8/leg'),mk('v32_w_lunge','REVERSE LUNGE','3 rounds × 8/leg',3,'8/leg'),mk('v32_w_push','PUSH-UPS','3 rounds × 8-12',3,'8-12'),mk('v32_w_swing',sub('KETTLEBELL SWING','GLUTE BRIDGE'),sub('3 rounds × 15, 35lb weeks 1-3; 40lb week 4 if crisp','3 rounds × 15'),3,'15'),mk('v32_w_row',sub('ONE-ARM KB ROW','PRONE Y-T-W RAISES'),sub('3 rounds × 10/arm, 35lb','3 rounds × 8 each Y/T/W; stable table row 10 only if verified safe'),3,sub('10/arm','8 each')),mk('v32_w_pull',sub('PULL-UPS','PRONE SWIMMERS'),sub('3 rounds × 4-6, 1-2 reps in reserve','3 rounds × 10; no bar required'),3,sub('4-6','10'))
- ],[{id:'v32_w_rope',name:'⭐ OPTIONAL EASY ROPE',detail:'5 min easy rope or shadow-rope; only if under 45 min.',xp:20}]);
+ ],[{id:'v32_w_rope',name:'⭐ OPTIONAL EASY ROPE',detail:'5 min easy rope or shadow-rope; after the core if time and form allow.',xp:20}]);
  p[4]=circuit('EASY RECOVERY · 30 MIN','cardio',[
   warm('v32_th_warm',travel),mk('v32_th_rope',sub('EASY JUMP ROPE','EASY SHADOW ROPE'), '18-22 min conversational pace; e.g. 6 × 3 min easy with 30s relaxed resets; no hard intervals or walking; 2 min cooldown, all inside 30 min',1,'18-22 min'),mk('v32_th_dead','DEAD BUG','2 × 8/side, slow',2,'8/side'),mk('v32_th_pull',sub('EASY PULL-UPS','PRONE Y-T-W RAISES'),sub('2 × 4-6, stay 1-2 reps shy of failure','2 × 8 each Y/T/W'),2,sub('4-6','8 each'))
  ],[],false);
  p[5]=circuit('FULL BODY C + ABS · 35-40 MIN','combo',[
   warm('v32_f_warm',travel),mk('v32_f_squat',sub('GOBLET SQUAT','SLOW BODYWEIGHT SQUAT'),sub('3 rounds × 10-12, 35lb weeks 1-3; 40lb week 4 if crisp','3 rounds × 15'),3,sub('10-12','15')),mk('v32_f_row',sub('ONE-ARM KB ROW','PRONE Y-T-W RAISES'),sub('3 rounds × 10/arm, 35lb','3 rounds × 8 each Y/T/W; safe table row only if verified'),3,sub('10/arm','8 each')),mk('v32_f_press',sub('OVERHEAD KB PRESS','PIKE PUSH-UP'),sub('3 rounds × 6-8/arm, manageable 35lb only if clean','3 rounds × 6-8'),3,sub('6-8/arm','6-8')),mk('v32_f_swing',sub('KETTLEBELL SWING','BODYWEIGHT HIP HINGE'),sub('3 rounds × 15, 35lb weeks 1-3; 40lb week 4 if crisp','3 rounds × 15'),3,'15'),mk('v32_f_v','SUITCASES · SEATED V-TUCKS','3 rounds × 12, controlled',3,'12'),mk('v32_f_side','SIDE PLANK','3 rounds × 25-35s/side',3,'25-35s/side'),mk('v32_f_pull',sub('PULL-UPS','PRONE SWIMMERS'),sub('3 rounds × 4-6, 1-2 reps in reserve','3 rounds × 10, no bar needed'),3,sub('4-6','10'))
- ],[{id:'v32_f_rope',name:'⭐ OPTIONAL EASY ROPE',detail:'5-8 min easy rope or shadow-rope OR choose the ab wheel option, not both if over 45 min.',xp:20},{id:'v32_f_wheel',name:sub('⭐ OPTIONAL AB WHEEL','⭐ OPTIONAL HOLLOW HOLD'),detail:sub('2 × 5-8 controlled reps; only if under 45 min','2 × 20-30s; only if under 45 min'),xp:25}]);
+ ],[{id:'v32_f_rope',name:'⭐ OPTIONAL EASY ROPE',detail:'5-8 min easy rope or shadow-rope OR choose the ab wheel option, only if time and form allow.',xp:20},{id:'v32_f_wheel',name:sub('⭐ OPTIONAL AB WHEEL','⭐ OPTIONAL HOLLOW HOLD'),detail:sub('2 × 5-8 controlled reps; after the core if time and form allow','2 × 20-30s; after the core if time and form allow'),xp:25}]);
  p[6]=circuit('OPTIONAL SATURDAY · 20-30 MIN','cardio',[
   warm('v32_sa_warm',travel),mk('v32_sa_rope',sub('EASY JUMP ROPE','EASY SHADOW ROPE'),'3 rounds × 2 min, easy',3,'2 min'),mk('v32_sa_push','PUSH-UPS','3 rounds × 8',3,'8'),mk('v32_sa_lunge','REVERSE LUNGE','3 rounds × 10/leg',3,'10/leg'),mk('v32_sa_row',sub('ONE-ARM KB ROW','PRONE Y-T-W RAISES'),sub('3 rounds × 8-10/arm, 35lb if manageable','3 rounds × 8 each Y/T/W; no unsafe furniture'),3,sub('8-10/arm','8 each'))
  ],satBonuses(travel),true);
@@ -1599,10 +1606,10 @@ for(const md of ['home','travel']){
     warm.detail=(day===6?'150':'200')+' easy '+(travel?'shadow jumps':'rope skips')+'; smooth pace, not a race. Hard stop at '+(day===6?'30':'45')+' min including any bonuses; no walking.';
     warm.rn=(day===6?'150':'200')+' '+(travel?'shadow jumps':'skips');
 
-    if(day===1||day===3||day===5){const bonus=plan.bonuses.find(x=>x.id==='v32_'+({1:'m',3:'w',5:'f'}[day])+'_rope');if(bonus){bonus.name='⭐ OPTIONAL EASY '+(travel?'SHADOW ROPE':'JUMP ROPE');bonus.detail='300 easy '+(travel?'shadow jumps':'skips')+'; only if still within the 45-min cap.';}}
+    if(day===1||day===3||day===5){const bonus=plan.bonuses.find(x=>x.id==='v32_'+({1:'m',3:'w',5:'f'}[day])+'_rope');if(bonus){bonus.name='⭐ OPTIONAL EASY '+(travel?'SHADOW ROPE':'JUMP ROPE');bonus.detail='300 easy '+(travel?'shadow jumps':'skips')+'; after the core if time and form allow.';}}
     if(day===2){const rope=plan.workout.find(x=>x.id==='v32_t_rope');rope.detail='3 rounds × 150 '+(travel?'shadow jumps':'rope skips')+' at controlled pace.';rope.rn='150 '+(travel?'shadow jumps':'skips');}
     if(day===4){const rope=plan.workout.find(x=>x.id==='v32_th_rope');rope.detail='6 easy rounds × 300 '+(travel?'shadow jumps':'rope skips')+'; 10 slow breaths between rounds, conversational effort, no hard intervals. Express: 4 rounds × 300. Keep the whole day inside 30 min.';rope.sets=6;rope.rn='300 '+(travel?'shadow jumps':'skips');}
-    if(day===6){const rope=plan.workout.find(x=>x.id==='v32_sa_rope');rope.detail='3 rounds × 150 easy '+(travel?'shadow jumps':'rope skips')+'.';rope.rn='150 '+(travel?'shadow jumps':'skips');const b=plan.bonuses.find(x=>x.id==='v32_sat_rope');b.name='⭐ OPTIONAL EASY '+(travel?'SHADOW ROPE':'JUMP ROPE');b.detail='150 more easy '+(travel?'shadow jumps':'skips')+'; choose at most one Saturday bonus, stay under 30 min.';}
+    if(day===6){const rope=plan.workout.find(x=>x.id==='v32_sa_rope');rope.detail='3 rounds × 150 easy '+(travel?'shadow jumps':'rope skips')+'.';rope.rn='150 '+(travel?'shadow jumps':'skips');const b=plan.bonuses.find(x=>x.id==='v32_sat_rope');b.name='⭐ OPTIONAL EASY '+(travel?'SHADOW ROPE':'JUMP ROPE');b.detail='150 more easy '+(travel?'shadow jumps':'skips')+'; choose at most one Saturday bonus, after the core if time and form allow.';}
     // Friday and Tuesday already have separate moves, but split the V-tuck alias out of the task title.
     for(const t of plan.workout)if(t.name==='SUITCASES · SEATED V-TUCKS')t.name='SEATED V-TUCKS (SUITCASES)';
   }
@@ -1615,6 +1622,65 @@ for(const md of ['home','travel']){
     ]);
   }
 }
+// V36: the 30-minute required core. Keep existing IDs so checked sets and food/history survive.
+// Noncompeting pairs use one movement's work as part of the other's rest. Pause longer if form slips.
+for(const md of ['home','travel']){
+  const p=PLAN[md];
+  for(let day=0;day<=6;day++){
+    const pl=p[day];if(day===0){pl.label='REST DAY · NO REQUIRED WORKOUT';}
+    else pl.label=({1:'FULL BODY A',2:'ABS + CONDITIONING',3:'FULL BODY B',4:'EASY RECOVERY',5:'FULL BODY C + ABS',6:'OPTIONAL SATURDAY'})[day]+' · 30-MIN CORE MAX';
+    for(const b of pl.bonuses){b.detail=b.detail.replace(/(?:45|30)-min (?:total )?cap|(?:only if |stay )?(?:total stays |still within |under |inside )?(?:the )?(?:45|30)-min cap/gi,'only if you have time after the 30-min core').replace(/Choose at most one Saturday bonus;/i,'Choose at most one Saturday bonus;');}
+    if(day===0)continue;
+    const warm=pl.workout[0];warm.detail=warm.detail.replace(/Hard stop at 45 min including any bonuses; no walking\./,'Required core stops at 30 min; optional bonuses never count as misses. No walking.');
+    if(day===6){warm.detail=warm.detail.replace('Hard stop at 30 min including any bonuses; no walking.','Optional session core stops at 30 min; extra bonuses only if time permits. No walking.');}
+  }
+  // Preserve the equipment-specific titles and substitutions already approved in V32.
+  const set=(day,id,sets,rn,detail)=>{const t=p[day].workout.find(x=>x.id===id);if(!t)throw Error(id);t.sets=sets;t.rn=rn;t.detail=detail;};
+  const travel=md==='travel';
+  set(1,'v32_m_squat',2,travel?'12-15':'10-12',travel?'2 × 12-15 slow, full range. Pair with shoulder/scapular work; breathe/rest until form is steady.':'2 × 10-12, 35lb weeks 1-3; 40lb week 4 if crisp. Pair with row; ~60-90s before repeating.');
+  set(1,'v32_m_row',2,travel?'8 each':'8-10/arm',travel?'2 × 8 each Y/T/W. This is shoulder/scapular work, NOT a loaded row; travel pulling remains limited without verified equipment.':'2 × 8-10/arm at manageable 35lb. Pair with goblet squat; flat back, no heaving.');
+  set(1,'v32_m_push',2,'8-12','2 × 8-12, controlled. Pair with pull-ups; stop 1-2 reps before form breaks.');
+  set(1,'v32_m_swing',2,travel?'12-15':'12-15',travel?'2 × 12-15 controlled hip hinges. No weight on travel days; use full range.':'2 × 12-15 crisp swings; 35lb weeks 1-3, 40lb week 4 if crisp. Do not rush fatigue.');
+  set(1,'v32_m_press',2,travel?'6-8':'6-8/arm',travel?'2 × 6-8 pike push-ups, controlled.':'2 × 6-8/arm, manageable 35lb only if clean; rest before swinging.');
+  set(1,'v32_m_pull',2,travel?'10':'4-6',travel?'2 × 10 prone swimmers, controlled. Shoulder work, not a substitute for loaded pulling.':'2 × 4-6 pull-ups, 1-2 reps in reserve; pair with push-ups.');
+  set(2,'v32_t_burpee',2,'8','2 × 8 steady burpees; step back if needed. Do not race sloppy reps.');
+  set(2,'v32_t_v',2,'12','2 × 12 seated V-tucks, slow open and close.');
+  set(2,'v32_t_dead',2,'8/side','2 × 8/side dead bugs, low back steady. Pair with V-tucks if recovery allows.');
+  set(2,'v32_t_rope',3,travel?'150 shadow jumps':'150 skips',`3 × 150 controlled ${travel?'shadow jumps':'rope skips'}; easy transitions, not timed racing.`);
+  set(2,'v32_t_pull',2,travel?'8 each':'4-6',travel?'2 × 8 each Y/T/W, easy shoulder work. No loaded pull unless you have verified equipment.':'2 × 4-6 easy pull-ups, 1-2 reps in reserve; fit them between conditioning sets.');
+  for(const id of ['v32_t_plank','v32_t_bicycle']){const i=p[2].workout.findIndex(x=>x.id===id);const t=p[2].workout.splice(i,1)[0];t.name='⭐ OPTIONAL '+t.name;t.detail=t.detail.replace(/^3 rounds/,'2 rounds')+' Bonus after the 30-min core only if time permits; not a miss.';t.sets=2;p[2].bonuses.unshift(t);}
+  set(3,'v32_w_rdl',2,'8/leg',travel?'2 × 8/leg slow single-leg hinges, controlled balance.':'2 × 8/leg single-leg KB RDL at manageable 35lb; avoid twisting.');
+  set(3,'v32_w_lunge',2,'8/leg','2 × 8/leg reverse lunges. Pair with upper-body work, rest until stable.');
+  set(3,'v32_w_push',2,'8-12','2 × 8-12 push-ups. Pair with rows, 1-2 reps shy of sloppy form.');
+  set(3,'v32_w_swing',2,'12-15',travel?'2 × 12-15 glute bridges, controlled squeeze.':'2 × 12-15 crisp swings, 35lb weeks 1-3; 40lb week 4 if crisp.');
+  set(3,'v32_w_row',2,travel?'8 each':'8-10/arm',travel?'2 × 8 each Y/T/W. Scapular work only; not a comparable loaded row.':'2 × 8-10/arm one-arm KB rows, manageable 35lb. Pair with push-ups.');
+  set(3,'v32_w_pull',2,travel?'10':'4-6',travel?'2 × 10 prone swimmers, controlled. Not loaded pulling.':'2 × 4-6 pull-ups, 1-2 reps in reserve; take a rest if grip or form fades.');
+  set(4,'v32_th_rope',4,travel?'300 shadow jumps':'300 skips',`4 easy rounds × 300 ${travel?'shadow jumps':'rope skips'}; 10 slow breaths between rounds. Conversational pace; cap all required work at 30 minutes.`);
+  set(4,'v32_th_dead',2,'8/side','2 × 8/side dead bugs, slow and controlled.');
+  set(4,'v32_th_pull',2,travel?'8 each':'4-6',travel?'2 × 8 each Y/T/W, easy shoulder work, not loaded pulling.':'2 × 4-6 easy pull-ups, 1-2 reps in reserve.');
+  set(5,'v32_f_squat',2,travel?'12-15':'10-12',travel?'2 × 12-15 slow full-range squats.':'2 × 10-12 goblet squats, 35lb weeks 1-3; 40lb week 4 if crisp. Pair with shoulder/scapular work.');
+  set(5,'v32_f_row',2,travel?'8 each':'8-10/arm',travel?'2 × 8 each Y/T/W. Scapular work only; loaded pulling needs equipment.':'2 × 8-10/arm KB rows, manageable 35lb. Pair with squat.');
+  set(5,'v32_f_press',2,travel?'6-8':'6-8/arm',travel?'2 × 6-8 pike push-ups; rest as needed.':'2 × 6-8/arm overhead KB press, 35lb only if clean.');
+  {const i=p[5].workout.findIndex(x=>x.id==='v32_f_press');const t=p[5].workout.splice(i,1)[0];t.name='⭐ OPTIONAL '+t.name;t.detail+=' Extra shoulder work after the core only if you have time; not a miss.';p[5].bonuses.unshift(t);}
+  set(5,'v32_f_swing',2,'12-15',travel?'2 × 12-15 controlled bodyweight hip hinges.':'2 × 12-15 crisp KB swings, 35lb weeks 1-3; 40lb week 4 if crisp.');
+  set(5,'v32_f_v',2,'12','2 × 12 seated V-tucks, slow and controlled.');
+  set(5,'v32_f_side',1,'5-6 breaths/side','1 set each side × 5-6 slow breaths, hips level; do not rush.');
+  set(5,'v32_f_pull',2,travel?'10':'4-6',travel?'2 × 10 prone swimmers, controlled; not loaded pulling.':'2 × 4-6 pull-ups, 1-2 reps in reserve; pair with another noncompeting move only while form stays clean.');
+  set(6,'v32_sa_rope',3,travel?'150 shadow jumps':'150 skips',`3 × 150 easy ${travel?'shadow jumps':'rope skips'}; optional Saturday, stop main session at 30.`);
+  for(const id of ['v32_sa_push','v32_sa_lunge','v32_sa_row']){const t=p[6].workout.find(x=>x.id===id);t.sets=2;t.detail=t.detail.replace(/^3 rounds/,'2 rounds')+' Optional Saturday main session, stop at 30.';}
+  // Extra volume is an explicit choice, never silently included in the scored core.
+  for(const [day,ids] of [[1,['v32_m_squat','v32_m_row','v32_m_push','v32_m_swing','v32_m_press','v32_m_pull']],[2,['v32_t_v','v32_t_dead']],[3,['v32_w_rdl','v32_w_lunge','v32_w_push','v32_w_swing','v32_w_row','v32_w_pull']],[5,['v32_f_squat','v32_f_row','v32_f_swing','v32_f_v','v32_f_pull']]]){
+    for(const id of ids){const t=p[day].workout.find(x=>x.id===id);if(!t)throw Error('bonus source '+id);p[day].bonuses.push({id:'v36_more_'+id,name:'⭐ OPTIONAL EXTRA SET: '+t.name,detail:'1 extra set at '+t.rn+' after the 30-min core, only if time and form allow. Not required; stop if recovery or technique fades.',sets:1,rn:t.rn,xp:15});}
+  }
+  // No workout or bonus is required on Sunday. All non-core sets remain available as bonus.
+  for(const day of [0,1,2,3,4,5,6])for(const b of p[day].bonuses){if(b.id.startsWith('v33_ab_'))b.detail=b.detail.replace(/after the core if time permits|after the core if time permits/g,'only after the 30-min core if time permits');else if(!/not a miss/i.test(b.detail))b.detail=b.detail.replace(/(?:only if total stays under|only if still within the|under|stay under|inside|included in the) (?:45|30)[- ]min(?: cap)?/gi,'only after the 30-min core if time permits');}
+
+}
+
+for(const md of ['home','travel'])for(const day of [1,2,3,4,5,6]){const w=PLAN[md][day].workout[0];w.detail+=' ~3 min warmup, ~23 min work, ~3 min transitions. Count active training time across the day; pause whenever needed. Stop the required core at 30 min of work.';}
+
+for(const md of ['home','travel']){const p=PLAN[md][1];const i=p.workout.findIndex(t=>t.id==='v32_m_press');const t=p.workout.splice(i,1)[0];t.name='⭐ OPTIONAL '+t.name;t.detail+=' Extra shoulder work after the core; not a miss.';p.bonuses.unshift(t);}
+
 // A legacy workout must remain on Sep 26 but its combined day-one bonus becomes checkable pieces.
 const legacyStart=dayMode=>[
  v33Task('v33_d1_squat','⭐ SQUATS','3 steady rounds × 12 squats.',3,'12',9),
@@ -1725,7 +1791,7 @@ function calcCals(foods){return(foods||[]).reduce((a,f)=>a+(f.calories||0),0)}
 function calcScore(){const s=loadS();let t=0;Object.keys(s).forEach(k=>{if(!k.startsWith('_')){const ds=s[k];try{const dm=ds._mode||mode;const p=getDayPlan(dm,k);t+=calcXP(ds.done||[],ds.sets||{},p,ds.extras)*10;}catch(e){}}});return t+(s._bonusXP||0);}
 function calcCoins(){const s=loadS();let c=0;Object.keys(s).forEach(k=>{if(!k.startsWith('_')){const ds=s[k];try{const dm=ds._mode||mode;const p=getDayPlan(dm,k);getAllT(p).forEach(t=>{if((ds.done||[]).includes(t.id))c++;});}catch(e){}}});return c+(s._totalCoins||0);}
 function calcLives(){const today=new Date();today.setHours(0,0,0,0);const s=loadS();const questStart=s._qs?new Date(s._qs+'T12:00:00'):today;questStart.setHours(0,0,0,0);let missed=0;for(let i=1;i<=7;i++){const d=new Date(today);d.setDate(today.getDate()-i);if(d<questStart)continue;const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=getDayPlan(dm,k);if(p.type==='rest'||d.getDay()===6)continue;if(calcPct(ds.done||[],p,ds)<30)missed++;}return Math.max(1,3-Math.floor(missed/2));}
-function calcStreak(){const today=new Date();today.setHours(0,0,0,0);const s=loadS();const questStart=s._qs?new Date(s._qs+'T12:00:00'):today;questStart.setHours(0,0,0,0);let streak=0;for(let i=0;i<90;i++){const d=new Date(today);d.setDate(today.getDate()-i);if(d<questStart)break;const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=getDayPlan(dm,k);if(p.type==='rest'||d.getDay()===6){streak++;continue;}if(calcPct(ds.done||[],p,ds)>=80)streak++;else break;}return streak;}
+function calcStreak(){const today=new Date();today.setHours(0,0,0,0);const s=loadS();const questStart=s._qs?new Date(s._qs+'T12:00:00'):today;questStart.setHours(0,0,0,0);let streak=0;for(let i=0;i<90;i++){const d=new Date(today);d.setDate(today.getDate()-i);if(d<questStart)break;const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=getDayPlan(dm,k);if(p.type==='rest'||d.getDay()===6){streak++;continue;}if(calcPct(ds.done||[],p,ds)>=80)streak++;else if(i===0)continue;else break;}return streak;}
 function getWeekPct(w){const s=loadS();if(!s._qs||w>getQW()||w<1)return 0;const start=new Date(s._qs+'T12:00:00');let tot=0,comp=0;for(let i=0;i<7;i++){const d=new Date(start);d.setDate(start.getDate()+(w-1)*7+i);const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=getDayPlan(dm,k);if(d.getDay()===6&&k!=='2026-09-26')continue;const ct=getCoreT(p).filter(t=>!Array.isArray(ds._express)||ds._express.includes(t.id));tot+=ct.length;comp+=ct.filter(t=>(ds.done||[]).includes(t.id)).length;}return tot>0?Math.round(comp/tot*100):0;}
 function getPowerPct(){const today=new Date();today.setHours(0,0,0,0);let done=0,total=0;for(let i=0;i<7;i++){const d=new Date(today);d.setDate(today.getDate()-today.getDay()+i);if(d>today)break;const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=getDayPlan(dm,k);if(p.type==='rest'||d.getDay()===6)continue;const ct=getCoreT(p);total+=ct.length;done+=ct.filter(t=>(ds.done||[]).includes(t.id)).length;}return total>0?Math.round(done/total*100):0;}
 function checkPause(){const today=new Date();today.setHours(0,0,0,0);const s=loadS();const questStart=s._qs?new Date(s._qs+'T12:00:00'):today;questStart.setHours(0,0,0,0);let missed=0;const d=new Date(questStart);while(d<today){const k=dKey(d);const ds=getDS(k);const dm=ds._mode||mode;const p=getDayPlan(dm,k);if(p.type!=='rest'&&d.getDay()!==6&&calcPct(ds.done||[],p,ds)<50)missed++;d.setDate(d.getDate()+1);}return missed;}
@@ -2412,7 +2478,7 @@ function renderDay(){
   document.getElementById('daySubTitle').innerHTML=p.label+modeTag;
   const pct=calcPct(done,p,ds);const xp=calcXP(done,sets,p,ds.extras);
   document.getElementById('smcPct').textContent=pct+'%';document.getElementById('smcXp').textContent=xp;
-  document.getElementById('smcStreak').textContent=calcStreak()+'🔥';document.getElementById('smcProt').textContent=(calcProt(ds.foods)+calcSuppProt(key))+'g';
+  document.getElementById('smcStreak').textContent=calcStreak()+'🔥';document.getElementById('streakHeroCount').textContent=calcStreak();document.getElementById('smcProt').textContent=(calcProt(ds.foods)+calcSuppProt(key))+'g';
   const today=new Date();today.setHours(0,0,0,0);let wxp=0;
   const viewedWeekStart=new Date(currentDate);viewedWeekStart.setDate(currentDate.getDate()-currentDate.getDay());
   for(let i=0;i<7;i++){const d=new Date(viewedWeekStart);d.setDate(viewedWeekStart.getDate()+i);const kk=dKey(d);const dd=getDS(kk);const dm=getDayMode(kk);wxp+=calcXP(dd.done||[],dd.sets||{},getDayPlan(dm,kk),dd.extras);}
@@ -4299,7 +4365,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=35;
+const APP_VERSION=36;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
@@ -4453,7 +4519,7 @@ window.HOWTO_CUES={
   PULLUPSETS:['Hang with an active shoulder and secure grip.','Pull elbows to ribs, chin over bar, descend slowly.','Feel lats; stop before form breaks.','Do not swing or grind to failure.'],
   HIGHINTENSITYINTERVALFINISHER:['Set an open floor area; stand with knees soft.','For each burpee, put hands down, step or hop feet back, then return to standing.','Feel whole-body conditioning, not a low-back pinch.','Do not rush broken reps or continue if form fails.']
 };
-window.howtoKey=function(raw){let k=cueKey(raw).replace(/^OPTIONAL/,'');if(k==='2EASYPULLUPSETS')return 'PULLUPSETS';if(k.includes('ABWHEEL'))return 'ABWHEEL';if(k.includes('PRONEYTW'))return 'PRONEYTW';if(k.includes('SEATEDVTUCKS'))return k.includes('SUITCASES')?'SEATEDVTUCKSSUITCASES':'SEATEDVTUCKS';if(k.includes('PULLUPSETS'))return 'PULLUPSETS';if(k.includes('HOLLOW'))return 'HOLLOWHOLD';if(k.includes('PLANK')&&k.includes('SIDE'))return 'SIDEPLANK';if(k.includes('PLANK'))return 'PLANKHOLD';if(k.includes('ROPE')&&k.includes('EASY'))return k.includes('SHADOW')?'EASYSHADOWROPE':'EASYJUMPROPE';return k;};
+window.howtoKey=function(raw){let k=cueKey(raw).replace(/^OPTIONALEXTRASET/,'').replace(/^OPTIONAL/,'');if(k==='2EASYPULLUPSETS')return 'PULLUPSETS';if(k.includes('ABWHEEL'))return 'ABWHEEL';if(k.includes('PRONEYTW'))return 'PRONEYTW';if(k.includes('SEATEDVTUCKS'))return k.includes('SUITCASES')?'SEATEDVTUCKSSUITCASES':'SEATEDVTUCKS';if(k.includes('PULLUPS'))return 'PULLUPS';if(k.includes('PRONESWIMMERS'))return 'PRONESWIMMERS';if(k.includes('PULLUPSETS'))return 'PULLUPSETS';if(k.includes('HOLLOW'))return 'HOLLOWHOLD';if(k.includes('SINGLELEGKBRDL'))return 'SINGLELEGKBRDL';if(k.includes('SLOWSINGLELEGHINGE'))return 'SLOWSINGLELEGHINGE';if(k.includes('OVERHEADKBPRESS'))return 'OVERHEADKBPRESS';if(k.includes('BODYWEIGHTHIPHINGE'))return 'BODYWEIGHTHIPHINGE';if(k.includes('KETTLEBELLSWING'))return 'KETTLEBELLSWING';if(k.includes('PLANK')&&k.includes('SIDE'))return 'SIDEPLANK';if(k.includes('PLANK'))return 'PLANKHOLD';if(k.includes('ROPE')&&k.includes('EASY'))return k.includes('SHADOW')?'EASYSHADOWROPE':'EASYJUMPROPE';return k;};
 function toggleCue(el){
   const row=el.closest('.task-row');if(!row)return;
   const old=row.querySelector('.cue-box');if(old){old.remove();return;}
@@ -4462,7 +4528,7 @@ function toggleCue(el){
   const box=document.createElement('div');box.className='cue-box';
   box.onclick=function(e){e.stopPropagation();};
   const cv=document.createElement('canvas');cv.width=32;cv.height=32;cv.style.width='128px';cv.style.height='128px';
-  box.appendChild(cv);startCueDemo(cv,key);
+  box.appendChild(cv);startCueDemo(cv,howtoKey(el.getAttribute('data-tn')));
   const cap=document.createElement('div');cap.style.cssText="text-align:center;font-size:.7rem;color:#a08000;margin-bottom:3px;";cap.textContent='PAKALU ANIMATES THE MOVE: START ↔ FINISH';box.appendChild(cap);
   const txt=document.createElement('div');if(howto){txt.className='cue-guide';['SET UP','DO IT','FEEL','AVOID'].forEach((label,i)=>{const step=document.createElement('div');step.className='cue-step';const heading=document.createElement('strong');heading.textContent=label;step.appendChild(heading);step.appendChild(document.createTextNode(howto[i]));txt.appendChild(step);});}else{txt.className='cue-fallback';txt.textContent=cue;}box.appendChild(txt);
   const x=document.createElement('button');x.textContent='✕ CLOSE';x.style.cssText="display:block;margin:6px auto 0;background:#330000;border:2px solid #7a2000;color:#ff6666;font-family:'Press Start 2P',monospace;font-size:.22rem;padding:6px 12px;cursor:pointer;";x.onclick=function(e){e.stopPropagation();box.remove();};
