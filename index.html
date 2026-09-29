@@ -1729,6 +1729,11 @@ for(const md of ['home','travel'])for(let day=0;day<=6;day++){
     }
   }
 }
+// V41: bonus status already lives in the section; omit redundant OPTIONAL from titles.
+// Keep IDs, details, XP, and checkoff state unchanged.
+for(const md of ['home','travel'])for(let day=0;day<=6;day++){
+  for(const t of PLAN[md][day].bonuses||[])t.name=t.name.replace(/^(⭐\s*)?OPTIONAL\s+/i,(_,star)=>(star||''));
+}
 // A legacy workout must remain on Sep 26 but its combined day-one bonus becomes checkable pieces.
 const legacyStart=dayMode=>[
  v33Task('v33_d1_squat','⭐ SQUATS','3 steady rounds × 12 squats.',3,'12',9),
@@ -2597,7 +2602,7 @@ function renderDay(){
     <div class="rest-msg">REST DAY, PAKALU.<br>RECOVERY IS TRAINING.<br>HIT YOUR SUPPLEMENTS & EAT 160g PROTEIN.<br>THE PRINCESS IS STILL WAITING. ♥<br><br><span style="font-size:0.5rem;color:#ffff44">★ DID YOU KNOW? ★</span><br>Mario never skipped rest day either.<br>That's why he always saved the princess.<br><br><span style="font-size:0.4rem;color:#88aaff">★ FUN FACT ★</span><br>Your muscles actually GROW on rest days,<br>not during workouts. Today is doing work.</div>`;
     rb.appendChild(createZzzEasterEgg());
     cont.appendChild(rb);
-    if(p.bonuses&&p.bonuses.length)cont.appendChild(makeSection('⭐ OPTIONAL BONUS TASKS','gold',p.bonuses,done,sets,true));
+    if(p.bonuses&&p.bonuses.length)cont.appendChild(makeSection('⭐ BONUS TASKS','gold',p.bonuses,done,sets,true));
     cont.appendChild(makeExtraSection(key));
   }else{
     if(p.workout&&p.workout.length){const _wl=ds._express;cont.appendChild(makeSection(Array.isArray(_wl)?'⚡ EXPRESS DAY — 20-MIN FLOOR':'⚡ WORKOUT','red',Array.isArray(_wl)?p.workout.filter(t=>_wl.includes(t.id)):p.workout,done,sets,false));}
@@ -4412,7 +4417,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=40;
+const APP_VERSION=41;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
