@@ -565,6 +565,14 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
 
 .bg-coin{position:fixed;font-size:.9rem;animation:bgCoin linear infinite;opacity:.12;pointer-events:none;z-index:2;}
 @keyframes bgCoin{0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)}}
+
+/* Read-only daily food record: compact, legible, no entry controls. */
+.food-ledger-items{display:flex;flex-direction:column;gap:4px;}
+.food-ledger-row{background:#101010;border:2px solid #3b2330;padding:8px 10px;display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap;}
+.food-ledger-name{font-size:clamp(.28rem,.65vw,.42rem);line-height:1.6;color:#f4e8e8;min-width:0;overflow-wrap:anywhere;}
+.food-ledger-macros{font:clamp(.8rem,1.7vw,1rem) 'VT323',monospace;color:#ffcf8b;white-space:normal;}
+.food-ledger-note,.food-ledger-empty{font:clamp(.85rem,1.6vw,1rem) 'VT323',monospace;color:#aaa;line-height:1.3;padding-top:7px;}
+@media(max-width:600px){.food-ledger-row{display:block}.food-ledger-macros{margin-top:3px}.food-ledger-name{font-size:.36rem}}
 </style>
 <style>
 /* mobile tap-target pass - sizing only, no visual redesign */
@@ -881,11 +889,9 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
     <div class="smc"><span class="smc-l">XP</span><span class="smc-v" id="smcXp">0</span></div>
     <div class="smc"><span class="smc-l">STREAK</span><span class="smc-v" id="smcStreak">0🔥</span></div>
     <div class="smc"><span class="smc-l">WEEK XP</span><span class="smc-v" id="smcWkXp">0</span></div>
-    <div class="smc"><span class="smc-l">PROTEIN</span><span class="smc-v" id="smcProt">0g</span></div>
   </div>
   <div class="prog-panel">
     <div class="prog-row"><div class="prog-lbl">DAY CLEAR</div><div class="prog-out"><div class="prog-in grn" id="pgDay" style="width:0%"></div></div><div class="prog-pct" id="pgDayP">0%</div></div>
-    <div class="prog-row"><div class="prog-lbl">PROTEIN</div><div class="prog-out"><div class="prog-in rd" id="pgProt" style="width:0%"></div></div><div class="prog-pct" id="pgProtP">0g</div></div>
     <div class="prog-row"><div class="prog-lbl" id="pgWkLbl">THIS WEEK</div><div class="prog-out"><div class="prog-in gld" id="pgWk" style="width:0%"></div></div><div class="prog-pct" id="pgWkP">0%</div></div>
   </div>
   <div id="dayContent"></div>
@@ -919,51 +925,11 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
     </div>
   </div>
 
-  <div class="sec-block">
-    <div class="sec-hdr pink" onclick="toggleSec('foodSec')">
-      <span class="sec-title">🍕 FOOD LOG</span>
-      <span style="display:flex;align-items:center;gap:6px;"><span id="foodLogToggleBtn" class="mini-log-btn" style="display:none;" onclick="event.stopPropagation();toggleSec('foodLogItems')">📋 <span id="foodLogCount"></span> <span class="sec-arr" id="arr_foodLogItems" style="font-size:0.3rem;">▼</span></span><span class="sec-count" id="foodCount">0g/160g</span><span class="sec-arr" id="arr_foodSec">▼</span></span>
-    </div>
-    <div id="foodSec">
-      <div class="food-area">
-
-        <!-- SECTION 2: QUICK DRINKS + EXTRAS -->
-        <div class="food-section-lbl">⚡ QUICK ADD — DRINKS + EXTRAS</div>
-        <div id="quickAddRow" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:6px;margin-bottom:10px;"></div>
-
-        <!-- SECTION 3: LOG ANYTHING YOU ATE -->
-        <div class="food-section-lbl">🍽 ATE SOMETHING? LOG IT HERE</div>
-        <div class="food-input-row">
-          <input class="fi" id="logName" placeholder="ex: 2 eggs, grilled salmon, protein bar, bag of chips..."
-            onkeydown="if(event.key==='Enter')lookupAndLog()"
-            oninput="clearLookupResult()"/>
-          <button class="fb" id="lookupBtn" onclick="lookupAndLog()">+ LOG</button>
-        </div>
-        <div id="lookupSpinner" style="display:none;font-family:VT323,monospace;font-size:.75rem;color:#555;padding:4px 0;">▋ looking up nutrition...</div>
-        <div id="lookupResult" style="display:none;background:#0a0a0a;border:2px solid #333;padding:7px 9px;margin-top:4px;margin-bottom:4px;">
-          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap;">
-            <div style="flex:1;">
-              <div id="lookupName" style="font-size:0.28rem;color:#ddd;margin-bottom:2px;"></div>
-              <div id="lookupDetail" style="font-family:VT323,monospace;font-size:.68rem;color:#888;"></div>
-              <div id="lookupHealthBar" style="margin-top:4px;"></div>
-            </div>
-            <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-              <div style="text-align:center;">
-                <div style="font-size:0.2rem;color:#888;">PROTEIN</div>
-                <input id="lookupProt" type="number" min="0" style="width:46px;background:#111;border:2px solid #444;color:#00ff88;font-family:'Press Start 2P',monospace;font-size:0.3rem;padding:3px 4px;text-align:center;"/>
-                <div style="font-size:0.18rem;color:#555;">g</div>
-              </div>
-              <div style="display:flex;flex-direction:column;gap:3px;">
-                <button class="fb grn" onclick="confirmLog('fuel')" style="font-size:0.22rem;padding:8px 12px;">⚡ LOG IT</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-        <!-- LOG LIST -->
-        <div class="food-log-list task-list collapsed" id="foodLogItems"></div>
-      </div>
+  <div class="sec-block" id="foodLedger" aria-label="Food record">
+    <div class="sec-hdr pink"><span class="sec-title">🍽 FOOD RECORD</span><span class="sec-count" id="foodLedgerTotal">Awaiting log</span></div>
+    <div class="food-area">
+      <div id="foodLedgerItems" class="food-ledger-items" aria-live="polite"></div>
+      <div class="food-ledger-note">Text me what you ate. This record is updated from your messages; there are no food entry buttons here. Estimates are labeled, and missing macros aren't counted as zero.</div>
     </div>
   </div>
 </div>
@@ -1729,10 +1695,10 @@ for(const md of ['home','travel'])for(let day=0;day<=6;day++){
     }
   }
 }
-// V41: bonus status already lives in the section; omit redundant OPTIONAL from titles.
-// Keep IDs, details, XP, and checkoff state unchanged.
+// V42: the bonus section supplies both status and extra-set context.
+// Remove redundant title prefixes across every day/mode; preserve IDs, details, XP, checkoffs.
 for(const md of ['home','travel'])for(let day=0;day<=6;day++){
-  for(const t of PLAN[md][day].bonuses||[])t.name=t.name.replace(/^(⭐\s*)?OPTIONAL\s+/i,(_,star)=>(star||''));
+  for(const t of PLAN[md][day].bonuses||[])t.name=t.name.replace(/^(⭐\s*)?(?:OPTIONAL\s+)?(?:EXTRA SET:\s*)?/i,(_,star)=>(star||''));
 }
 // A legacy workout must remain on Sep 26 but its combined day-one bonus becomes checkable pieces.
 const legacyStart=dayMode=>[
@@ -1983,8 +1949,7 @@ function renderAll(){
   renderPowerupBar();
   renderWeekDaysRow();
   renderDay();
-  renderFoodLog();
-  renderProtBar();
+  renderFoodLedger();
   drawSMO(getPowerPct(),calcLives());
   checkPauseBanner();
   checkWeeklyRecap();
@@ -2531,14 +2496,12 @@ function renderDay(){
   document.getElementById('daySubTitle').innerHTML=p.label+modeTag;
   const pct=calcPct(done,p,ds);const xp=calcXP(done,sets,p,ds.extras);
   document.getElementById('smcPct').textContent=pct+'%';document.getElementById('smcXp').textContent=xp;
-  document.getElementById('smcStreak').textContent=calcStreak()+'🔥';document.getElementById('streakHeroCount').textContent=calcStreak();document.getElementById('smcProt').textContent=(calcProt(ds.foods)+calcSuppProt(key))+'g';
+  document.getElementById('smcStreak').textContent=calcStreak()+'🔥';document.getElementById('streakHeroCount').textContent=calcStreak();
   const today=new Date();today.setHours(0,0,0,0);let wxp=0;
   const viewedWeekStart=new Date(currentDate);viewedWeekStart.setDate(currentDate.getDate()-currentDate.getDay());
   for(let i=0;i<7;i++){const d=new Date(viewedWeekStart);d.setDate(viewedWeekStart.getDate()+i);const kk=dKey(d);const dd=getDS(kk);const dm=getDayMode(kk);wxp+=calcXP(dd.done||[],dd.sets||{},getDayPlan(dm,kk),dd.extras);}
   document.getElementById('smcWkXp').textContent=wxp;
   document.getElementById('pgDay').style.width=pct+'%';document.getElementById('pgDayP').textContent=pct+'%';
-  const prot=calcProt(ds.foods)+calcSuppProt(key);const pp=Math.min(100,Math.round(prot/160*100));
-  document.getElementById('pgProt').style.width=pp+'%';document.getElementById('pgProtP').textContent=prot+'g';
   let wt=0,wc=0;for(let i=0;i<7;i++){const d=new Date(viewedWeekStart);d.setDate(viewedWeekStart.getDate()+i);const dk=dKey(d);const dm=getDayMode(dk);const pl=getDayPlan(dm,dk);if(d.getDay()===6&&dk!=='2026-09-26')continue;const ct=getCoreT(pl).filter(t=>{const _e=getDS(dk)._express;return!Array.isArray(_e)||_e.includes(t.id);});const dd=getDS(dk).done||[];wt+=ct.length;wc+=ct.filter(t=>dd.includes(t.id)).length;}
   const wpct=wt>0?Math.round(wc/wt*100):0;document.getElementById('pgWk').style.width=wpct+'%';document.getElementById('pgWkP').textContent=wpct+'%';
   const todayStart=new Date();todayStart.setHours(0,0,0,0);
@@ -2609,7 +2572,7 @@ function renderDay(){
     if(p.bonuses&&p.bonuses.length) cont.appendChild(makeSection('⭐ BONUS TASKS','gold',p.bonuses,done,sets,true));
     cont.appendChild(makeExtraSection(key));
   }
-  cont.appendChild(makeSuppSection(p.supps,done));
+  cont.appendChild(makeCreatineSection(done));
   cont.appendChild(makeCompletedLog(key,p,done,sets));
 }
 
@@ -2930,123 +2893,10 @@ function pickDrinkForSupp(suppId, drinkName, drinkProtein){
   renderAll();
 }
 
-function makeSuppSection(supps, done){
-  const key=dKey(currentDate);
-  const suppDone=getSuppDone(key);
-  const wrap=document.createElement('div');
-
-  function rowHTML(t){
-    const isShake=t.type==='shake1'||t.type==='shake2';
-    const isChomps=t.type==='chomps';
-
-    // ── CHOMPS — one flex row, tap a dot per stick ──
-    if(isChomps){
-      const groups=[
-        {label:'BEEF · 10g each',ids:['daily_s2','daily_s2b'],p:10,name:'Chomps Beef'},
-        {label:'CHICKEN · 12g each',ids:['daily_s2c','daily_s2d'],p:12,name:'Chomps Chicken'}
-      ];
-      const cnt=groups.reduce((n,g)=>n+g.ids.filter(cid=>suppDone[cid]&&suppDone[cid].checked).length,0);
-      const tracks=groups.map(g=>{
-        const dots=g.ids.map(cid=>{const c=!!(suppDone[cid]&&suppDone[cid].checked);return`<div class="set-dot${c?' done-set':''}" onclick="event.stopPropagation();toggleSupp('${cid}',${g.p},'${g.name}')">${c?'✓':''}</div>`;}).join('');
-        return`<div class="set-tracker" style="flex:1;min-width:140px;justify-content:center;margin-top:4px;">${dots}<span class="set-label">${g.label}</span></div>`;
-      }).join('');
-      return`<div class="supp-row${cnt>0?' done':''}" id="tr_${t.id}">
-        <span class="supp-icon">🥩</span>
-        <div class="supp-info" style="flex:1;">
-          <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;">
-            <div class="supp-name">CHOMPS</div>
-            <div class="supp-detail" style="margin:0;">flex slot · tap a dot per stick</div>
-            <div class="supp-detail" style="margin:0;margin-left:auto;color:#888;">${cnt} stick${cnt!==1?'s':''} today</div>
-          </div>
-          <div style="display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-between;">${tracks}</div>
-        </div>
-      </div>`;
-    }
-
-    const sd=suppDone[t.id];
-    const isChecked=!!(sd?.checked);
-    const pickedName=sd?.name||'';
-    const pickedProt=sd?.protein||0;
-
-    // ── CREATINE — its own big daily tap ──
-    if(t.id==='daily_creatine'){
-      return`<div class="supp-row${isChecked?' done':''}" id="tr_${t.id}" onclick="toggleSupp('${t.id}',0,'Creatine')" style="cursor:pointer;border-color:${isChecked?'':'#886600'};background:${isChecked?'':'#141000'};">
-        <span class="supp-icon">💊</span>
-        <div class="supp-info">
-          <div class="supp-name" style="color:#ffcc44;">CREATINE</div>
-          <div class="supp-detail">${isChecked?'<span style="color:#00cc44;">✓ taken today</span>':'5g · every single day — tap when taken'}</div>
-        </div>
-        <div class="supp-status"><div class="supp-check" style="${isChecked?'':'border-color:#ffcc44;color:#ffcc44;'}">${isChecked?'✓':'<span style="font-size:.6rem;">TAP</span>'}</div></div>
-      </div>`;
-    }
-
-    // ── SHAKE — done state ──
-    if(isChecked){
-      return`<div class="supp-row done" id="tr_${t.id}" onclick="toggleSupp('${t.id}',${pickedProt},'${pickedName}')" style="cursor:pointer;" title="Tap to uncheck">
-        <span class="supp-icon">${t.icon}</span>
-        <div class="supp-info">
-          <div class="supp-name">${t.type==='shake1'?t.name.replace(/\s*\+\s*CREATINE/i,''):t.name}</div>
-          <div class="supp-detail"><span style="color:#00cc44;">✓ ${pickedName||'done'}${pickedProt?` · +${pickedProt}g`:''}</span></div>
-        </div>
-        <div class="supp-status"><div class="supp-check">✓</div></div>
-      </div>`;
-    }
-
-    // ── SHAKE — pick a drink ──
-    const optionsHTML=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;padding:6px;">`+
-      DRINK_OPTIONS.map(opt=>`
-        <div onclick="pickDrinkForSupp('${t.id}','${opt.name}',${opt.protein})"
-          style="background:#0a0a1a;border:2px solid #1a1a44;padding:8px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;">
-          <span style="font-size:1.6rem;">${opt.icon}</span>
-          <div style="font-size:0.38rem;color:#ccc;line-height:1.4;">${opt.name}</div>
-          <div style="font-family:VT323,monospace;font-size:.95rem;color:#555;">${opt.detail}</div>
-          <div style="font-size:0.44rem;color:#00ff88;font-weight:bold;margin-top:2px;">+${opt.protein}g</div>
-        </div>`).join('')+
-      `</div>`;
-    const shakeName=t.type==='shake1'?t.name.replace(/\s*\+\s*CREATINE/i,''):t.name;
-    const shakeDetail=t.type==='shake1'?'Pick your drink':t.detail;
-    return`<div class="supp-row" id="tr_${t.id}" style="flex-direction:column;align-items:stretch;padding:0;">
-      <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-bottom:1px solid #0d0d22;">
-        <span class="supp-icon">${t.icon}</span>
-        <div class="supp-info">
-          <div class="supp-name">${shakeName}</div>
-          <div class="supp-detail">${shakeDetail}</div>
-        </div>
-      </div>
-      ${optionsHTML}
-    </div>`;
-  }
-
-  function suppBlock(title,hdrCls,list,required){
-    const sid='ss_'+Math.random().toString(36).slice(2,7);
-    const b=document.createElement('div');b.className='sec-block';
-    const rowsHTML=list.map(rowHTML).join('');
-    let countHtml='';
-    if(required){
-      const dc=list.filter(t=>done.includes(t.id)).length;
-      countHtml=`<span class="sec-count">${dc}/${list.length}</span>`;
-    }else{
-      const taps=list.reduce((n,t)=>{
-        if(t.type==='chomps')return n+['daily_s2','daily_s2b','daily_s2c','daily_s2d'].filter(cid=>suppDone[cid]?.checked).length;
-        return n+(suppDone[t.id]?.checked?1:0);
-      },0);
-      if(taps)countHtml=`<span class="sec-count" style="color:#666;">${taps} today</span>`;
-    }
-    b.innerHTML=`<div class="sec-hdr ${hdrCls}" onclick="toggleSec('${sid}')">
-      <span class="sec-title">${title}</span>
-      <span style="display:flex;align-items:center;gap:4px;">${countHtml}<span class="sec-arr" id="arr_${sid}">▼</span></span>
-    </div>
-    <div id="${sid}"><div class="supp-grid">${rowsHTML}</div></div>`;
-    return b;
-  }
-
-  // Shake #1 + creatine = locked non-negotiables. Shake #2 + Chomps = flex backup taps.
-  const core=supps.filter(t=>t.type==='shake1'||t.id==='daily_creatine');
-  if(!core.some(t=>t.id==='daily_creatine'))core.push({id:'daily_creatine',icon:'💊',name:'CREATINE',detail:'5g daily',protein:0,xp:0});
-  const flex=supps.filter(t=>t.type==='shake2'||t.type==='chomps');
-  if(core.length)wrap.appendChild(suppBlock('🧠 DAILY NON-NEGOTIABLES','blue',core,true));
-  if(flex.length)wrap.appendChild(suppBlock('🥤 FLEX FUEL — OPTIONAL BACKUP','gold',flex,false));
-  return wrap;
+function makeCreatineSection(done){
+  const b=document.createElement('div');b.className='sec-block';
+  b.innerHTML=`<div class="sec-hdr blue" onclick="toggleSec('creatineSec')"><span class="sec-title">💊 CREATINE · 5g DAILY</span><span class="sec-count">${done.includes('daily_creatine')?'✓':'NOT YET'}</span><span class="sec-arr" id="arr_creatineSec">▼</span></div><div id="creatineSec"><div class="supp-grid"><div class="supp-row${done.includes('daily_creatine')?' done':''}" onclick="toggleSupp('daily_creatine',0,'Creatine')" style="cursor:pointer;"><span class="supp-icon">💊</span><div class="supp-info"><div class="supp-name">CREATINE</div><div class="supp-detail">${done.includes('daily_creatine')?'✓ taken today':'5g daily · tap when taken'}</div></div><div class="supp-check">${done.includes('daily_creatine')?'✓':'TAP'}</div></div></div></div>`;
+  return b;
 }
 
 function renderFoodLog(){
@@ -3086,6 +2936,36 @@ function renderFoodLog(){
 
   renderProtBar();
   renderQuickAdd();
+}
+
+// Read-only food ledger. Preserve historical meals and legacy supplement taps in state;
+// show a legacy supplement only when a matching item was not already logged as food.
+function renderFoodLedger(){
+  const key=dKey(currentDate),ds=getDS(key),list=document.getElementById('foodLedgerItems');
+  if(!list)return;
+  const foods=[...(ds.foods||[])];
+  const supplementRows=Object.entries(ds.suppDone||{}).filter(([id,v])=>id!=='daily_creatine'&&v?.checked&&v.protein>0);
+  for(const [id,v] of supplementRows){
+    const name=v.name||'Supplement';
+    if(foods.some(f=>f.protein===v.protein&&new RegExp(name.split(/\s+/)[0],'i').test(f.name||'')))continue;
+    foods.push({name:name+' (older app checkoff)',protein:v.protein,detail:'Calories and fat not logged'});
+  }
+  list.replaceChildren();
+  if(!foods.length){const p=document.createElement('p');p.className='food-ledger-empty';p.textContent='Nothing logged for this day yet. Text me what you ate.';list.append(p);}
+  for(const f of foods){
+    const row=document.createElement('div');row.className='food-ledger-row';
+    const title=document.createElement('div');title.className='food-ledger-name';title.textContent=f.name||'Food item';
+    const macros=document.createElement('div');macros.className='food-ledger-macros';
+    const c=Number.isFinite(+f.calories)&&+f.calories>0?'~'+f.calories+' cal':'cal not logged';
+    const fat=f.fat!=null&&Number.isFinite(+f.fat)&&+f.fat>=0?'~'+f.fat+'g fat':'fat not logged';
+    macros.textContent=`${f.protein||0}g protein · ${c} · ${fat}`;
+    row.append(title,macros);list.append(row);
+  }
+  const p=foods.reduce((n,f)=>n+(+f.protein||0),0),knownCals=foods.filter(f=>+f.calories>0),knownFat=foods.filter(f=>f.fat!=null&&Number.isFinite(+f.fat)&&+f.fat>=0);
+  const c=knownCals.reduce((n,f)=>n+(+f.calories||0),0),fat=knownFat.reduce((n,f)=>n+(+f.fat||0),0);
+  const calLabel=ds.foodTotals?.calories!=null?`~${ds.foodTotals.calories} cal`:foods.length&&knownCals.length===foods.length?`~${c} cal`:knownCals.length?`≥${c} cal (partial)`:'cal not totaled';
+  const fatLabel=ds.foodTotals?.fat!=null?`~${ds.foodTotals.fat}g fat`:foods.length&&knownFat.length===foods.length?`~${fat}g fat`:knownFat.length?`≥${fat}g fat (partial)`:'fat not totaled';
+  document.getElementById('foodLedgerTotal').textContent=`${p}g protein · ${calLabel} · ${fatLabel}`;
 }
 
 // ================================================================
@@ -4328,7 +4208,7 @@ const _s=loadS();if(!_s._qs){_s._qs=dKey(new Date());saveS(_s);}
   });
   saveS(s);
 })();
-renderAll();renderQuickAdd();
+renderAll();
 // Sync mode buttons to restored mode
 (function(){const hb=document.getElementById('homeBtn');const tb=document.getElementById('travelBtn');if(hb&&tb){hb.className='mode-btn'+(mode==='home'?' active':'');tb.className='mode-btn'+(mode==='travel'?' active':'');}})();
 setupHiddenBlocks();
@@ -4417,7 +4297,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=41;
+const APP_VERSION=42;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
