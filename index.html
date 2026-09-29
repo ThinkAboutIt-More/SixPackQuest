@@ -2963,8 +2963,9 @@ function renderFoodLedger(){
   }
   const p=foods.reduce((n,f)=>n+(+f.protein||0),0),knownCals=foods.filter(f=>+f.calories>0),knownFat=foods.filter(f=>f.fat!=null&&Number.isFinite(+f.fat)&&+f.fat>=0);
   const c=knownCals.reduce((n,f)=>n+(+f.calories||0),0),fat=knownFat.reduce((n,f)=>n+(+f.fat||0),0);
-  const calLabel=ds.foodTotals?.calories!=null?`~${ds.foodTotals.calories} cal`:foods.length&&knownCals.length===foods.length?`~${c} cal`:knownCals.length?`≥${c} cal (partial)`:'cal not totaled';
-  const fatLabel=ds.foodTotals?.fat!=null?`~${ds.foodTotals.fat}g fat`:foods.length&&knownFat.length===foods.length?`~${fat}g fat`:knownFat.length?`≥${fat}g fat (partial)`:'fat not totaled';
+  const totalsCurrent=ds.foodTotals?.itemCount===foods.length;
+  const calLabel=totalsCurrent&&ds.foodTotals?.calories!=null?`~${ds.foodTotals.calories} cal (est)`:foods.length&&knownCals.length===foods.length?`~${c} cal`:knownCals.length?`≥${c} cal (partial)`:'cal not totaled';
+  const fatLabel=totalsCurrent&&ds.foodTotals?.fat!=null?`~${ds.foodTotals.fat}g fat (est)`:foods.length&&knownFat.length===foods.length?`~${fat}g fat`:knownFat.length?`≥${fat}g fat (partial)`:'fat not totaled';
   document.getElementById('foodLedgerTotal').textContent=`${p}g protein · ${calLabel} · ${fatLabel}`;
 }
 
