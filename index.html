@@ -929,7 +929,7 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
     <div class="sec-hdr pink"><span class="sec-title">🍽 FOOD RECORD</span><span class="sec-count" id="foodLedgerTotal">Awaiting log</span></div>
     <div class="food-area">
       <div id="foodLedgerItems" class="food-ledger-items" aria-live="polite"></div>
-      <div class="food-ledger-note">Text me what you ate. This record is updated from your messages; there are no food entry buttons here. Estimates are labeled, and missing macros aren't counted as zero.</div>
+      <div class="food-ledger-note">Text me what you ate - this updates from your messages.</div>
     </div>
   </div>
 </div>
@@ -2954,11 +2954,17 @@ function renderFoodLedger(){
   if(!foods.length){const p=document.createElement('p');p.className='food-ledger-empty';p.textContent='Nothing logged for this day yet. Text me what you ate.';list.append(p);}
   for(const f of foods){
     const row=document.createElement('div');row.className='food-ledger-row';
-    const title=document.createElement('div');title.className='food-ledger-name';title.textContent=f.name||'Food item';
+    const title=document.createElement('div');title.className='food-ledger-name';
+    // Keep source notes and estimates in state; only shorten what is shown in the ledger.
+    let displayName=(f.name||'Food item').replace(/\s*\([^)]*\)/g,'').trim();
+    if(/^In-N-Out 4x4 Protein Style,/i.test(displayName))displayName='In-N-Out 4x4 Protein Style';
+    displayName=displayName.replace(/\s+at bar$/i,'').trim();
+    title.textContent=displayName;
     const macros=document.createElement('div');macros.className='food-ledger-macros';
-    const c=Number.isFinite(+f.calories)&&+f.calories>0?'~'+f.calories+' cal':'cal not logged';
-    const fat=f.fat!=null&&Number.isFinite(+f.fat)&&+f.fat>=0?'~'+f.fat+'g fat':'fat not logged';
-    macros.textContent=`${f.protein||0}g protein · ${c} · ${fat}`;
+    const parts=[`${f.protein||0}g protein`];
+    if(Number.isFinite(+f.calories)&&+f.calories>0)parts.push(`~${f.calories} cal`);
+    if(f.fat!=null&&Number.isFinite(+f.fat)&&+f.fat>=0)parts.push(`~${f.fat}g fat`);
+    macros.textContent=parts.join(' · ');
     row.append(title,macros);list.append(row);
   }
   const p=foods.reduce((n,f)=>n+(+f.protein||0),0),knownCals=foods.filter(f=>+f.calories>0),knownFat=foods.filter(f=>f.fat!=null&&Number.isFinite(+f.fat)&&+f.fat>=0);
@@ -4298,7 +4304,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=42;
+const APP_VERSION=43;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
