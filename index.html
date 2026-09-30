@@ -896,35 +896,6 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
   </div>
   <div id="dayContent"></div>
 
-  <!-- HYDRATION METER -->
-  <div id="hydrationBar" style="margin-bottom:7px;background:#000;border:3px solid #0066cc;padding:10px 12px;">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-      <span style="font-family:'Press Start 2P',monospace;font-size:clamp(0.22rem,0.55vw,0.55rem);color:#44aaff;">💧 HYDRATION</span>
-      <span id="hydTotal" style="font-family:'VT323',monospace;font-size:clamp(.75rem,1.3vw,1.1rem);color:#44aaff;">0oz / 64oz</span>
-    </div>
-    <div style="position:relative;height:16px;background:#001122;border:2px solid #003366;overflow:hidden;margin-bottom:6px;">
-      <div id="hydFill" style="height:100%;width:0%;transition:width .4s cubic-bezier(.4,0,.2,1);background:linear-gradient(90deg,#0044aa,#00aaff);position:relative;">
-        <div style="position:absolute;right:0;top:0;bottom:0;width:3px;background:rgba(255,255,255,0.5);"></div>
-      </div>
-      <!-- 64oz halfway marker -->
-      <div style="position:absolute;left:50%;top:0;bottom:0;width:2px;background:#0066cc;opacity:0.6;"></div>
-      <div style="position:absolute;left:50%;top:-13px;transform:translateX(-50%);font-family:'VT323',monospace;font-size:.5rem;color:#0066cc;">32oz</div>
-    </div>
-    <!-- Quick add buttons -->
-    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px;">
-      <button onclick="addWaterToday(19.2)" style="flex:1;background:#001a3a;border:3px solid #2288ff;color:#66bbff;font-family:'Press Start 2P',monospace;font-size:clamp(0.2rem,0.5vw,0.42rem);padding:5px 4px;cursor:pointer;">+19.2oz<br><span style="font-family:'VT323',monospace;font-size:.65rem;color:#4499dd;">liquid death</span></button>
-      <button onclick="addWaterToday(24)" style="flex:1;background:#001133;border:2px solid #0066cc;color:#44aaff;font-family:'Press Start 2P',monospace;font-size:clamp(0.2rem,0.5vw,0.42rem);padding:5px 4px;cursor:pointer;">+24oz<br><span style="font-family:'VT323',monospace;font-size:.65rem;color:#336699;">home cup</span></button>
-      <button onclick="addWaterToday(25.36)" style="flex:1;background:#001133;border:2px solid #0066cc;color:#44aaff;font-family:'Press Start 2P',monospace;font-size:clamp(0.2rem,0.5vw,0.42rem);padding:5px 4px;cursor:pointer;">+25.4oz<br><span style="font-family:'VT323',monospace;font-size:.65rem;color:#336699;">evian</span></button>
-      <div id="hydFreqRow" style="display:contents;"></div>
-    </div>
-    <!-- Custom amount -->
-    <div style="display:flex;gap:4px;align-items:center;">
-      <input id="hydCustom" type="number" min="1" max="200" placeholder="custom oz" style="flex:1;background:#001122;border:2px solid #003366;color:#44aaff;font-family:'Press Start 2P',monospace;font-size:clamp(0.16rem,0.4vw,0.32rem);padding:5px 6px;outline:none;" onkeydown="if(event.key==='Enter')addCustomWater()"/>
-      <button onclick="addCustomWater()" style="background:#0044aa;border:none;border-bottom:3px solid #002266;color:#fff;font-family:'Press Start 2P',monospace;font-size:clamp(0.16rem,0.4vw,0.3rem);padding:5px 8px;cursor:pointer;">+ LOG</button>
-      <button onclick="resetWaterToday()" style="background:#110000;border:2px solid #330000;color:#553333;font-family:'Press Start 2P',monospace;font-size:clamp(0.12rem,0.35vw,0.26rem);padding:5px 6px;cursor:pointer;" title="Reset today's water">↺</button>
-    </div>
-  </div>
-
   <div class="sec-block" id="foodLedger" aria-label="Food record">
     <div class="sec-hdr pink"><span class="sec-title">🍽 FOOD RECORD</span><span class="sec-count" id="foodLedgerTotal">Awaiting log</span></div>
     <div class="food-area">
@@ -2572,7 +2543,7 @@ function renderDay(){
     if(p.bonuses&&p.bonuses.length) cont.appendChild(makeSection('⭐ BONUS TASKS','gold',p.bonuses,done,sets,true));
     cont.appendChild(makeExtraSection(key));
   }
-  cont.appendChild(makeCreatineSection(done));
+  // Creatine and water are text reminders only; keep historical state.
   cont.appendChild(makeCompletedLog(key,p,done,sets));
 }
 
@@ -4304,7 +4275,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=44;
+const APP_VERSION=45;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
