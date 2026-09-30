@@ -142,7 +142,7 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
 .streak-hero-main{font-family:'Press Start 2P',monospace;display:flex;align-items:baseline;justify-content:center;gap:12px;margin:5px 0}
 #streakHeroCount{font-size:clamp(1.25rem,4vw,2.1rem);color:#fff3ae;text-shadow:3px 3px 0 #b54e00}
 .streak-hero-unit{font-size:clamp(.31rem,1vw,.55rem);color:#ffcf68;line-height:1.7}
-.streak-hero-note{font-family:'VT323',monospace;color:#e8b989;font-size:clamp(.76rem,1.4vw,1.02rem);line-height:1.2}
+.week-complete-stat{border-top:2px solid #563000;margin-top:12px;padding-top:10px} #weekHeroCount{font-size:clamp(1.3rem,4vw,2rem);color:#ffcf68} .streak-hero-note{font-family:'VT323',monospace;color:#e8b989;font-size:clamp(.76rem,1.4vw,1.02rem);line-height:1.2}
 /* ===== MAIN ===== */
 .main{position:relative;z-index:10;max-width:1100px;margin:0 auto;padding:0 20px 80px;}
 
@@ -883,7 +883,7 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
     <button class="today-btn" onclick="goToday()">▶ TODAY ◀</button>
     <button class="today-btn" id="expressBtn" onclick="toggleExpress()" style="margin-left:6px;">⏱ 20-MIN DAY</button>
   </div>
-  <div class="streak-hero" role="status" aria-live="polite"><div class="streak-hero-label">🔥 QUEST STREAK</div><div class="streak-hero-main"><span id="streakHeroCount">0</span> <span class="streak-hero-unit">DAYS IN A ROW</span></div><div class="streak-hero-note">Planned recovery keeps the streak going.</div></div>
+  <div class="streak-hero" role="status" aria-live="polite"><div class="streak-hero-label">🔥 QUEST STREAK</div><div class="streak-hero-main"><span id="streakHeroCount">0</span> <span class="streak-hero-unit">DAYS IN A ROW</span></div><div class="streak-hero-note">Day-clear streak. Planned recovery keeps it going.</div><div class="week-complete-stat"><div class="streak-hero-label" id="weekHeroLabel">WEEK COMPLETE</div><div class="streak-hero-main"><span id="weekHeroCount">0%</span></div><div class="streak-hero-note">Required work only. Partial sets count.</div></div></div>
   <div class="stats-mini">
     <div class="smc"><span class="smc-l" id="smcPctLbl">TODAY</span><span class="smc-v" id="smcPct">0%</span></div>
     <div class="smc"><span class="smc-l">XP</span><span class="smc-v" id="smcXp">0</span></div>
@@ -2473,12 +2473,23 @@ function renderDay(){
   for(let i=0;i<7;i++){const d=new Date(viewedWeekStart);d.setDate(viewedWeekStart.getDate()+i);const kk=dKey(d);const dd=getDS(kk);const dm=getDayMode(kk);wxp+=calcXP(dd.done||[],dd.sets||{},getDayPlan(dm,kk),dd.extras);}
   document.getElementById('smcWkXp').textContent=wxp;
   document.getElementById('pgDay').style.width=pct+'%';document.getElementById('pgDayP').textContent=pct+'%';
-  let wt=0,wc=0;for(let i=0;i<7;i++){const d=new Date(viewedWeekStart);d.setDate(viewedWeekStart.getDate()+i);const dk=dKey(d);const dm=getDayMode(dk);const pl=getDayPlan(dm,dk);if(d.getDay()===6&&dk!=='2026-09-26')continue;const ct=getCoreT(pl).filter(t=>{const _e=getDS(dk)._express;return!Array.isArray(_e)||_e.includes(t.id);});const dd=getDS(dk).done||[];wt+=ct.length;wc+=ct.filter(t=>dd.includes(t.id)).length;}
-  const wpct=wt>0?Math.round(wc/wt*100):0;document.getElementById('pgWk').style.width=wpct+'%';document.getElementById('pgWkP').textContent=wpct+'%';
+  let wt=0,wc=0;const questStart=loadS()._qs;
+  for(let i=0;i<7;i++){
+    const d=new Date(viewedWeekStart);d.setDate(viewedWeekStart.getDate()+i);const dk=dKey(d);
+    if(questStart&&dk<questStart)continue;
+    const dm=getDayMode(dk),pl=getDayPlan(dm,dk),dd=getDS(dk);
+    if(pl.type==='rest'||(d.getDay()===6&&dk!=='2026-09-26'))continue;
+    const ct=getCoreT(pl).filter(t=>!Array.isArray(dd._express)||dd._express.includes(t.id));
+    wt+=ct.length;ct.forEach(t=>{if((dd.done||[]).includes(t.id))wc++;else if(t.sets>1)wc+=Math.min(1,((dd.sets||{})[t.id]||0)/t.sets);});
+  }
+  const wpct=wt>0?Math.round(wc/wt*100):0;
+  document.getElementById('pgWk').style.width=wpct+'%';document.getElementById('pgWkP').textContent=wpct+'%';
+  document.getElementById('weekHeroCount').textContent=wpct+'%';
   const todayStart=new Date();todayStart.setHours(0,0,0,0);
   const thisWeekStart=new Date(todayStart);thisWeekStart.setDate(todayStart.getDate()-todayStart.getDay());
   const diffWeeks=Math.round((viewedWeekStart-thisWeekStart)/(7*86400000));
   document.getElementById('pgWkLbl').textContent=diffWeeks===0?'THIS WEEK':diffWeeks===-1?'LAST WEEK':`${Math.abs(diffWeeks)}W AGO`;
+  document.getElementById('weekHeroLabel').textContent=(diffWeeks===0?'THIS WEEK':diffWeeks===-1?'LAST WEEK':'VIEWED WEEK')+' COMPLETE';
   const qw=getQW();
   renderHydration(key);
 
@@ -4275,7 +4286,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=45;
+const APP_VERSION=46;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
