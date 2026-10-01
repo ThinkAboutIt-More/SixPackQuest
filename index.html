@@ -143,6 +143,7 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
 #streakHeroCount{font-size:clamp(1.25rem,4vw,2.1rem);color:#fff3ae;text-shadow:3px 3px 0 #b54e00}
 .streak-hero-unit{font-size:clamp(.31rem,1vw,.55rem);color:#ffcf68;line-height:1.7}
 .week-complete-stat{border-top:2px solid #563000;margin-top:12px;padding-top:10px} #weekHeroCount{font-size:clamp(1.3rem,4vw,2rem);color:#ffcf68} .streak-hero-note{font-family:'VT323',monospace;color:#e8b989;font-size:clamp(.76rem,1.4vw,1.02rem);line-height:1.2}
+.nutrition-coach{background:#151a20;border:2px solid #465362;padding:14px;margin-bottom:16px;font-family:'VT323',monospace;font-size:20px;line-height:1.3;color:#edf2f4}.nutrition-coach h3{font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.7;color:#ffd36a;margin:3px 0 12px}.nutrition-coach p{margin:6px 0}.nutrition-coach .nutrition-note{color:#b5c2cc;font-size:17px;margin:10px 0 16px}.nutrition-trend{border-bottom:1px solid #344251;padding-bottom:4px}
 /* ===== MAIN ===== */
 .main{position:relative;z-index:10;max-width:1100px;margin:0 auto;padding:0 20px 80px;}
 
@@ -896,9 +897,38 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
   </div>
   <div id="dayContent"></div>
 
+  <div id="hydrationBar" style="margin-bottom:7px;background:#000;border:3px solid #0066cc;padding:10px 12px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+      <span style="font-family:'Press Start 2P',monospace;font-size:clamp(0.22rem,0.55vw,0.55rem);color:#44aaff;">💧 WATER TRACKER</span>
+      <span id="hydTotal" style="font-family:'VT323',monospace;font-size:clamp(.75rem,1.3vw,1.1rem);color:#44aaff;">0oz / 64oz</span>
+    </div>
+    <div style="position:relative;height:16px;background:#001122;border:2px solid #003366;overflow:hidden;margin-bottom:6px;">
+      <div id="hydFill" style="height:100%;width:0%;transition:width .4s cubic-bezier(.4,0,.2,1);background:linear-gradient(90deg,#0044aa,#00aaff);position:relative;">
+        <div style="position:absolute;right:0;top:0;bottom:0;width:3px;background:rgba(255,255,255,0.5);"></div>
+      </div>
+      <!-- 64oz halfway marker -->
+      <div style="position:absolute;left:50%;top:0;bottom:0;width:2px;background:#0066cc;opacity:0.6;"></div>
+      <div style="position:absolute;left:50%;top:-13px;transform:translateX(-50%);font-family:'VT323',monospace;font-size:.5rem;color:#0066cc;">32oz</div>
+    </div>
+    <!-- Quick add buttons -->
+    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px;">
+      <button onclick="addWaterToday(19.2)" style="flex:1;background:#001a3a;border:3px solid #2288ff;color:#66bbff;font-family:'Press Start 2P',monospace;font-size:clamp(0.2rem,0.5vw,0.42rem);padding:5px 4px;cursor:pointer;">+19.2oz<br><span style="font-family:'VT323',monospace;font-size:.65rem;color:#4499dd;">liquid death</span></button>
+      <button onclick="addWaterToday(24)" style="flex:1;background:#001133;border:2px solid #0066cc;color:#44aaff;font-family:'Press Start 2P',monospace;font-size:clamp(0.2rem,0.5vw,0.42rem);padding:5px 4px;cursor:pointer;">+24oz<br><span style="font-family:'VT323',monospace;font-size:.65rem;color:#336699;">home cup</span></button>
+      <button onclick="addWaterToday(25.36)" style="flex:1;background:#001133;border:2px solid #0066cc;color:#44aaff;font-family:'Press Start 2P',monospace;font-size:clamp(0.2rem,0.5vw,0.42rem);padding:5px 4px;cursor:pointer;">+25.4oz<br><span style="font-family:'VT323',monospace;font-size:.65rem;color:#336699;">evian</span></button>
+      <div id="hydFreqRow" style="display:contents;"></div>
+    </div>
+    <!-- Custom amount -->
+    <div style="display:flex;gap:4px;align-items:center;">
+      <input id="hydCustom" type="number" min="1" max="200" placeholder="custom oz" style="flex:1;background:#001122;border:2px solid #003366;color:#44aaff;font-family:'Press Start 2P',monospace;font-size:clamp(0.16rem,0.4vw,0.32rem);padding:5px 6px;outline:none;" onkeydown="if(event.key==='Enter')addCustomWater()"/>
+      <button onclick="addCustomWater()" style="background:#0044aa;border:none;border-bottom:3px solid #002266;color:#fff;font-family:'Press Start 2P',monospace;font-size:clamp(0.16rem,0.4vw,0.3rem);padding:5px 8px;cursor:pointer;">+ LOG</button>
+      <button onclick="resetWaterToday()" style="background:#110000;border:2px solid #330000;color:#553333;font-family:'Press Start 2P',monospace;font-size:clamp(0.12rem,0.35vw,0.26rem);padding:5px 6px;cursor:pointer;" title="Reset today's water">↺</button>
+    </div>
+  </div>
+
   <div class="sec-block" id="foodLedger" aria-label="Food record">
     <div class="sec-hdr pink"><span class="sec-title">🍽 FOOD RECORD</span><span class="sec-count" id="foodLedgerTotal">Awaiting log</span></div>
     <div class="food-area">
+      <div id="nutritionCoach" class="nutrition-coach" aria-live="polite"></div>
       <div id="foodLedgerItems" class="food-ledger-items" aria-live="polite"></div>
       <div class="food-ledger-note">Text me what you ate - this updates from your messages.</div>
     </div>
@@ -1921,6 +1951,7 @@ function renderAll(){
   renderWeekDaysRow();
   renderDay();
   renderFoodLedger();
+  renderNutritionCoach();
   drawSMO(getPowerPct(),calcLives());
   checkPauseBanner();
   checkWeeklyRecap();
@@ -2726,7 +2757,7 @@ function renderFreqWater(){
       +${oz}oz<br><span style="font-family:'VT323',monospace;font-size:.65rem;color:#336699;">${oz}oz</span>
     </button>`).join('');
 }
-function resetWaterToday(){const key=dKey(currentDate);const ds=getDS(key);ds.water=0;setDS(key,ds);renderHydration(key);}
+function resetWaterToday(){const key=dKey(currentDate);const ds=getDS(key);ds.water=0;setDS(key,ds);renderHydration(key);renderNutritionCoach();}
 
 function deleteExtra(key, idx){
   const ds=getDS(key);if(!ds.extras)return;
@@ -2955,6 +2986,51 @@ function renderFoodLedger(){
   const calLabel=totalsCurrent&&ds.foodTotals?.calories!=null?`~${ds.foodTotals.calories} cal (est)`:foods.length&&knownCals.length===foods.length?`~${c} cal`:knownCals.length?`≥${c} cal (partial)`:'cal not totaled';
   const fatLabel=totalsCurrent&&ds.foodTotals?.fat!=null?`~${ds.foodTotals.fat}g fat (est)`:foods.length&&knownFat.length===foods.length?`~${fat}g fat`:knownFat.length?`≥${fat}g fat (partial)`:'fat not totaled';
   document.getElementById('foodLedgerTotal').textContent=`${p}g protein · ${calLabel} · ${fatLabel}`;
+}
+
+// V47: additive nutrition coaching. Missing labels are never zero-fat days.
+const NUTRITION_START='2026-09-30';
+function nutritionDay(key){
+ const ds=getDS(key),fs=ds.foods||[],p=calcProt(fs),tot=ds.foodTotals;
+ const current=tot&&tot.itemCount===fs.length;
+ const fatKnown=!!(fs.length>0&&(fs.every(f=>f.fat!=null&&Number.isFinite(+f.fat))||(current&&Number.isFinite(+tot.fat))));
+ const calKnown=!!(fs.length>0&&(fs.every(f=>Number.isFinite(+f.calories)&&+f.calories>0)||(current&&tot.calories!=null)));
+ const fat=current&&Number.isFinite(+tot.fat)?+tot.fat:fs.reduce((n,f)=>n+(+f.fat||0),0);
+ const calories=current&&tot.calories!=null?String(tot.calories):String(calcCals(fs));
+ return {p,fat,fatKnown,calKnown,calories,hasFood:fs.length>0,closed:p>=160&&fatKnown&&fat<=80};
+}
+function nutritionStreak(){
+ const now=new Date();now.setHours(0,0,0,0);let n=0;
+ for(let i=0;i<90;i++){const d=new Date(now);d.setDate(now.getDate()-i);const k=dKey(d);if(k<NUTRITION_START)break;if(nutritionDay(k).closed)n++;else if(i===0)continue;else break;}return n;
+}
+function renderNutritionCoach(){
+ const box=document.getElementById('nutritionCoach');if(!box)return;box.replaceChildren();
+ const key=dKey(currentDate),v=nutritionDay(key),h=document.createElement('h3');h.textContent='DAILY NUTRITION';box.append(h);
+ const lines=[`Protein: ${v.p} / 160g · ${Math.max(0,160-v.p)}g left`,
+ v.fatKnown?`Fat: ~${v.fat}g · working zone 60g / upper guide 80g${v.fat>80?' · above guide':v.fat>60?' · above zone':''}`:`Fat: ${v.hasFood?'incomplete labels':'not logged'} · working zone 60g / upper guide 80g`,
+ v.calKnown?`Calories logged: ~${v.calories}`:`Calories logged: ${v.hasFood?'partial (~'+v.calories+')':'unknown'}`,
+ 'Calorie reference: 1,850 observed midpoint of 3 past logged days',
+ 'Personal calorie target pending · this reference is not a food budget',
+ v.closed?'Nutrition day closed: logged protein + fat guides met':v.fatKnown&&v.fat>80?'Nutrition targets not met: fat above working guide':!v.fatKnown?'Nutrition status: incomplete log':`Nutrition targets open: ${Math.max(0,160-v.p)}g protein left`,
+ `Nutrition streak: ${nutritionStreak()} days · workout streak unchanged`];
+ for(const txt of lines){const p=document.createElement('p');p.textContent=txt;box.append(p);}
+ const note=document.createElement('p');note.className='nutrition-note';note.textContent='Coach-set working guides, not medical limits. Estimates stay estimates. Missing food or labels can change the result. Nutrition streak starts Sep 30; no recovery-day auto-credit.';box.append(note);
+ const title=document.createElement('h3');title.textContent='LAST 7 DAYS';box.append(title);
+ let protein=0,fat=0,known=0,eligible=0;const start=new Date(key+'T12:00:00');
+ for(let i=6;i>=0;i--){const d=new Date(start);d.setDate(start.getDate()-i);const k=dKey(d);if(loadS()._qs&&k<loadS()._qs)continue;eligible++;const a=nutritionDay(k);protein+=a.p>=160?1:0;if(a.fatKnown){known++;fat+=a.fat<=80?1:0;}
+ const row=document.createElement('p');row.className='nutrition-trend';row.textContent=`${d.toLocaleDateString('en-US',{month:'short',day:'numeric'})}: protein ${a.hasFood?(a.p>=160?'hit':a.p+'g logged'):'unknown'} · fat ${a.fatKnown?(a.fat<=80?'within guide':'above guide'):'unknown'}`;box.append(row);}
+ const hits=document.createElement('p');hits.textContent=`Protein: ${protein}/${eligible} days since quest start hit (${eligible?Math.round(protein/eligible*100):0}%) · fat: ${known?Math.round(fat/known*100)+'% of '+known+' known days':'not enough data'} within guide`;box.append(hits);
+ const w=document.createElement('h3');w.textContent='WEEKLY WEIGH-IN';box.append(w);
+ const weights=loadS()._weighIns||[],recent=[...weights].sort((a,b)=>b.date.localeCompare(a.date))[0];
+ const wp=document.createElement('p');wp.textContent=recent?`Last reported: ${recent.weight} lb on ${recent.date}`:'No weigh-in recorded here yet. Text your weight once a week, same scale, morning before food.';box.append(wp);
+ const wn=document.createElement('p');wn.className='nutrition-note';wn.textContent='Weekly check-in: text a morning weigh-in every Sunday. Same scale, before food. Review weight and training over several weeks; no automatic calorie cuts. This panel does not create a reminder.';box.append(wn);
+ const progress=document.createElement('h3');progress.textContent='RECOVERY + BODY PROGRESS';box.append(progress);
+ const sleeps=[];for(let i=0;i<7;i++){const d=new Date(key+'T12:00:00');d.setDate(d.getDate()-i);const sleep=getDS(dKey(d)).sleepHours;if(Number.isFinite(sleep)&&sleep>=0&&sleep<=24)sleeps.push(sleep);}
+ const sp=document.createElement('p');sp.textContent=sleeps.length?'Sleep: '+(sleeps.reduce((a,b)=>a+b,0)/sleeps.length).toFixed(1)+'h average across '+sleeps.length+' reported nights':'Sleep: not logged. Text rough hours slept; weekly average appears here.';box.append(sp);
+ const photos=loadS()._progressPhotos||[],waists=loadS()._waistMeasurements||[];
+ const pp=document.createElement('p');pp.textContent='Weekly with weigh-in: optional progress photo, same lighting and pose. '+(photos.length?photos.length+' private photo records stored.':'No progress photos recorded here yet.');box.append(pp);
+ const waist=document.createElement('p');waist.textContent='Monthly: optional waist measurement, same point and conditions. '+(waists.length?'Latest: '+waists[waists.length-1].inches+' in on '+waists[waists.length-1].date:'No waist measurement recorded here yet.');box.append(waist);
+ const water=document.createElement('p');let waterRun=0;for(let i=0;i<90;i++){const d=new Date();d.setDate(d.getDate()-i);const k=dKey(d);if(loadS()._qs&&k<loadS()._qs)break;if((+getDS(k).water||0)>=64)waterRun++;else if(i===0)continue;else break;}water.textContent='Water roll: '+waterRun+' days at prior 64oz tracking goal · no pings';box.append(water);
 }
 
 // ================================================================
@@ -4286,7 +4362,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=46;
+const APP_VERSION=47;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
