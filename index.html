@@ -2533,7 +2533,7 @@ function renderDay(){
 
   // SPILLOVER
   const allSpills=getSpillover(key);
-  const spills=allSpills;
+  const spills=allSpills.filter(t=>!(getDS(t._sf).done||[]).includes(t.id));
   if(spills.length){
     const sb=document.createElement('div');sb.className='spillover-block';
     const dc=spills.filter(t=>(getDS(t._sf).done||[]).includes(t.id)).length;
@@ -2549,7 +2549,7 @@ function renderDay(){
       // In travel mode, swap KB/pull-up tasks to their travel equivalent
       const travelSub=(mode==='travel'&&!od&&HOME_TO_TRAVEL[t.id]&&!t.id.startsWith('v32_'));
       const displayName=travelSub?HOME_TO_TRAVEL[t.id].name:t.name;
-      const displayDetail=travelSub?HOME_TO_TRAVEL[t.id].detail:t.detail;
+      const fullDetail=travelSub?HOME_TO_TRAVEL[t.id].detail:t.detail;const displayDetail=concisePrescription(travelSub?{...t,detail:fullDetail}:t,displayName,t._sf||dKey(currentDate));
       const subTag=travelSub?`<span style="font-family:'Press Start 2P',monospace;font-size:0.16rem;background:#003300;color:#44ff88;padding:1px 4px;margin-left:5px;vertical-align:middle;">✈ TRAVEL SUB</span>`:'';
 
       const travelHint=(mode==='travel'&&!od&&!HOME_ONLY_IDS.has(t.id)&&HOME_TO_TRAVEL[t.id])
@@ -2558,7 +2558,7 @@ function renderDay(){
       return`<div class="task-row spill-row${od?' done':''}" id="tr_${t._sf}_${t.id}" onclick="toggleSpill('${t._sf}','${t.id}')">
         <div class="chk">${od?'✓':''}</div>
         <div class="ti">
-          <div class="tn" onclick="event.stopPropagation();toggleCue(this)" data-tn="${t.name}" style="cursor:pointer;">${displayName}${subTag}${((window.FORM_CUES&&window.FORM_CUES[window.cueKey(t.name)])||(window.HOWTO_CUES&&window.HOWTO_CUES[window.howtoKey(t.name)]))?'<span class="cue-dot">?</span>':''} <span style="font-size:0.22rem;color:#cc8844">(${t._sl?.toUpperCase()})</span></div>
+          <div class="tn" onclick="event.stopPropagation();toggleCue(this)" data-tn="${t.name}" data-help="${fullDetail.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" style="cursor:pointer;">${displayName}${subTag}${fullDetail?'<span class="cue-dot">?</span>':''} <span style="font-size:0.22rem;color:#cc8844">(${t._sl?.toUpperCase()})</span></div>
           <div class="td">${displayDetail}</div>
           ${setHtml}
           ${travelHint}
@@ -2586,9 +2586,20 @@ function renderDay(){
     cont.appendChild(makeExtraSection(key));
   }
   // Creatine and water are text reminders only; keep historical state.
-  cont.appendChild(makeCompletedLog(key,p,done,sets));
+  const history=makeCompletedLog(key,p,done,sets);history.dataset.completedHistory='true';cont.appendChild(history);
+  cont.querySelectorAll('.task-row.done,.supp-row.done,.supp-row.auto-done').forEach(row=>{if(!row.closest('[data-completed-history]')&&!row.closest('[id^=extraList_]'))row.remove();});
 }
 
+function concisePrescription(t,name,key){
+  const n=(name||t.name||'').toUpperCase(),rn=t.rn||'';
+  const amount=t.sets&&rn?`${t.sets} × ${rn}`:(t.detail||'').split(/[.;]/)[0].split(' — ')[0].split(',')[0].replace(/\s+(?:controlled|if|after|only|no unsafe|stop).*$/i,'').replace(/^Muscle is built.*$/,'');
+  let load='';
+  if(/KETTLEBELL|\bKB\b|GOBLET/.test(n)&&!/BODYWEIGHT|HIP HINGE|SHADOW/.test(n)){
+    const start=loadS()._qs;const w=start?Math.max(1,Math.floor((new Date(key+'T12:00:00')-new Date(start+'T12:00:00'))/604800000)+1):getQW();
+    load=/SWING|GOBLET/.test(n)?(w>=4?'40lb':'35lb'):'35lb';
+  }
+  return amount+(load?' · '+load:'');
+}
 function makeSection(title,hdrCls,tasks,done,sets,isBonus){
   const sid='s_'+Math.random().toString(36).slice(2,7);
   const b=document.createElement('div');b.className='sec-block';
@@ -2600,15 +2611,14 @@ function makeSection(title,hdrCls,tasks,done,sets,isBonus){
   ${progTasks.filter(t=>!done.includes(t.id)).map(t=>{const isDone=done.includes(t.id);const st=t.sets||0;const sd=(sets&&sets[t.id])||0;
     const sub=mode==='travel'&&!isDone&&HOME_TO_TRAVEL[t.id]&&!t.id.startsWith('v32_');
     const displayName=sub?HOME_TO_TRAVEL[t.id].name:t.name;
-    const displayDetail=sub?HOME_TO_TRAVEL[t.id].detail:t.detail;
+    const fullDetail=sub?HOME_TO_TRAVEL[t.id].detail:t.detail;const displayDetail=concisePrescription(sub?{...t,detail:fullDetail}:t,displayName,t._sf||dKey(currentDate));
     const subTag=sub?`<span style="font-family:'Press Start 2P',monospace;font-size:0.16rem;background:#003300;color:#44ff88;padding:1px 4px;margin-left:5px;vertical-align:middle;">✈ TRAVEL SUB</span>`:'';
     let setHtml='';
     if(st>1&&!isDone){setHtml=`<div class="set-tracker" onclick="event.stopPropagation()">${Array.from({length:st},(_,i)=>`<div class="set-dot${i<sd?' done-set':''}" onclick="addSet('${t.id}',${st},${i})">${i<sd?'✓':i+1}</div>`).join('')}<span class="set-label${sd>0?' ok':''}">${sd}/${st} sets${t.rn?' ('+t.rn+')':''}</span></div>`;}
     else if(st>1&&isDone){setHtml=`<div class="set-tracker"><span class="set-label ok">ALL ${st} SETS ✓</span></div>`;}
-    return`<div class="task-row${isBonus?' bonus-row':''}${isDone?' done':''}" id="tr_${t.id}" onclick="toggleTask('${t.id}')"><div class="chk">${isDone?'✓':''}</div><div class="ti"><div class="tn" onclick="event.stopPropagation();toggleCue(this)" data-tn="${t.name}" style="cursor:pointer;">${displayName}${subTag}${((window.FORM_CUES&&window.FORM_CUES[window.cueKey(t.name)])||(window.HOWTO_CUES&&window.HOWTO_CUES[window.howtoKey(t.name)]))?'<span class="cue-dot">?</span>':''}</div><div class="td">${displayDetail}</div>${setHtml}</div>${isDone?`<button class="uncheck-action" onclick="event.stopPropagation();toggleTask('${t.id}')">↩ UNCHECK</button>`:`<div class="txp">+${t.xp}XP</div>`}</div>`;
+    return`<div class="task-row${isBonus?' bonus-row':''}${isDone?' done':''}" id="tr_${t.id}" onclick="toggleTask('${t.id}')"><div class="chk">${isDone?'✓':''}</div><div class="ti"><div class="tn" onclick="event.stopPropagation();toggleCue(this)" data-tn="${t.name}" data-help="${fullDetail.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" style="cursor:pointer;">${displayName}${subTag}${fullDetail?'<span class="cue-dot">?</span>':''}</div><div class="td">${displayDetail}</div>${setHtml}</div>${isDone?`<button class="uncheck-action" onclick="event.stopPropagation();toggleTask('${t.id}')">↩ UNCHECK</button>`:`<div class="txp">+${t.xp}XP</div>`}</div>`;
   }).join('')}${!isBonus||dc<progTasks.length?'</div>':''}
-  ${isBonus&&dc?`<div class="bonus-done-hdr" onclick="toggleSec('done_${sid}')">✓ ${dc} DONE BONUS ${dc===1?'TASK':'TASKS'} <span class="sec-arr closed" id="arr_done_${sid}">▼</span></div>
-    <div class="task-list collapsed" id="done_${sid}">${progTasks.filter(t=>done.includes(t.id)).map(t=>`<div class="task-row bonus-row done" onclick="toggleTask('${t.id}')"><div class="chk">✓</div><div class="ti"><div class="tn">${t.name}</div><div class="td">${t.detail}</div></div><button class="uncheck-action" onclick="event.stopPropagation();toggleTask('${t.id}')">↩ UNCHECK</button></div>`).join('')}</div>`:''}`;
+  `;
   return b;
 }
 
@@ -2679,7 +2689,7 @@ function makeExtraSection(key){
         <button class="fb" style="background:#664400;border-bottom-color:#332200;" onclick="logExtra('${key}','${sid}')">+ LOG</button>
       </div>
     </div>
-    <div id="extraList_${sid}">${listHTML}</div>
+    <div style="padding:4px 10px;${extras.length?'':'display:none;'}"><span class="mini-log-btn" onclick="toggleSec('extraList_${sid}')">✓ ${extras.length} LOGGED <span class="sec-arr closed" id="arr_extraList_${sid}">▼</span></span></div><div class="task-list collapsed" id="extraList_${sid}">${listHTML}</div>
   </div>`;
   return b;
 }
@@ -4362,7 +4372,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=47;
+const APP_VERSION=48;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
@@ -4401,15 +4411,17 @@ async function cloudPull(doRender){
 }
 setInterval(()=>{cloudPull();},25000);
 setTimeout(()=>{cloudPull(true);},1500);
-setInterval(async()=>{try{
-  const t=await (await fetch(location.pathname+'?vw='+Date.now(),{cache:'no-store'})).text();
-  const m=t.match(/APP_VERSION=(\d+)/);
-  if(m&&+m[1]>APP_VERSION){
-    if(document.getElementById('__vwToast'))return;
-    const d=document.createElement('div');d.id='__vwToast';
-    d.style.cssText='position:fixed;bottom:8px;left:8px;z-index:9999;background:#ffd700;color:#000;font-family:"Press Start 2P",monospace;font-size:0.25rem;padding:8px 10px;border:3px solid #000;cursor:pointer';
-    d.textContent='★ NEW VERSION - TAP TO REFRESH';d.onclick=()=>location.reload();document.body.appendChild(d);
-  }}catch(e){}},300000);
+let __versionBusy=false,__versionChecked=0;
+async function checkAppVersion(){
+ if(__versionBusy||Date.now()-__versionChecked<15000)return;
+ __versionBusy=true;__versionChecked=Date.now();
+ try{const t=await(await fetch(location.pathname+'?vw='+Date.now(),{cache:'no-store'})).text();const m=t.match(/APP_VERSION=(\d+)/);
+ if(m&&+m[1]>APP_VERSION&&!document.getElementById('__vwToast')){
+ const d=document.createElement('button');d.id='__vwToast';d.style.cssText='position:fixed;bottom:8px;left:8px;z-index:9999;background:#ffd700;color:#000;font-family:"Press Start 2P",monospace;font-size:10px;padding:14px;min-height:48px;border:3px solid #000;cursor:pointer';d.textContent='★ UPDATE READY - TAP TO REFRESH';d.onclick=()=>location.reload();document.body.appendChild(d);
+ }}catch(e){}finally{__versionBusy=false;}
+}
+setInterval(checkAppVersion,60000);setTimeout(checkAppVersion,2000);
+window.addEventListener('focus',checkAppVersion);document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkAppVersion();});
 
 // day-1 prev-button state + pre-quest archive (fresh-start guard)
 try{const _s0=loadS();if(_s0._qs){let _moved=false;Object.keys(_s0).forEach(k=>{if(/^\d{4}-\d{2}-\d{2}$/.test(k)&&k<_s0._qs){_s0._archive=_s0._archive||{};_s0._archive[k]=_s0[k];delete _s0[k];_moved=true;}});if(_moved)saveS(_s0);}}catch(e){}
@@ -4521,13 +4533,13 @@ function toggleCue(el){
   const row=el.closest('.task-row');if(!row)return;
   const old=row.querySelector('.cue-box');if(old){old.remove();return;}
   const key=cueKey(el.getAttribute('data-tn'));
-  const howto=HOWTO_CUES[howtoKey(el.getAttribute('data-tn'))];const cue=FORM_CUES[key];if(!howto&&!cue)return;
+  const howto=HOWTO_CUES[howtoKey(el.getAttribute('data-tn'))];const cue=FORM_CUES[key];const detail=el.getAttribute('data-help');if(!howto&&!cue&&!detail)return;
   const box=document.createElement('div');box.className='cue-box';
   box.onclick=function(e){e.stopPropagation();};
   const cv=document.createElement('canvas');cv.width=32;cv.height=32;cv.style.width='128px';cv.style.height='128px';
   box.appendChild(cv);startCueDemo(cv,howtoKey(el.getAttribute('data-tn')));
   const cap=document.createElement('div');cap.style.cssText="text-align:center;font-size:.7rem;color:#a08000;margin-bottom:3px;";cap.textContent='PAKALU ANIMATES THE MOVE: START ↔ FINISH';box.appendChild(cap);
-  const txt=document.createElement('div');if(howto){txt.className='cue-guide';['SET UP','DO IT','FEEL','AVOID'].forEach((label,i)=>{const step=document.createElement('div');step.className='cue-step';const heading=document.createElement('strong');heading.textContent=label;step.appendChild(heading);step.appendChild(document.createTextNode(howto[i]));txt.appendChild(step);});}else{txt.className='cue-fallback';txt.textContent=cue;}box.appendChild(txt);
+  const txt=document.createElement('div');if(howto){txt.className='cue-guide';['SET UP','DO IT','FEEL','AVOID'].forEach((label,i)=>{const step=document.createElement('div');step.className='cue-step';const heading=document.createElement('strong');heading.textContent=label;step.appendChild(heading);step.appendChild(document.createTextNode(howto[i]));txt.appendChild(step);});}else{txt.className='cue-fallback';txt.textContent=cue||'';}box.appendChild(txt);if(detail){const note=document.createElement('div');note.className='cue-fallback';note.textContent=detail;box.appendChild(note);}
   const x=document.createElement('button');x.textContent='✕ CLOSE';x.style.cssText="display:block;margin:6px auto 0;background:#330000;border:2px solid #7a2000;color:#ff6666;font-family:'Press Start 2P',monospace;font-size:.22rem;padding:6px 12px;cursor:pointer;";x.onclick=function(e){e.stopPropagation();box.remove();};
   box.appendChild(x);
   row.appendChild(box);
