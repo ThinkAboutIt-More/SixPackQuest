@@ -334,7 +334,7 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
 .task-list.collapsed{display:none;}
 .bonus-done-hdr{display:flex;justify-content:space-between;align-items:center;margin:4px;padding:8px 10px;min-height:40px;border:2px solid #765500;background:#241800;color:var(--coin);font-size:.35rem;cursor:pointer;user-select:none;}
 .bonus-done-hdr:hover{border-color:var(--coin);}
-.task-row{display:flex;align-items:flex-start;gap:6px;padding:6px 8px;margin-bottom:4px;background:#111;border:2px solid #2a2a2a;cursor:pointer;transition:all .15s;user-select:none;position:relative;overflow:hidden;}
+.task-row{display:flex;align-items:flex-start;gap:6px;padding:6px 8px;margin-bottom:4px;background:#111;border:2px solid #2a2a2a;cursor:default;transition:all .15s;user-select:none;position:relative;overflow:hidden;}
 .task-row::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#333;}
 .task-row:hover{border-color:var(--coin);}
 .task-row:hover::before{background:var(--coin);}
@@ -574,6 +574,7 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
 .food-ledger-macros{font:clamp(.8rem,1.7vw,1rem) 'VT323',monospace;color:#ffcf8b;white-space:normal;}
 .food-ledger-note,.food-ledger-empty{font:clamp(.85rem,1.6vw,1rem) 'VT323',monospace;color:#aaa;line-height:1.3;padding-top:7px;}
 @media(max-width:600px){.food-ledger-row{display:block}.food-ledger-macros{margin-top:3px}.food-ledger-name{font-size:.36rem}}
+button.chk,button.supp-check{padding:0;flex-shrink:0;cursor:pointer;color:inherit;font:inherit;}button.chk:focus-visible,button.supp-check:focus-visible{outline:2px solid #ffd828;outline-offset:2px;}
 </style>
 <style>
 /* mobile tap-target pass - sizing only, no visual redesign */
@@ -2555,8 +2556,8 @@ function renderDay(){
       const travelHint=(mode==='travel'&&!od&&!HOME_ONLY_IDS.has(t.id)&&HOME_TO_TRAVEL[t.id])
         ?`<div style="margin-top:4px;padding:4px 7px;background:#0a1a00;border-left:3px solid #44aa00;font-family:'VT323',monospace;font-size:.72rem;color:#88ff44;line-height:1.3;">✈ ON THE ROAD: <strong>${HOME_TO_TRAVEL[t.id].name}</strong> — ${HOME_TO_TRAVEL[t.id].detail}</div>`
         :'';
-      return`<div class="task-row spill-row${od?' done':''}" id="tr_${t._sf}_${t.id}" onclick="toggleSpill('${t._sf}','${t.id}')">
-        <div class="chk">${od?'✓':''}</div>
+      return`<div class="task-row spill-row${od?' done':''}" id="tr_${t._sf}_${t.id}">
+        <button type="button" class="chk" aria-label="Toggle completion" onclick="event.stopPropagation();toggleSpill('${t._sf}','${t.id}')">${od?'✓':''}</button>
         <div class="ti">
           <div class="tn" onclick="event.stopPropagation();toggleCue(this)" data-tn="${t.name}" data-help="${fullDetail.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" style="cursor:pointer;">${displayName}${subTag}${fullDetail?'<span class="cue-dot">?</span>':''} <span style="font-size:0.22rem;color:#cc8844">(${t._sl?.toUpperCase()})</span></div>
           <div class="td">${displayDetail}</div>
@@ -2616,7 +2617,7 @@ function makeSection(title,hdrCls,tasks,done,sets,isBonus){
     let setHtml='';
     if(st>1&&!isDone){setHtml=`<div class="set-tracker" onclick="event.stopPropagation()">${Array.from({length:st},(_,i)=>`<div class="set-dot${i<sd?' done-set':''}" onclick="addSet('${t.id}',${st},${i})">${i<sd?'✓':i+1}</div>`).join('')}<span class="set-label${sd>0?' ok':''}">${sd}/${st} sets${t.rn?' ('+t.rn+')':''}</span></div>`;}
     else if(st>1&&isDone){setHtml=`<div class="set-tracker"><span class="set-label ok">ALL ${st} SETS ✓</span></div>`;}
-    return`<div class="task-row${isBonus?' bonus-row':''}${isDone?' done':''}" id="tr_${t.id}" onclick="toggleTask('${t.id}')"><div class="chk">${isDone?'✓':''}</div><div class="ti"><div class="tn" onclick="event.stopPropagation();toggleCue(this)" data-tn="${t.name}" data-help="${fullDetail.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" style="cursor:pointer;">${displayName}${subTag}${fullDetail?'<span class="cue-dot">?</span>':''}</div><div class="td">${displayDetail}</div>${setHtml}</div>${isDone?`<button class="uncheck-action" onclick="event.stopPropagation();toggleTask('${t.id}')">↩ UNCHECK</button>`:`<div class="txp">+${t.xp}XP</div>`}</div>`;
+    return`<div class="task-row${isBonus?' bonus-row':''}${isDone?' done':''}" id="tr_${t.id}"><button type="button" class="chk" aria-label="Toggle completion" onclick="event.stopPropagation();toggleTask('${t.id}')">${isDone?'✓':''}</button><div class="ti"><div class="tn" onclick="event.stopPropagation();toggleCue(this)" data-tn="${t.name}" data-help="${fullDetail.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" style="cursor:pointer;">${displayName}${subTag}${fullDetail?'<span class="cue-dot">?</span>':''}</div><div class="td">${displayDetail}</div>${setHtml}</div>${isDone?`<button class="uncheck-action" onclick="event.stopPropagation();toggleTask('${t.id}')">↩ UNCHECK</button>`:`<div class="txp">+${t.xp}XP</div>`}</div>`;
   }).join('')}${!isBonus||dc<progTasks.length?'</div>':''}
   `;
   return b;
@@ -2633,8 +2634,8 @@ function makeCompletedLog(key,p,done,sets){
   const rows=[];
   // Workout + supp tasks
   allTasks.filter(t=>done.includes(t.id)).forEach(t=>{
-    rows.push(`<div class="task-row done" style="opacity:.7;" onclick="toggleTask('${t.id}')">
-      <div class="chk">✓</div>
+    rows.push(`<div class="task-row done" style="opacity:.7;">
+      <button type="button" class="chk" aria-label="Toggle completion" onclick="event.stopPropagation();toggleTask('${t.id}')">✓</button>
       <div class="ti"><div class="tn">${t.name}</div></div>
       <button class="uncheck-action" onclick="event.stopPropagation();toggleTask('${t.id}')">↩ UNCHECK</button>
     </div>`);
@@ -2643,8 +2644,8 @@ function makeCompletedLog(key,p,done,sets){
   ['daily_s0','daily_s1','daily_s2','daily_s2b','daily_s2c','daily_s2d','daily_creatine'].forEach(id=>{
     const sd=suppDone[id];if(!sd||!sd.checked)return;
     const label=id==='daily_s2_a'?'CHOMPS #1':id==='daily_s2_b'?'CHOMPS #2':sd.name||id;
-    rows.push(`<div class="task-row done" style="opacity:.7;" onclick="toggleSupp('${id}',${sd.protein||0},'${sd.name||''}')">
-      <div class="chk">✓</div>
+    rows.push(`<div class="task-row done" style="opacity:.7;">
+      <button type="button" class="chk" aria-label="Toggle completion" onclick="event.stopPropagation();toggleSupp('${id}',${sd.protein||0},'${sd.name||''}')">✓</button>
       <div class="ti"><div class="tn">${label}${sd.protein?` · +${sd.protein}g`:''}</div></div>
       <div class="txp" style="color:#555;">logged</div>
     </div>`);
@@ -2918,7 +2919,7 @@ function pickDrinkForSupp(suppId, drinkName, drinkProtein){
 
 function makeCreatineSection(done){
   const b=document.createElement('div');b.className='sec-block';
-  b.innerHTML=`<div class="sec-hdr blue" onclick="toggleSec('creatineSec')"><span class="sec-title">💊 CREATINE · 5g DAILY</span><span class="sec-count">${done.includes('daily_creatine')?'✓':'NOT YET'}</span><span class="sec-arr" id="arr_creatineSec">▼</span></div><div id="creatineSec"><div class="supp-grid"><div class="supp-row${done.includes('daily_creatine')?' done':''}" onclick="toggleSupp('daily_creatine',0,'Creatine')" style="cursor:pointer;"><span class="supp-icon">💊</span><div class="supp-info"><div class="supp-name">CREATINE</div><div class="supp-detail">${done.includes('daily_creatine')?'✓ taken today':'5g daily · tap when taken'}</div></div><div class="supp-check">${done.includes('daily_creatine')?'✓':'TAP'}</div></div></div></div>`;
+  b.innerHTML=`<div class="sec-hdr blue" onclick="toggleSec('creatineSec')"><span class="sec-title">💊 CREATINE · 5g DAILY</span><span class="sec-count">${done.includes('daily_creatine')?'✓':'NOT YET'}</span><span class="sec-arr" id="arr_creatineSec">▼</span></div><div id="creatineSec"><div class="supp-grid"><div class="supp-row${done.includes('daily_creatine')?' done':''}"><span class="supp-icon">💊</span><div class="supp-info"><div class="supp-name">CREATINE</div><div class="supp-detail">${done.includes('daily_creatine')?'✓ taken today':'5g daily · tap when taken'}</div></div><button type="button" class="supp-check" aria-label="Toggle creatine" onclick="event.stopPropagation();toggleSupp('daily_creatine',0,'Creatine')">${done.includes('daily_creatine')?'✓':'TAP'}</button></div></div></div>`;
   return b;
 }
 
@@ -4372,7 +4373,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=48;
+const APP_VERSION=49;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
