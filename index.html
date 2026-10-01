@@ -575,6 +575,7 @@ body{background:var(--sky);font-family:'Press Start 2P',monospace;min-height:100
 .food-ledger-note,.food-ledger-empty{font:clamp(.85rem,1.6vw,1rem) 'VT323',monospace;color:#aaa;line-height:1.3;padding-top:7px;}
 @media(max-width:600px){.food-ledger-row{display:block}.food-ledger-macros{margin-top:3px}.food-ledger-name{font-size:.36rem}}
 button.chk,button.supp-check{padding:0;flex-shrink:0;cursor:pointer;color:inherit;font:inherit;}button.chk:focus-visible,button.supp-check:focus-visible{outline:2px solid #ffd828;outline-offset:2px;}
+.completed-day-dropdown{border:2px solid #444;background:#0a0a10;color:#ddd}.completed-day-dropdown summary{padding:14px;min-height:48px;box-sizing:border-box;font:18px "VT323",monospace;cursor:pointer}.completed-day-dropdown .task-row{cursor:default}.completed-day-dropdown .uncheck-action{font:16px "VT323",monospace;white-space:normal;min-height:44px;}
 </style>
 <style>
 /* mobile tap-target pass - sizing only, no visual redesign */
@@ -898,7 +899,7 @@ button.chk,button.supp-check{padding:0;flex-shrink:0;cursor:pointer;color:inheri
   </div>
   <div id="dayContent"></div>
 
-  <div id="hydrationBar" style="margin-bottom:7px;background:#000;border:3px solid #0066cc;padding:10px 12px;">
+  <div id="hydrationBar" hidden style="display:none;margin-bottom:7px;background:#000;border:3px solid #0066cc;padding:10px 12px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
       <span style="font-family:'Press Start 2P',monospace;font-size:clamp(0.22rem,0.55vw,0.55rem);color:#44aaff;">💧 WATER TRACKER</span>
       <span id="hydTotal" style="font-family:'VT323',monospace;font-size:clamp(.75rem,1.3vw,1.1rem);color:#44aaff;">0oz / 64oz</span>
@@ -926,14 +927,14 @@ button.chk,button.supp-check{padding:0;flex-shrink:0;cursor:pointer;color:inheri
     </div>
   </div>
 
-  <div class="sec-block" id="foodLedger" aria-label="Food record">
-    <div class="sec-hdr pink"><span class="sec-title">🍽 FOOD RECORD</span><span class="sec-count" id="foodLedgerTotal">Awaiting log</span></div>
+  <details class="sec-block" id="foodLedger" aria-label="Food record">
+    <summary class="sec-hdr pink" style="cursor:pointer;list-style:none;"><span class="sec-title">▶ 🍽 FOOD RECORD</span><span class="sec-count" id="foodLedgerTotal">Awaiting log</span></summary>
     <div class="food-area">
       <div id="nutritionCoach" class="nutrition-coach" aria-live="polite"></div>
       <div id="foodLedgerItems" class="food-ledger-items" aria-live="polite"></div>
       <div class="food-ledger-note">Text me what you ate - this updates from your messages.</div>
     </div>
-  </div>
+  </details>
 </div>
 
 <canvas id="runCanvas" style="position:fixed;bottom:51px;left:0;right:0;width:100%;height:44px;z-index:52;pointer-events:none;image-rendering:pixelated;"></canvas>
@@ -1798,8 +1799,19 @@ const saveS=s=>{localStorage.setItem('spq_v5',JSON.stringify(s));try{cloudPush()
 const getDS=k=>{const s=loadS();return s[k]||{done:[],sets:{},foods:[]}};
 const setDS=(k,ds)=>{const s=loadS();s[k]=ds;saveS(s)};
 
+// Owner Oct1 correction: Sep30 reverse lunges were checked but not performed.
+function repairSep30LungesOnce(){
+ const marker='spq_fix_sep30_lunges_v50';if(localStorage.getItem(marker))return;
+ const s=loadS(),d=s['2026-09-30'];if(!d)return;
+ d.done=(d.done||[]).filter(id=>id!=='v32_w_lunge');
+ if(!d.sets)d.sets={};d.sets.v32_w_lunge=0;
+ if(Array.isArray(d._express)&&!d._express.includes('v32_w_lunge'))d._express.push('v32_w_lunge');
+ localStorage.setItem('spq_v5',JSON.stringify(s));localStorage.setItem(marker,'1');
+}
+repairSep30LungesOnce();
 function getDayPlan(dayMode,key){
   const p=(key==='2026-09-26'&&loadS()._qs==='2026-09-26'?LEGACY_PLAN[dayMode][6]:PLAN[dayMode][new Date(key+'T12:00:00').getDay()]);
+  if(key==='2026-10-01')return {...p,workout:[...(p.workout||[]),{...PLAN[dayMode][3].workout.find(t=>t.id==='v32_w_lunge'),id:'v50_oct1_second_reverse_lunge',name:'REVERSE LUNGES · SECOND CARD',sets:2,rn:'8/leg',detail:'2 × 8/leg reverse lunges. Separate added card requested Oct1.'}]};
   if(key!=='2026-09-26'||loadS()._qs!=='2026-09-26')return p;
   return {...p,bonuses:[...(p.bonuses||[]),...legacyStart(dayMode)]};
 }
@@ -2582,7 +2594,7 @@ function renderDay(){
     if(p.bonuses&&p.bonuses.length)cont.appendChild(makeSection('⭐ BONUS TASKS','gold',p.bonuses,done,sets,true));
     cont.appendChild(makeExtraSection(key));
   }else{
-    if(p.workout&&p.workout.length){const _wl=ds._express;cont.appendChild(makeSection(Array.isArray(_wl)?'⚡ EXPRESS DAY — 20-MIN FLOOR':'⚡ WORKOUT','red',Array.isArray(_wl)?p.workout.filter(t=>_wl.includes(t.id)):p.workout,done,sets,false));}
+    if(p.workout&&p.workout.length){const _wl=ds._express;cont.appendChild(makeSection(Array.isArray(_wl)?'⚡ EXPRESS DAY — 20-MIN FLOOR':'⚡ WORKOUT','red',Array.isArray(_wl)?p.workout.filter(t=>_wl.includes(t.id)||t.id==='v50_oct1_second_reverse_lunge'):p.workout,done,sets,false));}
     if(p.bonuses&&p.bonuses.length) cont.appendChild(makeSection('⭐ BONUS TASKS','gold',p.bonuses,done,sets,true));
     cont.appendChild(makeExtraSection(key));
   }
@@ -2636,8 +2648,8 @@ function makeCompletedLog(key,p,done,sets){
   allTasks.filter(t=>done.includes(t.id)).forEach(t=>{
     rows.push(`<div class="task-row done" style="opacity:.7;">
       <button type="button" class="chk" aria-label="Toggle completion" onclick="event.stopPropagation();toggleTask('${t.id}')">✓</button>
-      <div class="ti"><div class="tn">${t.name}</div></div>
-      <button class="uncheck-action" onclick="event.stopPropagation();toggleTask('${t.id}')">↩ UNCHECK</button>
+      <div class="ti"><div class="tn">${t.name}${(p.bonuses||[]).some(b=>b.id===t.id)?' · BONUS':''}</div><div class="td">${concisePrescription(t,t.name,key)}</div></div>
+      <button class="uncheck-action" onclick="event.stopPropagation();toggleTask('${t.id}')">↩ RESTORE TO LIST</button>
     </div>`);
   });
   // Supplements from suppDone
@@ -2651,11 +2663,8 @@ function makeCompletedLog(key,p,done,sets){
     </div>`);
   });
 
-  if(!rows.length){ b.style.display='none'; return b; }
-  b.innerHTML=`<div style="display:flex;justify-content:flex-end;margin-bottom:2px;">
-    <span class="mini-log-btn" onclick="toggleSec('${sid}')">✓ ${rows.length} DONE <span class="sec-arr" id="arr_${sid}" style="font-size:0.3rem;">▼</span></span>
-  </div>
-  <div class="task-list collapsed" id="${sid}">${rows.join('')}</div>`;
+  b.classList.add('completed-day-section');
+  b.innerHTML=`<details class="completed-day-dropdown"><summary>✓ COMPLETED · ${key} · ${rows.length}</summary><div class="task-list">${rows.length?rows.join(''):'<p style="padding:12px;">No completed items for this day yet.</p>'}</div></details>`;
   return b;
 }
 
@@ -4373,7 +4382,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=49;
+const APP_VERSION=50;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
