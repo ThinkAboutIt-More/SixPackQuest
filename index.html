@@ -1812,6 +1812,7 @@ repairSep30LungesOnce();
 function getDayPlan(dayMode,key){
   const p=(key==='2026-09-26'&&loadS()._qs==='2026-09-26'?LEGACY_PLAN[dayMode][6]:PLAN[dayMode][new Date(key+'T12:00:00').getDay()]);
   if(key==='2026-10-01')return {...p,workout:[...(p.workout||[]),{...PLAN[dayMode][3].workout.find(t=>t.id==='v32_w_lunge'),id:'v50_oct1_second_reverse_lunge',name:'REVERSE LUNGES · SECOND CARD',sets:2,rn:'8/leg',detail:'2 × 8/leg reverse lunges. Separate added card requested Oct1.'},{id:'v51_oct1_pull_remaining12',name:'PULL-UPS · 12 REMAINING',detail:'12 pull-ups remaining from the 24 checked off. Complete in comfortable sets, stay shy of failure.',sets:1,rn:'12 total',xp:20}]};
+  if(key==='2026-10-02')return {...p,workout:[...(p.workout||[]),{id:'v52_oct2_swings_remaining60',name:'KB SWINGS · 60 REMAINING',detail:'60 kettlebell swings remaining from what was checked off. Complete in comfortable sets with good form.',sets:1,rn:'60 total',xp:20},{id:'v52_oct2_lunges_remaining16',name:'REVERSE LUNGES · 16 REMAINING',detail:'16 reverse lunges remaining from what was checked off. Complete in comfortable sets.',sets:1,rn:'16 total',xp:20},{id:'v52_oct2_rows_remaining20',name:'KB ROWS · 20 REMAINING',detail:'20 kettlebell rows remaining from what was checked off. Complete in comfortable sets.',sets:1,rn:'20 total',xp:20}]};
   if(key!=='2026-09-26'||loadS()._qs!=='2026-09-26')return p;
   return {...p,bonuses:[...(p.bonuses||[]),...legacyStart(dayMode)]};
 }
@@ -2594,7 +2595,7 @@ function renderDay(){
     if(p.bonuses&&p.bonuses.length)cont.appendChild(makeSection('⭐ BONUS TASKS','gold',p.bonuses,done,sets,true));
     cont.appendChild(makeExtraSection(key));
   }else{
-    if(p.workout&&p.workout.length){const _wl=ds._express;cont.appendChild(makeSection(Array.isArray(_wl)?'⚡ EXPRESS DAY — 20-MIN FLOOR':'⚡ WORKOUT','red',Array.isArray(_wl)?p.workout.filter(t=>_wl.includes(t.id)||t.id==='v50_oct1_second_reverse_lunge'||t.id==='v51_oct1_pull_remaining12'):p.workout,done,sets,false));}
+    if(p.workout&&p.workout.length){const _wl=ds._express;cont.appendChild(makeSection(Array.isArray(_wl)?'⚡ EXPRESS DAY — 20-MIN FLOOR':'⚡ WORKOUT','red',Array.isArray(_wl)?p.workout.filter(t=>_wl.includes(t.id)||t.id==='v50_oct1_second_reverse_lunge'||t.id==='v51_oct1_pull_remaining12'||t.id.startsWith('v52_oct2_')):p.workout,done,sets,false));}
     if(p.bonuses&&p.bonuses.length) cont.appendChild(makeSection('⭐ BONUS TASKS','gold',p.bonuses,done,sets,true));
     cont.appendChild(makeExtraSection(key));
   }
@@ -4382,7 +4383,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=51;
+const APP_VERSION=52;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
