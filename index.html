@@ -1703,6 +1703,34 @@ for(const md of ['home','travel'])for(let day=0;day<=6;day++){
 for(const md of ['home','travel'])for(let day=0;day<=6;day++){
   for(const t of PLAN[md][day].bonuses||[])t.name=t.name.replace(/^(⭐\s*)?(?:OPTIONAL\s+)?(?:EXTRA SET:\s*)?/i,(_,star)=>(star||''));
 }
+// V54 (Oct3): more optional bonus cards on home days only; core workout and holds unchanged. Bonuses already count toward XP, score and coins.
+for(let day=0;day<=6;day++){
+  const b=PLAN.home[day].bonuses;if(!b)continue;
+  if(!b.some(x=>x.id==='v32_m_press'||x.id==='v32_f_press'))b.push(v33Task('v54_press_'+day,'⭐ OVERHEAD KB PRESS','Optional: 2 rounds × 6-8/arm with the 35lb kettlebell, clean form. Do it after the core when you are ahead. Not a miss.',2,'6-8/arm',20));
+  b.push(v33Task('v54_curl_'+day,'⭐ KB CURLS','Optional: 2 × 10 curls with the 35lb kettlebell, slow and controlled. Not a miss.',2,'10',15));
+  b.push(v33Task('v54_carry_'+day,'⭐ SUITCASE CARRY (ANTI-ROTATION)','Optional: 2 × 30 seconds per side holding the 35lb kettlebell in one hand, standing tall and not leaning. Not a miss.',2,'30s/side',20));
+}
+// V54 (Oct4): optional bonus holds are a full minute. Core cards unchanged.
+for(const md of ['home','travel'])for(let day=0;day<=6;day++){
+  for(const t of PLAN[md][day].bonuses||[]){
+    if(t.id==='v33_ab_side'){t.sets=1;t.rn='60 seconds per side';t.detail='Hold the side plank for 60 seconds on each side, hips level. One checkbox after both sides. Optional after the core; not required for day completion.';}
+    else if(t.id==='v33_ab_hollow'||(md==='travel'&&['v32_t_wheel','v32_f_wheel','v32_sat_wheel'].includes(t.id))){t.sets=1;t.rn='60 seconds total';t.detail='Hold the hollow position for 60 seconds total. Pauses are fine; stop if your lower back lifts. Optional after the core; never a miss.';}
+  }
+}
+// V54 (Oct4): no ranges anywhere. Every dose range reads as its top number. Schedule text (weeks 1-3) and reps-in-reserve guidance are left alone.
+const v54Top=str=>typeof str!=='string'?str:str.replace(/(\d+)\s*[-–]\s*(\d+)/g,(m,a,b,off,full)=>{
+  const before=full.slice(Math.max(0,off-8),off),after=full.slice(off+m.length,off+m.length+22);
+  if(/weeks?\s*$/i.test(before))return m;
+  if(/^\s*reps?\s+(in reserve|shy|before)/i.test(after))return m;
+  if(+b<=+a)return m;
+  return b;
+});
+for(const md of ['home','travel'])for(let day=0;day<=6;day++){
+  const p=PLAN[md][day];
+  for(const t of [...(p.workout||[]),...(p.bonuses||[]),...(p.supps||[])]){
+    for(const f of ['name','rn','detail'])if(t[f])t[f]=v54Top(t[f]);
+  }
+}
 // A legacy workout must remain on Sep 26 but its combined day-one bonus becomes checkable pieces.
 const legacyStart=dayMode=>[
  v33Task('v33_d1_squat','⭐ SQUATS','3 steady rounds × 12 squats.',3,'12',9),
@@ -1891,7 +1919,7 @@ function getProgVal(key,week){
 
 // Apply week progression to a task's detail text
 function applyProg(t,week){
-  if(t.id.startsWith('v32_')){const extra=week>=10?2:week>=7?1:0;if(extra&&/v32_[mwf]_push|v32_[mwf]_pull/.test(t.id)){const detail=t.detail.replace(/(\d+)-(\d+)/,(all,a,b)=>(+a+extra)+'-'+(+b+extra));return {...t,detail:detail+' · week '+(week>=10?'10':'7')+' progression, only with clean reps and 1-2 in reserve',rn:t.rn.replace(/(\d+)-(\d+)/,(all,a,b)=>(+a+extra)+'-'+(+b+extra))};}return t;}
+  if(t.id.startsWith('v32_')){const extra=week>=10?2:week>=7?1:0;if(extra&&/v32_[mwf]_push|v32_[mwf]_pull/.test(t.id)){const detail=t.detail.replace(/(×\s*)(\d+)/,(all,x,a)=>x+(+a+extra));return {...t,detail:detail+' · week '+(week>=10?'10':'7')+' progression, only with clean reps and 1-2 in reserve',rn:t.rn.replace(/^\d+/,a=>(+a+extra))};}return t;}
   const p=getProgVal.bind(null);
   let name=t.name,detail=t.detail,sets=t.sets,rn=t.rn;
   if(t.id==='m6'||t.id==='w6'||t.id==='f7'||t.id==='t6'||t.id==='sa2'){
@@ -4383,43 +4411,94 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=52;
+const APP_VERSION=54;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
 const sbH=()=>({'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'});
 let __cloudM=parseInt(localStorage.getItem('spq_v5_m')||'0'),__pushT=null,__pullLock=false,__pulledOnce=false;
 function syncBadgeSet(t){const b=document.getElementById('syncBadge');if(b)b.textContent=t;}
-async function cloudPush(){
-  if(!__pulledOnce){clearTimeout(__pushT);__pushT=setTimeout(cloudPush,1500);return;}
-  const m=Date.now();__cloudM=m;localStorage.setItem('spq_v5_m',''+m);
-  clearTimeout(__pushT);
-  __pushT=setTimeout(async()=>{
-    try{
-      syncBadgeSet('SYNCING');
-      const body={id:SB_DOC,value:{_m:m,v5:loadS(),prs:JSON.parse(localStorage.getItem('spq_prs')||'{}'),mode:localStorage.getItem('spq_mode')||'home'},updated_at:new Date().toISOString()};
-      const r=await fetch(SB_URL+'/rest/v1/app_state?on_conflict=id',{method:'POST',headers:Object.assign(sbH(),{'Prefer':'resolution=merge-duplicates,return=minimal'}),body:JSON.stringify(body)});
-      syncBadgeSet(r.ok?'SYNCED':'OFFLINE');
-    }catch(e){syncBadgeSet('OFFLINE');}
-  },800);
+// V53 sync merge: 3-way (base/local/remote). Removals are preserved because "in base but missing on a side" means that side deleted it.
+const spqEq=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+const spqIsObj=x=>x&&typeof x==='object'&&!Array.isArray(x);
+function spqMergeArr(b,l,r){
+  const keyed=a=>{const seen={},out=[];(a||[]).forEach(x=>{const k=JSON.stringify(x);seen[k]=(seen[k]||0)+1;out.push([k+'#'+seen[k],x]);});return out;};
+  const B=new Set(keyed(b).map(e=>e[0])),L=keyed(l),R=keyed(r);
+  const Ls=new Set(L.map(e=>e[0])),Rs=new Set(R.map(e=>e[0]));
+  const out=[],used=new Set();
+  const take=(k,x)=>{const inB=B.has(k),inL=Ls.has(k),inR=Rs.has(k);if(((inL&&inR)||(!inB&&(inL||inR)))&&!used.has(k)){used.add(k);out.push(x);}};
+  R.forEach(([k,x])=>take(k,x));L.forEach(([k,x])=>take(k,x));
+  return out;
 }
-async function cloudPull(doRender){
-  if(__pullLock)return;__pullLock=true;
+function spqMerge3(b,l,r,pref){
+  if(spqEq(l,r))return l;
+  if(spqEq(b,l))return r;
+  if(spqEq(b,r))return l;
+  if(Array.isArray(l)&&Array.isArray(r))return spqMergeArr(Array.isArray(b)?b:[],l,r);
+  if(spqIsObj(l)&&spqIsObj(r)){
+    const bb=spqIsObj(b)?b:{},o={};
+    new Set([...Object.keys(l),...Object.keys(r),...Object.keys(bb)]).forEach(k=>{
+      const v=spqMerge3(bb[k],l[k],r[k],pref);if(v!==undefined)o[k]=v;});
+    return o;
+  }
+  return pref==='remote'?r:l;
+}
+
+const SB_BASE_KEY='spq_v5_base';
+const spqLocalVal=()=>{let p={};try{p=JSON.parse(localStorage.getItem('spq_prs')||'{}')}catch(e){}return{v5:loadS(),prs:p,mode:localStorage.getItem('spq_mode')||'home'};};
+const spqNormRemote=(v,loc)=>({v5:v.v5,prs:v.prs||{},mode:v.mode||(loc&&loc.mode)||'home'});
+let __syncBusy=false;
+async function cloudSync(doRender){
+  if(__syncBusy)return;__syncBusy=true;
   try{
-    const r=await fetch(SB_URL+'/rest/v1/app_state?id=eq.'+encodeURIComponent(SB_DOC)+'&select=value',{headers:sbH()});
-    const rows=await r.json();
-    const d=rows&&rows[0]&&rows[0].value;
-    if(d&&d._m&&d._m>__cloudM){
-      __cloudM=d._m;localStorage.setItem('spq_v5_m',''+d._m);
-      if(d.v5)localStorage.setItem('spq_v5',JSON.stringify(d.v5));
-      if(d.prs)localStorage.setItem('spq_prs',JSON.stringify(d.prs));
-      if(d.mode)localStorage.setItem('spq_mode',d.mode);
-      if(doRender!==false)renderAll();
+    syncBadgeSet('SYNCING');
+    for(let attempt=0;attempt<3;attempt++){
+      const r=await fetch(SB_URL+'/rest/v1/app_state?id=eq.'+encodeURIComponent(SB_DOC)+'&select=value,updated_at',{headers:sbH()});
+      const rows=await r.json();const row=rows&&rows[0];
+      const rv=row&&row.value;
+      const local=spqLocalVal();
+      let base=null;try{base=JSON.parse(localStorage.getItem(SB_BASE_KEY)||'null')}catch(e){}
+      let merged,remoteN=null;
+      if(!rv||!rv.v5){merged=local;}
+      else{
+        remoteN=spqNormRemote(rv,local);
+        const localEmpty=!Object.keys(local.v5||{}).length;
+        if(!base||(localEmpty&&base&&Object.keys(base.v5||{}).length))merged=remoteN;
+        else merged=spqMerge3(base,local,remoteN,'remote');
+      }
+      let ok=true;
+      if(!remoteN||!spqEq(merged,remoteN)){
+        const m=Date.now();
+        const val=Object.assign({},rv||{},{_m:m,v5:merged.v5,prs:merged.prs,mode:merged.mode});
+        const body=JSON.stringify({value:val,updated_at:new Date().toISOString()});
+        let res;
+        if(row){res=await fetch(SB_URL+'/rest/v1/app_state?id=eq.'+encodeURIComponent(SB_DOC)+'&updated_at=eq.'+encodeURIComponent(row.updated_at),{method:'PATCH',headers:Object.assign(sbH(),{'Prefer':'return=representation'}),body});
+          const out=res.ok?await res.json():null;ok=!!(out&&out.length);
+          if(res.ok&&!ok)continue;}
+        else{res=await fetch(SB_URL+'/rest/v1/app_state?on_conflict=id',{method:'POST',headers:Object.assign(sbH(),{'Prefer':'resolution=merge-duplicates,return=minimal'}),body:JSON.stringify({id:SB_DOC,value:val,updated_at:new Date().toISOString()})});ok=res.ok;}
+        if(!ok){syncBadgeSet('OFFLINE');break;}
+        __cloudM=m;localStorage.setItem('spq_v5_m',''+m);
+      }
+      const changedLocal=!spqEq(merged,local);
+      if(changedLocal){
+        localStorage.setItem('spq_v5',JSON.stringify(merged.v5));
+        localStorage.setItem('spq_prs',JSON.stringify(merged.prs));
+        localStorage.setItem('spq_mode',merged.mode);
+      }
+      localStorage.setItem(SB_BASE_KEY,JSON.stringify(merged));
+      syncBadgeSet('SYNCED');
+      if(changedLocal&&doRender!==false)renderAll();
+      break;
     }
-    syncBadgeSet('SYNCED');
   }catch(e){syncBadgeSet('OFFLINE');}
-  __pulledOnce=true;__pullLock=false;
+  __pulledOnce=true;__syncBusy=false;
 }
+function cloudPush(){
+  if(!__pulledOnce){clearTimeout(__pushT);__pushT=setTimeout(cloudPush,1500);return;}
+  clearTimeout(__pushT);
+  __pushT=setTimeout(()=>{cloudSync(true);},800);
+}
+function cloudPull(doRender){return cloudSync(doRender);}
 setInterval(()=>{cloudPull();},25000);
 setTimeout(()=>{cloudPull(true);},1500);
 let __versionBusy=false,__versionChecked=0;
