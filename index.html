@@ -1731,6 +1731,8 @@ for(const md of ['home','travel'])for(let day=0;day<=6;day++){
     for(const f of ['name','rn','detail'])if(t[f])t[f]=v54Top(t[f]);
   }
 }
+// V54 safety: heat exposure is not a rep dose. Sauna is a flat 30 minutes, never the top of the old 30-60 range.
+for(const md of ['home','travel'])for(let day=0;day<=6;day++)for(const t of PLAN[md][day].bonuses||[]){if(/SAUNA/i.test(t.name))t.detail='30 min — boosts GH, cuts cortisol, accelerates recovery.';}
 // A legacy workout must remain on Sep 26 but its combined day-one bonus becomes checkable pieces.
 const legacyStart=dayMode=>[
  v33Task('v33_d1_squat','⭐ SQUATS','3 steady rounds × 12 squats.',3,'12',9),
@@ -4411,7 +4413,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=54;
+const APP_VERSION=55;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
