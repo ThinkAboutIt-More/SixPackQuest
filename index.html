@@ -1839,13 +1839,26 @@ function repairSep30LungesOnce(){
  localStorage.setItem('spq_v5',JSON.stringify(s));localStorage.setItem(marker,'1');
 }
 repairSep30LungesOnce();
-function getDayPlan(dayMode,key){
+function getDayPlanBase(dayMode,key){
   const p=(key==='2026-09-26'&&loadS()._qs==='2026-09-26'?LEGACY_PLAN[dayMode][6]:PLAN[dayMode][new Date(key+'T12:00:00').getDay()]);
   if(key==='2026-10-01')return {...p,workout:[...(p.workout||[]),{...PLAN[dayMode][3].workout.find(t=>t.id==='v32_w_lunge'),id:'v50_oct1_second_reverse_lunge',name:'REVERSE LUNGES · SECOND CARD',sets:2,rn:'8/leg',detail:'2 × 8/leg reverse lunges. Separate added card requested Oct1.'},{id:'v51_oct1_pull_remaining12',name:'PULL-UPS · 12 REMAINING',detail:'12 pull-ups remaining from the 24 checked off. Complete in comfortable sets, stay shy of failure.',sets:1,rn:'12 total',xp:20}]};
   if(key==='2026-10-02')return {...p,workout:[...(p.workout||[]),{id:'v52_oct2_swings_remaining60',name:'KB SWINGS · 60 REMAINING',detail:'60 kettlebell swings remaining from what was checked off. Complete in comfortable sets with good form.',sets:1,rn:'60 total',xp:20},{id:'v52_oct2_lunges_remaining16',name:'REVERSE LUNGES · 16 REMAINING',detail:'16 reverse lunges remaining from what was checked off. Complete in comfortable sets.',sets:1,rn:'16 total',xp:20},{id:'v52_oct2_rows_remaining20',name:'KB ROWS · 20 REMAINING',detail:'20 kettlebell rows remaining from what was checked off. Complete in comfortable sets.',sets:1,rn:'20 total',xp:20}]};
   if(key!=='2026-09-26'||loadS()._qs!=='2026-09-26')return p;
   return {...p,bonuses:[...(p.bonuses||[]),...legacyStart(dayMode)]};
 }
+// V56 (Oct4): Oct 14 lock-in. Two optional bonus cards per day Oct 4-13, on top of the existing plan, set by date. Not a miss; core workout unchanged.
+function lockInCards(key){
+  const full=['2026-10-04','2026-10-05','2026-10-06','2026-10-07','2026-10-08'],mid=['2026-10-09','2026-10-10','2026-10-11'],taper=['2026-10-12','2026-10-13'];
+  let push,holds;
+  if(full.includes(key)){push=v33Task('v56_push_'+key,'⭐ LOCK-IN: 50 PUSH-UPS','50 extra push-ups today, on top of the workout. 2 sets of 25, spread through the day, stopping 2-3 reps before failure. Not a miss.',2,'25 each',25);}
+  else if(mid.includes(key)){push=v33Task('v56_push_'+key,'⭐ LOCK-IN: 75 PUSH-UPS','75 extra push-ups today, on top of the workout. 3 sets of 25, stopping 2-3 reps before failure. Only if wrists, elbows and shoulders feel fine; if not, do 50 instead. Not a miss.',3,'25 each',30);}
+  else if(taper.includes(key)){push=v33Task('v56_push_'+key,'⭐ LOCK-IN: 25 PUSH-UPS','Taper day: 25 extra push-ups, one easy set, so you are fresh for the 14th. Not a miss.',1,'25 total',15);}
+  if(!push)return [];
+  if(taper.includes(key))holds=v33Task('v56_holds_'+key,'⭐ LOCK-IN: 3 MIN HOLDS','Taper day: 3 minutes of holds combined, on top of the workout. Plank 60 seconds, hollow hold 60 seconds, side plank 30 seconds per side. Pauses are fine. Not a miss.',1,'3 min total',15);
+  else holds=v33Task('v56_holds_'+key,'⭐ LOCK-IN: 5 MIN HOLDS','5 minutes of holds combined, on top of the workout. Plank 2 sets of 50 seconds, hollow hold 2 sets of 50 seconds, side plank 2 sets of 25 seconds per side. Pauses are fine. Not a miss.',1,'5 min total',25);
+  return [push,holds];
+}
+function getDayPlan(dayMode,key){const p=getDayPlanBase(dayMode,key);const c=lockInCards(key);return c.length?{...p,bonuses:[...(p.bonuses||[]),...c]}:p;}
 function getAllT(p){return[...(p.workout||[]),...(p.supps||[]),...(p.bonuses||[])]}
 function getCoreT(p){return[...(p.workout||[])]}
 function calcXP(done,sets,p,extras){let x=0;getAllT(p).forEach(t=>{if(done.includes(t.id)){x+=t.xp;}else if(t.sets&&sets&&sets[t.id]>0){x+=Math.floor(t.xp*(sets[t.id]/t.sets)*0.7);}});if(extras)extras.forEach(e=>x+=(e.xp||20));return x;}
@@ -4413,7 +4426,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=55;
+const APP_VERSION=56;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
