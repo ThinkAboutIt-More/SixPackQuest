@@ -1841,12 +1841,18 @@ function repairSep30LungesOnce(){
 repairSep30LungesOnce();
 function getDayPlanBase(dayMode,key){
   const p=(key==='2026-09-26'&&loadS()._qs==='2026-09-26'?LEGACY_PLAN[dayMode][6]:PLAN[dayMode][new Date(key+'T12:00:00').getDay()]);
-  if(key==='2026-10-01')return {...p,workout:[...(p.workout||[]),{...PLAN[dayMode][3].workout.find(t=>t.id==='v32_w_lunge'),id:'v50_oct1_second_reverse_lunge',name:'REVERSE LUNGES · SECOND CARD',sets:2,rn:'8/leg',detail:'2 × 8/leg reverse lunges. Separate added card requested Oct1.'},{id:'v51_oct1_pull_remaining12',name:'PULL-UPS · 12 REMAINING',detail:'12 pull-ups remaining from the 24 checked off. Complete in comfortable sets, stay shy of failure.',sets:1,rn:'12 total',xp:20}]};
-  if(key==='2026-10-02')return {...p,workout:[...(p.workout||[]),{id:'v52_oct2_swings_remaining60',name:'KB SWINGS · 60 REMAINING',detail:'60 kettlebell swings remaining from what was checked off. Complete in comfortable sets with good form.',sets:1,rn:'60 total',xp:20},{id:'v52_oct2_lunges_remaining16',name:'REVERSE LUNGES · 16 REMAINING',detail:'16 reverse lunges remaining from what was checked off. Complete in comfortable sets.',sets:1,rn:'16 total',xp:20},{id:'v52_oct2_rows_remaining20',name:'KB ROWS · 20 REMAINING',detail:'20 kettlebell rows remaining from what was checked off. Complete in comfortable sets.',sets:1,rn:'20 total',xp:20}]};
+  if(key==='2026-10-01')return {...p,workout:[...(p.workout||[]),{...PLAN[dayMode][3].workout.find(t=>t.id==='v32_w_lunge'),id:'v50_oct1_second_reverse_lunge',name:'REVERSE LUNGES · SECOND CARD',sets:2,rn:'8/leg',detail:'2 × 8/leg reverse lunges. Separate added card requested Oct1.'},{id:'v51_oct1_pull_remaining12',name:'PULL-UPS',detail:'12 pull-ups in total (both hands on the bar). Complete in comfortable sets, stay shy of failure.',sets:1,rn:'12 total',xp:20}]};
+  if(key==='2026-10-02')return {...p,workout:[...(p.workout||[]),{id:'v52_oct2_swings_remaining60',name:'KB SWINGS',detail:'60 kettlebell swings in total (two hands on the bell). Complete in comfortable sets with good form.',sets:1,rn:'60 total',xp:20},{id:'v52_oct2_lunges_remaining16',name:'REVERSE LUNGES',detail:'16 reverse lunges in total, 8 per leg. Complete in comfortable sets.',sets:1,rn:'16 total (8 per leg)',xp:20},{id:'v52_oct2_rows_remaining20',name:'KB ROWS',detail:'20 one-arm kettlebell rows in total, 10 per arm. Complete in comfortable sets.',sets:1,rn:'20 total (10 per arm)',xp:20}]};
   if(key!=='2026-09-26'||loadS()._qs!=='2026-09-26')return p;
   return {...p,bonuses:[...(p.bonuses||[]),...legacyStart(dayMode)]};
 }
 // V56 (Oct4): Oct 14 lock-in. Two optional bonus cards per day Oct 4-13, on top of the existing plan, set by date. Not a miss; core workout unchanged.
+// V57 (Oct4): every count says whether it is total, per arm, per leg or per side. Text only; ids, sets and XP unchanged.
+{const fix=x=>x.replace(/(\d+)s\/side/g,'$1 seconds per side').replace(/(\d+)\/arm/g,'$1 per arm').replace(/(\d+)\/leg/g,'$1 per leg').replace(/(\d+)\/side/g,'$1 per side');
+ for(const md of ['home','travel'])for(let day=0;day<=6;day++)for(const t of [...(PLAN[md][day].workout||[]),...(PLAN[md][day].bonuses||[])]){
+  if(t.rn)t.rn=fix(t.rn);if(t.detail)t.detail=fix(t.detail);
+  if(/^v54_curl_/.test(t.id)){t.rn='10 total';t.detail='Optional: 2 sets of 10 curls in total, both hands holding the 35lb kettlebell by the horns, slow and controlled. Not a miss.';}
+ }}
 function lockInCards(key){
   const full=['2026-10-04','2026-10-05','2026-10-06','2026-10-07','2026-10-08'],mid=['2026-10-09','2026-10-10','2026-10-11'],taper=['2026-10-12','2026-10-13'];
   let push,holds;
@@ -4426,7 +4432,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=56;
+const APP_VERSION=57;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
