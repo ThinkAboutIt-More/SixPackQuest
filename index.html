@@ -1842,7 +1842,7 @@ repairSep30LungesOnce();
 function getDayPlanBase(dayMode,key){
   const p=(key==='2026-09-26'&&loadS()._qs==='2026-09-26'?LEGACY_PLAN[dayMode][6]:PLAN[dayMode][new Date(key+'T12:00:00').getDay()]);
   if(key==='2026-10-01')return {...p,workout:[...(p.workout||[]),{...PLAN[dayMode][3].workout.find(t=>t.id==='v32_w_lunge'),id:'v50_oct1_second_reverse_lunge',name:'REVERSE LUNGES · SECOND CARD',sets:2,rn:'8/leg',detail:'2 × 8/leg reverse lunges. Separate added card requested Oct1.'},{id:'v51_oct1_pull_remaining12',name:'PULL-UPS',detail:'12 pull-ups in total (both hands on the bar). Complete in comfortable sets, stay shy of failure.',sets:1,rn:'12 total',xp:20}]};
-  if(key==='2026-10-02')return {...p,workout:[...(p.workout||[]),{id:'v52_oct2_swings_remaining60',name:'KB SWINGS',detail:'60 kettlebell swings in total (two hands on the bell). Complete in comfortable sets with good form.',sets:1,rn:'60 total',xp:20},{id:'v52_oct2_lunges_remaining16',name:'REVERSE LUNGES',detail:'16 reverse lunges in total, 8 per leg. Complete in comfortable sets.',sets:1,rn:'16 total (8 per leg)',xp:20},{id:'v52_oct2_rows_remaining20',name:'KB ROWS',detail:'20 one-arm kettlebell rows in total, 10 per arm. Complete in comfortable sets.',sets:1,rn:'20 total (10 per arm)',xp:20}]};
+  if(key==='2026-10-02')return {...p,workout:[...(p.workout||[]),{id:'v52_oct2_swings_remaining60',name:'KB SWINGS',detail:'60 kettlebell swings in total (two hands on the bell). Complete in comfortable sets with good form.',sets:1,rn:'60 total',xp:20},{id:'v52_oct2_lunges_remaining16',name:'REVERSE LUNGES',detail:'16 reverse lunges on each leg (32 total). Complete in comfortable sets, switching legs.',sets:1,rn:'16 per leg',xp:20},{id:'v52_oct2_rows_remaining20',name:'KB ROWS',detail:'20 one-arm kettlebell rows on each arm (40 total). Complete in comfortable sets, switching arms.',sets:1,rn:'20 per arm',xp:20}]};
   if(key!=='2026-09-26'||loadS()._qs!=='2026-09-26')return p;
   return {...p,bonuses:[...(p.bonuses||[]),...legacyStart(dayMode)]};
 }
@@ -4432,7 +4432,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=57;
+const APP_VERSION=58;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
