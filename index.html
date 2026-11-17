@@ -1869,7 +1869,14 @@ function getAllT(p){return[...(p.workout||[]),...(p.supps||[]),...(p.bonuses||[]
 function getCoreT(p){return[...(p.workout||[])]}
 function calcXP(done,sets,p,extras){let x=0;getAllT(p).forEach(t=>{if(done.includes(t.id)){x+=t.xp;}else if(t.sets&&sets&&sets[t.id]>0){x+=Math.floor(t.xp*(sets[t.id]/t.sets)*0.7);}});if(extras)extras.forEach(e=>x+=(e.xp||20));return x;}
 function calcPct(done,p,ds){if(p.type==='rest')return 100;let c=(p.workout||[]);if(ds&&Array.isArray(ds._express))c=c.filter(t=>ds._express.includes(t.id));if(!c.length)return 100;const _st=(ds&&ds.sets)||{};let pts=0;c.forEach(t=>{if(done.includes(t.id)){pts+=1;}else{const tot=t.sets||0;if(tot>1)pts+=Math.min(1,((_st[t.id])||0)/tot);}});return Math.round(pts/c.length*100);}
-function calcProt(foods){return(foods||[]).reduce((a,f)=>a+(f.protein||0),0)}
+// Missing protein is not zero. Keep a known subtotal without inventing macros.
+function hasProtein(f){return f.protein!=null&&String(f.protein).trim()!==''&&Number.isFinite(+f.protein)&&+f.protein>=0;}
+function proteinSummary(foods){
+ const fs=foods||[],known=fs.filter(hasProtein),p=known.reduce((n,f)=>n+(+f.protein),0);
+ return {p,known:fs.length>0&&known.length===fs.length,partial:known.length>0,hasFood:fs.length>0};
+}
+function proteinLabel(v){return v.known?v.p+'g':v.partial?'≥'+v.p+'g (partial)':'unknown';}
+function calcProt(foods){return proteinSummary(foods).p;}
 function calcCals(foods){return(foods||[]).reduce((a,f)=>a+(f.calories||0),0)}
 function calcScore(){const s=loadS();let t=0;Object.keys(s).forEach(k=>{if(!k.startsWith('_')){const ds=s[k];try{const dm=ds._mode||mode;const p=getDayPlan(dm,k);t+=calcXP(ds.done||[],ds.sets||{},p,ds.extras)*10;}catch(e){}}});return t+(s._bonusXP||0);}
 function calcCoins(){const s=loadS();let c=0;Object.keys(s).forEach(k=>{if(!k.startsWith('_')){const ds=s[k];try{const dm=ds._mode||mode;const p=getDayPlan(dm,k);getAllT(p).forEach(t=>{if((ds.done||[]).includes(t.id))c++;});}catch(e){}}});return c+(s._totalCoins||0);}
@@ -2880,14 +2887,19 @@ function renderProtBar(){
   const foodProt=calcProt(ds.foods||[]);
   const suppProt=calcSuppProt(key);
   const tot=foodProt+suppProt;
-  const pct=Math.min(100,Math.round(tot/160*100));
+  const protein=proteinSummary(ds.foods||[]);protein.p=tot;protein.partial=protein.partial||suppProt>0;
+  const pct=protein.known?Math.min(100,Math.round(tot/160*100)):0;
 
   const fill=document.getElementById('pqbFill');
   const num=document.getElementById('pqbNumber');
   const status=document.getElementById('pqbStatus');
 
   let grad,statusMsg,numColor;
-  if(tot===0){
+  if(!protein.known){
+    grad='linear-gradient(90deg,#444,#888)';
+    statusMsg='Protein total unknown - incomplete labels';
+    numColor='#888';
+  }else if(tot===0){
     grad='linear-gradient(90deg,#880044,#ff0088)';
     statusMsg='Log food below to track progress';
     numColor='#888';
@@ -2906,13 +2918,13 @@ function renderProtBar(){
   }
 
   if(fill){fill.style.width=pct+'%';fill.style.background=grad;}
-  if(num){num.textContent=tot+'g / 160g';num.style.color=numColor;}
-  if(status){status.textContent=statusMsg;status.style.color=tot>=160?'#00ff88':tot>=80?'#4488ff':'#666';}
+  if(num){num.textContent=proteinLabel(protein)+' / 160g';num.style.color=numColor;}
+  if(status){status.textContent=statusMsg;status.style.color=!protein.known?'#888':tot>=160?'#00ff88':tot>=80?'#4488ff':'#666';}
 
-  const fc=document.getElementById('foodCount');if(fc)fc.textContent=tot+'g/160g';
-  const sp=document.getElementById('smcProt');if(sp)sp.textContent=tot+'g';
+  const fc=document.getElementById('foodCount');if(fc)fc.textContent=proteinLabel(protein)+' / 160g';
+  const sp=document.getElementById('smcProt');if(sp)sp.textContent=proteinLabel(protein);
   const pp=document.getElementById('pgProt');if(pp)pp.style.width=pct+'%';
-  const ppP=document.getElementById('pgProtP');if(ppP)ppP.textContent=tot+'g';
+  const ppP=document.getElementById('pgProtP');if(ppP)ppP.textContent=proteinLabel(protein);
 }
 
 // Drink options for shake pickers
@@ -2995,7 +3007,7 @@ function renderFoodLog(){
   list.innerHTML='';
   if(foods.length){
     toggleBtn.style.display='inline-flex';
-    countEl.textContent=`${foods.length} · ${tot}g`;
+    countEl.textContent=`${foods.length} · ${proteinLabel(proteinSummary(foods))}`;
     foods.forEach((f,i)=>{
       const cat=f.category||'meal';
       const entryClass=cat==='cheat'?'entry-cheat':cat==='fuel'?'entry-fuel':'entry-meal';
@@ -3008,7 +3020,7 @@ function renderFoodLog(){
         ${f.detail?`<span class="fen-detail">${f.detail}</span>`:''}
       </div>
       <span class="entry-tag ${tagClass}">${tagLabel}</span>
-      <span class="fep" style="margin-left:4px;">${f.protein>0?'+'+f.protein+'g':''}</span>
+      <span class="fep" style="margin-left:4px;">${hasProtein(f)?'+'+f.protein+'g':'protein unknown'}</span>
       ${f.calories?`<span style="font-family:'VT323',monospace;font-size:.65rem;color:#664400;margin-left:3px;">${f.calories}cal</span>`:''}
       <button class="fed" onclick="delFood(${i})" title="Remove">✕</button>`;
       list.appendChild(el);
@@ -3044,7 +3056,7 @@ function renderFoodLedger(){
     displayName=displayName.replace(/\s+at bar$/i,'').trim();
     title.textContent=displayName;
     const macros=document.createElement('div');macros.className='food-ledger-macros';
-    const parts=[`${f.protein||0}g protein`];
+    const parts=[hasProtein(f)?`${f.protein}g protein`:'protein unknown'];
     if(Number.isFinite(+f.calories)&&+f.calories>0)parts.push(`~${f.calories} cal`);
     if(f.fat!=null&&Number.isFinite(+f.fat)&&+f.fat>=0)parts.push(`~${f.fat}g fat`);
     macros.textContent=parts.join(' · ');
@@ -3055,41 +3067,41 @@ function renderFoodLedger(){
   const totalsCurrent=ds.foodTotals?.itemCount===foods.length;
   const calLabel=totalsCurrent&&ds.foodTotals?.calories!=null?`~${ds.foodTotals.calories} cal (est)`:foods.length&&knownCals.length===foods.length?`~${c} cal`:knownCals.length?`≥${c} cal (partial)`:'cal not totaled';
   const fatLabel=totalsCurrent&&ds.foodTotals?.fat!=null?`~${ds.foodTotals.fat}g fat (est)`:foods.length&&knownFat.length===foods.length?`~${fat}g fat`:knownFat.length?`≥${fat}g fat (partial)`:'fat not totaled';
-  document.getElementById('foodLedgerTotal').textContent=`${p}g protein · ${calLabel} · ${fatLabel}`;
+  document.getElementById('foodLedgerTotal').textContent=`${proteinLabel(proteinSummary(foods))} protein · ${calLabel} · ${fatLabel}`;
 }
 
 // V47: additive nutrition coaching. Missing labels are never zero-fat days.
 const NUTRITION_START='2026-09-30';
 function nutritionDay(key){
- const ds=getDS(key),fs=ds.foods||[],p=calcProt(fs),tot=ds.foodTotals;
+ const ds=getDS(key),fs=ds.foods||[],protein=proteinSummary(fs),p=protein.p,tot=ds.foodTotals;
  const current=tot&&tot.itemCount===fs.length;
  const fatKnown=!!(fs.length>0&&(fs.every(f=>f.fat!=null&&Number.isFinite(+f.fat))||(current&&Number.isFinite(+tot.fat))));
  const calKnown=!!(fs.length>0&&(fs.every(f=>Number.isFinite(+f.calories)&&+f.calories>0)||(current&&tot.calories!=null)));
  const fat=current&&Number.isFinite(+tot.fat)?+tot.fat:fs.reduce((n,f)=>n+(+f.fat||0),0);
  const calories=current&&tot.calories!=null?String(tot.calories):String(calcCals(fs));
- return {p,fat,fatKnown,calKnown,calories,hasFood:fs.length>0,closed:p>=160&&fatKnown&&fat<=80};
+ return {p,proteinKnown:protein.known,proteinPartial:protein.partial,fat,fatKnown,calKnown,calories,hasFood:fs.length>0,closed:protein.known&&p>=160&&fatKnown&&fat<=80};
 }
 function nutritionStreak(){
  const now=new Date();now.setHours(0,0,0,0);let n=0;
- for(let i=0;i<90;i++){const d=new Date(now);d.setDate(now.getDate()-i);const k=dKey(d);if(k<NUTRITION_START)break;if(nutritionDay(k).closed)n++;else if(i===0)continue;else break;}return n;
+ for(let i=0;i<90;i++){const d=new Date(now);d.setDate(now.getDate()-i);const k=dKey(d);if(k<NUTRITION_START)break;const day=nutritionDay(k);if(!day.proteinKnown)return null;if(day.closed)n++;else if(i===0)continue;else break;}return n;
 }
 function renderNutritionCoach(){
  const box=document.getElementById('nutritionCoach');if(!box)return;box.replaceChildren();
  const key=dKey(currentDate),v=nutritionDay(key),h=document.createElement('h3');h.textContent='DAILY NUTRITION';box.append(h);
- const lines=[`Protein: ${v.p} / 160g · ${Math.max(0,160-v.p)}g left`,
+ const lines=[v.proteinKnown?`Protein: ${v.p} / 160g · ${Math.max(0,160-v.p)}g left`:`Protein: ${proteinLabel({p:v.p,known:false,partial:v.proteinPartial})} / 160g · gap unknown`,
  v.fatKnown?`Fat: ~${v.fat}g · working zone 60g / upper guide 80g${v.fat>80?' · above guide':v.fat>60?' · above zone':''}`:`Fat: ${v.hasFood?'incomplete labels':'not logged'} · working zone 60g / upper guide 80g`,
  v.calKnown?`Calories logged: ~${v.calories}`:`Calories logged: ${v.hasFood?'partial (~'+v.calories+')':'unknown'}`,
  'Calorie reference: 1,850 observed midpoint of 3 past logged days',
  'Personal calorie target pending · this reference is not a food budget',
- v.closed?'Nutrition day closed: logged protein + fat guides met':v.fatKnown&&v.fat>80?'Nutrition targets not met: fat above working guide':!v.fatKnown?'Nutrition status: incomplete log':`Nutrition targets open: ${Math.max(0,160-v.p)}g protein left`,
- `Nutrition streak: ${nutritionStreak()} days · workout streak unchanged`];
+ v.closed?'Nutrition day closed: logged protein + fat guides met':v.fatKnown&&v.fat>80?'Nutrition targets not met: fat above working guide':!v.proteinKnown||!v.fatKnown?'Nutrition status: incomplete log':`Nutrition targets open: ${Math.max(0,160-v.p)}g protein left`,
+ `Nutrition streak: ${nutritionStreak()===null?'unknown (incomplete protein logs)':nutritionStreak()+' days'} · workout streak unchanged`];
  for(const txt of lines){const p=document.createElement('p');p.textContent=txt;box.append(p);}
  const note=document.createElement('p');note.className='nutrition-note';note.textContent='Coach-set working guides, not medical limits. Estimates stay estimates. Missing food or labels can change the result. Nutrition streak starts Sep 30; no recovery-day auto-credit.';box.append(note);
  const title=document.createElement('h3');title.textContent='LAST 7 DAYS';box.append(title);
- let protein=0,fat=0,known=0,eligible=0;const start=new Date(key+'T12:00:00');
- for(let i=6;i>=0;i--){const d=new Date(start);d.setDate(start.getDate()-i);const k=dKey(d);if(loadS()._qs&&k<loadS()._qs)continue;eligible++;const a=nutritionDay(k);protein+=a.p>=160?1:0;if(a.fatKnown){known++;fat+=a.fat<=80?1:0;}
- const row=document.createElement('p');row.className='nutrition-trend';row.textContent=`${d.toLocaleDateString('en-US',{month:'short',day:'numeric'})}: protein ${a.hasFood?(a.p>=160?'hit':a.p+'g logged'):'unknown'} · fat ${a.fatKnown?(a.fat<=80?'within guide':'above guide'):'unknown'}`;box.append(row);}
- const hits=document.createElement('p');hits.textContent=`Protein: ${protein}/${eligible} days since quest start hit (${eligible?Math.round(protein/eligible*100):0}%) · fat: ${known?Math.round(fat/known*100)+'% of '+known+' known days':'not enough data'} within guide`;box.append(hits);
+ let protein=0,proteinKnownDays=0,fat=0,known=0,eligible=0;const start=new Date(key+'T12:00:00');
+ for(let i=6;i>=0;i--){const d=new Date(start);d.setDate(start.getDate()-i);const k=dKey(d);if(loadS()._qs&&k<loadS()._qs)continue;eligible++;const a=nutritionDay(k);if(a.proteinKnown){proteinKnownDays++;protein+=a.p>=160?1:0;}if(a.fatKnown){known++;fat+=a.fat<=80?1:0;}
+ const row=document.createElement('p');row.className='nutrition-trend';row.textContent=`${d.toLocaleDateString('en-US',{month:'short',day:'numeric'})}: protein ${a.proteinKnown?(a.p>=160?'hit':a.p+'g logged'):a.proteinPartial?'≥'+a.p+'g logged (partial)':'unknown'} · fat ${a.fatKnown?(a.fat<=80?'within guide':'above guide'):'unknown'}`;box.append(row);}
+ const hits=document.createElement('p');hits.textContent=`Protein: ${proteinKnownDays?protein+'/'+proteinKnownDays+' known days hit ('+Math.round(protein/proteinKnownDays*100)+'%)':'not enough data'}${eligible>proteinKnownDays?' · '+(eligible-proteinKnownDays)+' days unknown':''} · fat: ${known?Math.round(fat/known*100)+'% of '+known+' known days':'not enough data'} within guide`;box.append(hits);
  const w=document.createElement('h3');w.textContent='WEEKLY WEIGH-IN';box.append(w);
  const weights=loadS()._weighIns||[],recent=[...weights].sort((a,b)=>b.date.localeCompare(a.date))[0];
  const wp=document.createElement('p');wp.textContent=recent?`Last reported: ${recent.weight} lb on ${recent.date}`:'No weigh-in recorded here yet. Text your weight once a week, same scale, morning before food.';box.append(wp);
@@ -3971,7 +3983,7 @@ let nutritionInsightTimer=null;
 async function checkNutritionInsights(key){
   const apiKey=getApiKey();if(!apiKey)return;
   const ds=getDS(key);
-  const foods=ds.foods||[];if(!foods.length)return;
+  const foods=ds.foods||[];if(!foods.length||!proteinSummary(foods).known)return;
   clearTimeout(nutritionInsightTimer);
   nutritionInsightTimer=setTimeout(async()=>{
     const prot=calcProt(foods)+calcSuppProt(key);
@@ -4099,7 +4111,7 @@ async function askFood(){
 }
 
 function calcNutritionGrade(foods){
-  if(!foods||!foods.length) return null;
+  if(!foods||!foods.length||!proteinSummary(foods).known) return null;
   // Protein score: 0-50 points
   const prot=calcProt(foods);
   const protScore=Math.min(50,Math.round(prot/160*50));
@@ -4364,7 +4376,7 @@ setInterval(renderAll,60000);
   const foodList=foods.map(f=>`${f.name}(${f.protein}g)`).join(', ')||'nothing yet';
 
   // 1. END OF DAY SUMMARY — fires at 9pm if protein not yet hit
-  if(hour>=21&&prot<160){
+  if(hour>=21&&proteinSummary(foods).known&&prot<160){
     const alreadyFired=sessionStorage.getItem('eodFired_'+key);
     if(!alreadyFired){
       sessionStorage.setItem('eodFired_'+key,'1');
@@ -4395,7 +4407,7 @@ setInterval(renderAll,60000);
   }
 
   // 3. MIDDAY LOW PROTEIN CHECK — noon with under 40g
-  if(hour>=12&&hour<15&&prot<40){
+  if(hour>=12&&hour<15&&proteinSummary(foods).known&&prot<40){
     const middayFired=sessionStorage.getItem('middayFired_'+key);
     if(!middayFired){
       sessionStorage.setItem('middayFired_'+key,'1');
@@ -4432,7 +4444,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=58;
+const APP_VERSION=59;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
