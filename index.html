@@ -3076,7 +3076,7 @@ function nutritionDay(key){
  const ds=getDS(key),fs=ds.foods||[],protein=proteinSummary(fs),p=protein.p,tot=ds.foodTotals;
  const current=tot&&tot.itemCount===fs.length;
  const fatKnown=!!(fs.length>0&&(fs.every(f=>f.fat!=null&&Number.isFinite(+f.fat))||(current&&Number.isFinite(+tot.fat))));
- const calKnown=!!(fs.length>0&&(fs.every(f=>Number.isFinite(+f.calories)&&+f.calories>0)||(current&&tot.calories!=null)));
+ const calKnown=!!(fs.length>0&&(fs.every(f=>f.calories!=null&&String(f.calories).trim()!==''&&Number.isFinite(+f.calories)&&+f.calories>=0)||(current&&tot.calories!=null)));
  const fat=current&&Number.isFinite(+tot.fat)?+tot.fat:fs.reduce((n,f)=>n+(+f.fat||0),0);
  const calories=current&&tot.calories!=null?String(tot.calories):String(calcCals(fs));
  return {p,proteinKnown:protein.known,proteinPartial:protein.partial,fat,fatKnown,calKnown,calories,hasFood:fs.length>0,closed:protein.known&&p>=160&&fatKnown&&fat<=80};
@@ -3090,7 +3090,7 @@ function renderNutritionCoach(){
  const key=dKey(currentDate),v=nutritionDay(key),h=document.createElement('h3');h.textContent='DAILY NUTRITION';box.append(h);
  const lines=[v.proteinKnown?`Protein: ${v.p} / 160g · ${Math.max(0,160-v.p)}g left`:`Protein: ${proteinLabel({p:v.p,known:false,partial:v.proteinPartial})} / 160g · gap unknown`,
  v.fatKnown?`Fat: ~${v.fat}g · working zone 60g / upper guide 80g${v.fat>80?' · above guide':v.fat>60?' · above zone':''}`:`Fat: ${v.hasFood?'incomplete labels':'not logged'} · working zone 60g / upper guide 80g`,
- v.calKnown?`Calories logged: ~${v.calories}`:`Calories logged: ${v.hasFood?'partial (~'+v.calories+')':'unknown'}`,
+ v.calKnown?`Calories logged: ~${v.calories}`:`Calories logged: ${v.hasFood&&Number(v.calories)>0?'partial (~'+v.calories+')':'unknown'}`,
  'Calorie reference: 1,850 observed midpoint of 3 past logged days',
  'Personal calorie target pending · this reference is not a food budget',
  v.closed?'Nutrition day closed: logged protein + fat guides met':v.fatKnown&&v.fat>80?'Nutrition targets not met: fat above working guide':!v.proteinKnown||!v.fatKnown?'Nutrition status: incomplete log':`Nutrition targets open: ${Math.max(0,160-v.p)}g protein left`,
@@ -4444,7 +4444,7 @@ setInterval(renderAll,60000);
 // ================================================================
 // CLOUD SYNC (Supabase) - phone <-> web shared quest state
 // ================================================================
-const APP_VERSION=59;
+const APP_VERSION=60;
 const SB_URL='https://pmgmtjmilcjrxsalnuxr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZ210am1pbGNqcnhzYWxudXhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTM1OTEsImV4cCI6MjA5NzcyOTU5MX0.TB-T0_LMG50z_jOfq1LwFWbwiYIvkAkgfPW7WwP5LmA';
 const SB_DOC='sixpack:v5state';
